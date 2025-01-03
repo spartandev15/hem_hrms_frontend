@@ -1,0 +1,68 @@
+/* General styles for the table container */
+.table-container {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+/* Styles for the table */
+.employee-leave-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.employee-leave-table th,
+.employee-leave-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.employee-leave-table th {
+  background-color: #4caf50;
+  color: white;
+}
+
+.employee-leave-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.employee-leave-table tr:hover {
+  background-color: #ddd;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .employee-leave-table th,
+  .employee-leave-table td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .employee-leave-table {
+    font-size: 14px;
+    overflow-x: auto;
+    display: block;
+  }
+
+  .employee-leave-table td {
+    white-space: nowrap;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .employee-leave-table th,
+  .employee-leave-table td {
+    font-size: 10px;
+    padding: 6px;
+  }
+}

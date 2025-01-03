@@ -1,0 +1,40 @@
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper input,
+select {
+  width: 100%;
+  /* padding: 12px 10px 12px 10px; */
+  background-color: white;
+  font-size: 16px;
+  border: 1px solid #353434;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+  padding: 0.5rem 0.6rem;
+  border: 2px solid var(--bs-border-color);
+  border-radius: 4px;
+}
+
+/* Label styling */
+.input-wrapper .label-animation {
+  position: absolute;
+  color: black;
+  top: 50%;
+  left: 10px;
+  transform: translate(0, -50%);
+  transition: all 0.4s;
+  background-color: var(--white-color);
+}
+
+.input-wrapper input:focus {
+  border-color: #4a4a4a;
+}
+
+.input-wrapper.focused .label-animation {
+  top: 0px;
+  left: 10px;
+  background-color: var(--white-color);
+  padding: 0 0.2rem;
+}

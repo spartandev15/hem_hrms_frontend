@@ -1,0 +1,33 @@
+.confirm-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  min-height: 100vh;
+}
+
+.dialog {
+  background-color: #e2e6e7;
+  padding: 25px;
+  border-radius: 5px;
+  box-shadow: 0 8 2px var(--bs-border-color);
+}
+
+button {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button.cancel {
+}
+
+button:hover {
+  opacity: 0.8;
+}

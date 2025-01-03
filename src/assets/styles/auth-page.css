@@ -1,0 +1,271 @@
+.signin_pd_inner {
+    padding: 50px 0em;
+}
+
+.signin_pd_inner h3, .signup_pd_inner h3 {
+    color: #f6a21e;
+}
+.contact_form11 {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    transition: 1.25s;
+    overflow: hidden;
+    position: relative;
+    color: #fff;
+    border-radius: 5px;
+    padding: 30px;
+    box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #f9f9f9;
+    background-image: linear-gradient(#134d75, #134e7598);
+    z-index: 1;
+}
+
+.contact_form11::before {
+    position: absolute;
+    content: "";
+    background: rgb(255 255 255 / 22%);
+    left: -50px;
+    bottom: 0;
+    rotate: 180deg;
+    opacity: 0.5;
+    clip-path: polygon(20% 0, 83% 0, 94% 25%, 0 34%);
+    width: 230px;
+    height: 350px;
+    z-index: 2;
+}
+
+.contact_form11::after {
+    position: absolute;
+    content: "";
+    background: rgb(255 255 255 / 22%);
+    right: 30px;
+    opacity: 0.5;
+    top: 185px;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    width: 200px;
+    height: 200px;
+    animation: spin1 8s infinite linear; /* Corrected animation name */
+    z-index: 3;
+}
+
+.contact_form11>div::before {
+    clip-path: polygon(100% 0, 0 60%, 100% 100%);
+    content: "";
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 40px;
+    background: rgb(245 245 245 / 10%);
+    right: 60px;
+    animation: spin2 2s infinite linear; /* Corrected animation name */
+    z-index: 4;
+}
+
+.contact_form11>div::after {
+    position: absolute;
+    content: "";
+    width: 60px;
+    height: 60px;
+    background: rgb(255 255 255 / 22%);
+    left: 70px;
+    top: 40px;
+    border-radius: 50%;
+    opacity: 0.5;
+    z-index: 5;
+}
+
+@keyframes spin1 {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spin2 {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.contact_form12 {
+    background: #fff;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #f9f9f9;
+    padding: 10px;
+}
+
+
+.mybtn {
+    background: #134d75;
+    color: #fff;
+    margin: auto auto 10px;     
+    padding: 7px 50px;
+}
+
+.mybtn:hover {
+background-color: #f6a21e;
+color: #fff;
+}
+    
+.signupbtn {
+    background: #f6a21e;
+    color: #fff;
+    
+    font-weight: 600;
+    padding: 7px 50px;
+    width: 75%;
+}
+.signupbtn:hover {
+    background-color: #fff;
+    z-index: 6;
+}
+
+
+/*Input Button*/ 
+.form-outline {
+    position: relative;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  
+  .form-outline input {
+    max-width: 100%;
+    width: 100%;
+    height: 45px;
+    padding: 0 10px;
+   background: #fff;
+    color: #4a4a4a;
+    border: 2px solid #eaecf0;
+    transition: 0.2s ease-in-out;
+    transition-property: color, background-color, border;
+  padding: .375rem .75rem;
+    padding-left: 22px;
+    padding-right: 12px;
+    border-radius: 0.3rem;
+    line-height: 2;
+  }
+  
+  .form-outline input:focus {
+    border-color:  var(--main-color);
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .form-outline label {
+    position: absolute;
+   top: 12px; 
+    left: 22px;
+    font-size: 14px;
+    color: #4a4a4a;
+    pointer-events: none;
+    transition: all 0.3s;
+    background: #fff;
+  padding-right: 1rem;
+  margin-bottom: 0px;
+  }
+   
+  .form-outline input:focus + label,
+  .form-outline input:valid + label {
+    top: -8px;
+    left: 22px;
+    font-size: 14px;
+    color:  var(--main-color);
+    font-weight: 400;
+    background:#fff; 
+      padding: 0 2px;
+      transition: 0.2s ease-in-out;
+  }
+  
+  
+.form-outline textarea {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 10px ;
+   background: #fff;
+    color: #4a4a4a;
+    border: 2px solid #eaecf0;
+    transition: 0.2s ease-in-out;
+    transition-property: color, background-color, border;
+  padding: .375rem .75rem;
+    padding-left: 22px;
+    padding-right: 12px;
+    border-radius: 0.50rem;
+    line-height: 1.8;
+  }
+  
+  .form-outline  textarea:focus {
+    border-color: #154f76;
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .form-outline  textarea:focus + label,
+  .form-outline  textarea:valid + label {
+    top: -12px;
+    left: 22px;
+    font-size: 14px;
+    color:  var(--main-color);
+    font-weight: 400;
+    background:#fff; 
+      padding: 0 2px;
+      transition: 0.2s ease-in-out;
+  }
+   
+  .required {
+    color: red;
+  } 
+
+  .form-outline select {
+    max-width: 100%;
+    width: 100%;
+    height: 45px;
+    padding: 0 10px;
+   background: #fff;
+    color: #4a4a4a;
+    border: 2px solid #eaecf0;
+    transition: 0.2s ease-in-out;
+    transition-property: color, background-color, border;
+  padding: .375rem .75rem;
+    padding-left: 20px;
+    padding-right: 12px;
+    border-radius: 0.50rem;
+    line-height: 2;
+  }
+  
+  .form-outline select:focus {
+    border-color: #154f76;
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .form-outline select:focus + label,
+  .form-outline select:valid + label {
+    top: -12px;
+    left: 20px;
+    font-size: 14px;
+    color:  var(--main-color);
+    font-weight: 400;
+    background:#fff; 
+      padding: 0 5px;
+      transition: 0.2s ease-in-out;
+     border-radius: 0.5rem;
+  }
+  
+input[type=date]:required:invalid::-webkit-datetime-edit {
+  color: transparent;
+  line-height: 1.8;
+}
+input[type=date]:focus::-webkit-datetime-edit {
+  color: black !important;
+}
+.popup-content{
+border-radius: 0.3rem;
+}
+@media(max-width:767px){
+.popup-content{
+width: 90% !important;
+}
+
+}

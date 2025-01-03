@@ -1,0 +1,83 @@
+.profile-wrapper .profile-card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.4rem;
+  box-shadow: 0px 0px 2px var(--bs-border-color);
+  padding: 1.25rem 1rem 1.25rem 1rem;
+  background-color: var(--white-color);
+}
+
+.profile-wrapper .profile-card .profile-heading {
+  text-align: center;
+}
+
+.profile-wrapper .profile-card .profile-image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-wrapper .profile-card .profile-image {
+  width: 130px;
+  height: 130px;
+  border-radius: 100%;
+}
+
+.profile-wrapper .profile-card .profile-contact {
+  border-bottom: 1px solid var(--bs-border-color);
+  border-top: 1px solid var(--bs-border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* gap: 8px; */
+  padding: 3px 0;
+}
+
+.profile-wrapper .profile-card .profile-contact a {
+  text-decoration: none;
+}
+
+.profile-wrapper .profile-card .profile-detials {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.profile-wrapper .profile-card .profile-heading {
+  margin-top: 1.25rem;
+}
+
+.profile-wrapper .profile-card .profile-contact {
+  margin-top: 1.2rem;
+}
+
+.profile-wrapper .profile-card .profile-detials p {
+  margin: 0;
+}
+
+.profile-common-section {
+  background-color: white;
+  border: 1px solid var(--bs-border-color);
+  padding: 0.6rem 1.4rem;
+}
+
+.profile-common-section h2 {
+  color: #002d3a;
+}
+
+.edit-btn {
+  /* background-color: white; */
+  background-color: transparent;
+  border: none;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 0.2rem;
+  padding: 0 20px;
+  color: var(--white-color);
+  width: fit-content;
+}
+
+.edit-btn:hover {
+  background-color: var(--second-color);
+}
