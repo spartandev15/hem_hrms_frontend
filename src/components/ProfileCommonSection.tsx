@@ -38,9 +38,7 @@ export const ProfileCommonSection = ({
                   <p className="font-weight-light text-xsmall m-0 text-gray-primary">
                     {item?.label}
                   </p>
-                  <p className="text-xsmall font-bold m-0">
-                    {item?.value || "Not Availabe"}
-                  </p>
+                  <p className="text-xsmall font-bold m-0">{item?.value}</p>
                 </div>
               </div>
             ))}

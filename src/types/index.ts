@@ -1,4 +1,5 @@
 import { UseFormRegister } from "react-hook-form";
+import { string } from "zod";
 
 export interface SignUpFormData {
   first_name: string;
@@ -37,6 +38,19 @@ export interface IProfileCommonSection {
   onSubmit: () => void;
 }
 
+export interface ProfileCardProps {
+  id: number;
+  name: string;
+  last_name: string;
+  designation: string;
+  phone: number;
+  email: string;
+  profile_photo?: string;
+  line_manager?: string;
+  joining_date?: string;
+  employeeprofile?: string;
+}
+
 export interface EditableFormProps {
   fields: IField[];
   onSubmit: (values: any) => void;
@@ -54,6 +68,8 @@ export interface InputWithLabelProps {
   required?: boolean; // Optional, some fields might not be required
   register: UseFormRegister<any>;
   options?: any;
+  labelAnimated?: boolean;
+  serachIcon?: boolean;
 }
 
 interface EmployeeDetails {
@@ -71,6 +87,26 @@ interface EmployeeDetails {
   dob?: Date;
   gender?: string;
   address?: string;
+  leaves?: {
+    leave_data: {
+      paid_leaves: {
+        Taken: number;
+        Total: string;
+        Pending: string;
+      };
+      sick_leaves: {
+        Taken: number;
+        Total: string;
+        Pending: string;
+      };
+      unpaid_leaves: {
+        Taken: number;
+        Total: string;
+        Pending: string;
+      };
+    };
+    overall_total_leaves: string;
+  };
 }
 
 export interface EmployeeCardProps extends EmployeeDetails {}

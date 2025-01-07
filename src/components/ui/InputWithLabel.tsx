@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { InputWithLabelProps } from "../../types";
+import { IoMdSearch } from "react-icons/io";
 
 const InputWithLabel: React.FC<InputWithLabelProps> = ({
   label,
@@ -11,6 +12,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   required = false,
   value,
   options,
+  labelAnimated = true,
+  serachIcon,
 }) => {
   const [focused, setFocused] = useState(false);
 
@@ -44,7 +47,14 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             required={required}
             className="input-animation w-100"
           >
-            <option disabled>Categories</option>
+            {/* <option value="" disabled>
+              Select
+            </option> */}
+            {/* {!options && (
+              <option value="" disabled>
+                There is no data 
+              </option>
+            )} */}
             {options?.map((option, index) => (
               <option key={index} value={option.label}>
                 {option.label}
@@ -52,21 +62,40 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             ))}
           </select>
         ) : (
-          <input
-            type={type}
-            id={id}
-            {...register(name!)}
-            placeholder={focused ? placeholder : ""}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            required={required}
-            className="input-animation w-100"
-          />
+          <div className="position-relative">
+            <input
+              type={type}
+              id={id}
+              {...register(name!)}
+              placeholder={
+                focused ? (labelAnimated ? "" : placeholder) : placeholder
+              }
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              required={required}
+              className=" w-100"
+            />
+            {serachIcon && (
+              <IoMdSearch
+                size={20}
+                className="position-absolute top-50 bg-white"
+                style={{
+                  right: "10px",
+                  transform: "translate(20%, -50%)",
+                }}
+              />
+            )}
+          </div>
         )}
 
-        <label htmlFor={id} className="label-animation">
-          {label}
-        </label>
+        {labelAnimated && (
+          <label
+            htmlFor={id}
+            className={`${labelAnimated && "label-animation"}`}
+          >
+            {label}
+          </label>
+        )}
       </div>
     </div>
   );

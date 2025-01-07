@@ -10,6 +10,7 @@ import Employees from "../pages/Employee/Employees";
 import Category from "../pages/Category/Category";
 import Leave from "../pages/Leave/Leave";
 import NotFound from "../pages/NotFound/NotFound";
+import { EmployeeDetails } from "../pages/Employee/EmployeeDetails";
 
 const Navigation = () => {
   return (
@@ -30,6 +31,11 @@ const Navigation = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="profile" element={<Profile />} />
+          <Route
+            path="/employee-details/:employee-name/:id"
+            element={<EmployeeDetails />}
+          />
+
           {/* <Route path="dashboard" element={<Dashboard />}>
             <Route path="dashboard/add-employee" element={<AddEmployee />} />
           </Route> */}

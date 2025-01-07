@@ -17,6 +17,16 @@ export const employeeApi = baseApi.injectEndpoints({
     }),
 
     // endpoint for getting all employess
+    getEmployeeDetailsById: builder.query<any, any>({
+      query: (id) => {
+        return {
+          url: `/api/get/userLeaves/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["employess"],
+    }),
+
     getEmployees: builder.query<any, void>({
       query: () => {
         return {
@@ -59,4 +69,5 @@ export const {
   useGetEmployeesQuery,
   useDeleteEmployeeMutation,
   useUpdateEmployeeMutation,
+  useGetEmployeeDetailsByIdQuery,
 } = employeeApi;

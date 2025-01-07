@@ -19,6 +19,9 @@ import { EditableForm } from "../EditableForm";
 import InputWithLabel from "../ui/InputWithLabel";
 import { useForm } from "react-hook-form";
 import ConfirmDialog from "../ConfirmDialog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { employeeFormSchema } from "../../validations/formValidation";
+import { Link } from "react-router-dom";
 
 const EmployeeCard: React.FC<EmployeeCardProps> = ({
   id,
@@ -31,9 +34,14 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   employee_id,
   profile_photo,
   joining_date,
-  address,
+  leaves,
 }) => {
-  const { handleSubmit, register } = useForm({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(employeeFormSchema),
     defaultValues: {
       id,
       first_name,
@@ -47,24 +55,29 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       joining_date,
       address: "",
       password: "",
+      total_leaves: String(leaves?.overall_total_leaves),
+      paid_leaves: leaves?.leave_data?.paid_leaves.Total,
+      unpaid_leaves: leaves?.leave_data?.unpaid_leaves.Total,
+      sick_leaves: leaves?.leave_data?.sick_leaves.Total,
     },
   });
+  const dispatch = useAppDispatch();
 
   const [deleteEmployee, { data: deleteEmployeeDetails, isLoading }] =
     useDeleteEmployeeMutation();
-  const [actionsPopupOpen, setActionsPopupOpen] = useState(false);
-  const dispatch = useAppDispatch();
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+
   const [updateEmployee, { data: editEmployeeData }] =
     useUpdateEmployeeMutation();
 
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [actionsPopupOpen, setActionsPopupOpen] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   const closeOnOutsideClick = () => {
     setActionsPopupOpen(false); // Close the div or take other actions
   };
 
-  const actionPopupRef = useOutsideClick(closeOnOutsideClick);
+  const actionPopupRef = useOutsideClick<HTMLDivElement>(closeOnOutsideClick);
 
   // edit employee fields
   const editEmployeeFormFields = [
@@ -104,6 +117,13 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       value: email,
     },
     {
+      label: "Employee Id",
+      name: "employee_id",
+      type: "string",
+      required: true,
+      value: employee_id,
+    },
+    {
       label: "Password",
       type: "password",
       name: "password",
@@ -116,13 +136,6 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       type: "password",
       required: true,
       value: "",
-    },
-    {
-      label: "Employee Id",
-      name: "employee_id",
-      type: "string",
-      required: true,
-      value: employee_id,
     },
     {
       label: "Joining Date",
@@ -144,6 +157,34 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       type: "text",
       required: true,
       value: designation,
+    },
+    {
+      label: "Total Leaves",
+      name: "total_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Paid Leaves",
+      name: "paid_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Unpaid Leaves",
+      name: "unpaid_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Sick Leaves",
+      name: "sick_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
     },
   ];
 
@@ -227,6 +268,24 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
             >
               <RiDeleteBin6Line /> Delete
             </div>
+
+            <div
+              className="d-flex align-items-center px-2 py-1 text-small font-normal"
+              onClick={handleDeleteConfirmDialog}
+            >
+              <Link
+                to="/"
+                className=""
+                style={{
+                  // color: "#000",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  transition: "color 0.3s ease-in-out",
+                }}
+              >
+                View Details
+              </Link>
+            </div>
           </div>
         )}
       </div>
@@ -281,6 +340,12 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
                       type={item.type}
                       value={item.value}
                     />
+
+                    {errors[item.name] && (
+                      <p className="text-danger">
+                        {errors[item.name]?.message}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>

@@ -4,7 +4,7 @@ import { AUTH_TOKEN_KEY, BASE_API_URL } from "../constantsPaths/Constant";
 
 export const baseApi = createApi({
   reducerPath: "baseApi",
-  tagTypes: ["category", "employess", "leaves"],
+  tagTypes: ["category", "employess", "leaves", "leaveStatus"],
   // baseQuery: fetchBaseQuery({ baseUrl: 'https://sst.psghub.me/sstapi/api' }),
   baseQuery: fetchBaseQuery({
     // baseUrl: import.meta.env.VITE_API_KEY_BASE_URL,

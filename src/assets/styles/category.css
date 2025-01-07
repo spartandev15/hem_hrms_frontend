@@ -2,13 +2,12 @@
 }
 
 .category-wrapper .category-table {
-  /* overflow: auto;
-  border-collapse: collapse;
-  background-color: #f9fafb; */
-
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  overflow: auto;
+  border-radius: 44px;
+  border: 1px solid #d8d4d4;
 }
 
 .category-table th,
@@ -18,9 +17,14 @@
 }
 
 .category-table th {
-  background-color: #417090;
-  color: #fff;
+  background-color: #fcfafac0;
+  /* color: var(--white-color); */
+  color: var(--black-color);
   font-weight: bold;
+}
+
+.category-table tr {
+  border-bottom: 1px solid var(--bs-border-color);
 }
 
 .category-table tbody tr:nth-child(odd) {
@@ -38,7 +42,7 @@
 }
 
 .category-wrapper .category-table .actions-column {
-  width: 15%;
+  width: 10%;
   height: auto;
 }
 

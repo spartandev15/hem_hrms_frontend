@@ -67,7 +67,7 @@ const Login = () => {
               <p>
                 Enter your Organization details and start your journey with us.
               </p>
-              <Link to="/signup">
+              <Link to="/sign-up">
                 <button className="btn signupbtn">Sign Up</button>
               </Link>
             </div>
@@ -122,7 +122,7 @@ const Login = () => {
                       <p className="submitcontent mb-0">
                         Don't have an account.
                         <a
-                          onClick={() => navigate("/signup")}
+                          onClick={() => navigate("/sign-up")}
                           style={{
                             color: "#134d75",
                             fontWeight: "600",

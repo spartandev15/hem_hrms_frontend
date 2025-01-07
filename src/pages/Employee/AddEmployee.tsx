@@ -7,10 +7,18 @@ import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { useAppDispatch } from "../../hooks/ReduxHook";
 import { setToast } from "../../redux/slices/toastSlice";
 import { useGetAllCategoryQuery } from "../../redux/api/category";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { employeeFormSchema } from "../../validations/formValidation";
 
 const AddEmployee = () => {
   const dispatch = useAppDispatch();
-  const { handleSubmit, register } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(employeeFormSchema),
+  });
   const [postEmployee, { data: EmployeeDetailsData, isLoading }] =
     usePostEmployeeMutation();
 
@@ -84,7 +92,7 @@ const AddEmployee = () => {
       label: "Designation",
       name: "designation",
       type: "select",
-      options: allCategory?.category?.map((category) => ({
+      options: allCategory?.categories?.map((category) => ({
         label: category.name,
       })),
       required: true,
@@ -122,10 +130,12 @@ const AddEmployee = () => {
 
   const handleFormSubmit = (data: any) => {
     // const leavesFormData = {};
-    // console.log(data);
+    console.log(data);
     dispatch(setIsLoading(true));
     postEmployee(data);
   };
+
+  console.log(EmployeeDetailsData);
 
   if (EmployeeDetailsData) {
     dispatch(setIsLoading(false));
@@ -137,19 +147,18 @@ const AddEmployee = () => {
       <div className="mt-4 container pb-4">
         <div className="col-lg-10 m-auto">
           <div>
-            <h2
-              style={{
-                textAlign: "start",
-              }}
-            >
+            <h2 className="text-blue-primary text-start text-large ">
               New Employee Enrollment
             </h2>
           </div>
 
-          <form action="" onSubmit={handleSubmit(handleFormSubmit)}>
+          <form
+            onSubmit={handleSubmit(handleFormSubmit)}
+            className="border p-3 rounded shadow-sm"
+          >
             <div className="row mt-4">
               {addEmployeeFormFields.map((item, index) => (
-                <div className="col-6 my-2" key={`${item.label}-${index}`}>
+                <div className="col-sm-6 my-2" key={`${item.label}-${index}`}>
                   <InputWithLabel
                     id={`${index}`}
                     label={item.label}
@@ -159,6 +168,11 @@ const AddEmployee = () => {
                     value={item.value}
                     options={item.options}
                   />
+                  {errors[item.name] && (
+                    <p className="text-danger">
+                      {errors[item.name]?.message as string}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

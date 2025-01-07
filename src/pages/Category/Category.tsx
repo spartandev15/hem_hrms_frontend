@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit, MdOutlineDelete } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import { CiEdit } from "react-icons/ci";
 import { z } from "zod";
 import "../../assets/styles/category.css";
 import InputWithLabel from "../../components/ui/InputWithLabel";
@@ -78,11 +80,13 @@ const Category = () => {
     dispatch(setToast(deleteCategoryDataDetails.message));
   }
 
+  console.log(allCategory);
+
   return (
     <div>
       <div className="container category-wrapper py-3">
-        <div className="d-flex justify-content-between">
-          <h2>Add Category</h2>
+        <div className="d-flex justify-content-between align-items-center">
+          <h2 className="mt-2">Add Category</h2>
           <button
             className="btn w-auto px-4"
             onClick={() => setCreateShowFrom(!showCreateForm)}
@@ -125,14 +129,22 @@ const Category = () => {
 
         <div>
           <div className="container mt-5">
-            <h1 className="mb-4 text-center">Categories Lists</h1>
+            <h1 className="mb-4 text-start text-medium">Categories Lists</h1>
 
             {isLoading ? (
               <p>Loading....</p>
-            ) : (
-              <table className="category-table ">
+            ) : allCategory && allCategory?.categories?.length > 0 ? (
+              <table className="category-table shadow-sm rounded-5">
                 <thead className="thead-dark">
                   <tr>
+                    <th
+                      className="text-medium px-3"
+                      style={{
+                        width: "10%",
+                      }}
+                    >
+                      #
+                    </th>
                     <th className="text-medium px-3">Category</th>
                     <th className="text-medium text-center actions-column">
                       Actions
@@ -141,15 +153,19 @@ const Category = () => {
                 </thead>
 
                 <tbody>
-                  {allCategory?.category?.map((category, index) => (
+                  {allCategory?.categories?.map((category, index) => (
                     <TableRow
+                      key={index}
                       name={category.name}
                       id={category.id}
                       onClick={handleDeleteCategory}
+                      index={index}
                     />
                   ))}
                 </tbody>
               </table>
+            ) : (
+              <h2>No Data Available</h2>
             )}
           </div>
         </div>
@@ -162,7 +178,7 @@ const Category = () => {
 
 export default Category;
 
-const TableRow = ({ name, id, onClick }: any) => {
+const TableRow = ({ name, id, onClick, index }: any) => {
   const {
     register,
     handleSubmit,
@@ -203,6 +219,7 @@ const TableRow = ({ name, id, onClick }: any) => {
 
   return (
     <tr key={id}>
+      <td>{index + 1}</td>
       <td className="px-3 text-small font-medium ">
         {editingCategoryId === id ? (
           <form
@@ -226,7 +243,7 @@ const TableRow = ({ name, id, onClick }: any) => {
       </td>
 
       <td className="d-flex gap-2  justify-content-center align-items-center">
-        <MdEdit
+        <CiEdit
           size={20}
           color="#417090"
           className=""
@@ -235,7 +252,8 @@ const TableRow = ({ name, id, onClick }: any) => {
           }}
           onClick={() => handleEditClick(id, name)}
         />
-        <MdDelete
+
+        <MdOutlineDelete
           size={20}
           color="#D11A2A"
           className=""
