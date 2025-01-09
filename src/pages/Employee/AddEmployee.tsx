@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import InputWithLabel from "../../components/ui/InputWithLabel";
 import { useForm } from "react-hook-form";
 import "../../assets/styles/inputWithLabel.css";
@@ -19,10 +19,14 @@ const AddEmployee = () => {
   } = useForm({
     resolver: zodResolver(employeeFormSchema),
   });
-  const [postEmployee, { data: EmployeeDetailsData, isLoading }] =
-    usePostEmployeeMutation();
+  const [
+    postEmployee,
+    { data: EmployeeDetailsData, isSuccess: postEmployeeIsSuccess },
+  ] = usePostEmployeeMutation();
 
   const { data: allCategory } = useGetAllCategoryQuery();
+
+  console.log(allCategory);
 
   const addEmployeeFormFields = [
     {
@@ -92,8 +96,9 @@ const AddEmployee = () => {
       label: "Designation",
       name: "designation",
       type: "select",
-      options: allCategory?.categories?.map((category) => ({
+      options: allCategory?.categories?.map((category: any) => ({
         label: category.name,
+        value: category.name,
       })),
       required: true,
       value: "hem",
@@ -130,17 +135,21 @@ const AddEmployee = () => {
 
   const handleFormSubmit = (data: any) => {
     // const leavesFormData = {};
-    console.log(data);
     dispatch(setIsLoading(true));
     postEmployee(data);
   };
 
-  console.log(EmployeeDetailsData);
+  // if (EmployeeDetailsData) {
+  //   dispatch(setIsLoading(false));
+  //   dispatch(setToast(EmployeeDetailsData?.message));
+  // }
 
-  if (EmployeeDetailsData) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(EmployeeDetailsData?.message));
-  }
+  useEffect(() => {
+    if (EmployeeDetailsData?.result && postEmployeeIsSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(EmployeeDetailsData?.message));
+    }
+  }, [postEmployeeIsSuccess]);
 
   return (
     <div>

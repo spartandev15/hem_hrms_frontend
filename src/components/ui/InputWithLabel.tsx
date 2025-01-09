@@ -21,7 +21,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
     setFocused(true);
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (!e.target.value) {
       setFocused(false);
     }
@@ -43,23 +43,21 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             id={id}
             {...register(name!)}
             onFocus={handleFocus}
-            onBlur={handleBlur}
             required={required}
             className="input-animation w-100"
+            defaultValue={options ? options[0]?.value : ""}
           >
-            {/* <option value="" disabled>
-              Select
-            </option> */}
-            {/* {!options && (
+            {options && options.length > 0 ? (
+              options?.map((option: any, index: number) => (
+                <option key={index} value={option.label}>
+                  {option.label}
+                </option>
+              ))
+            ) : (
               <option value="" disabled>
-                There is no data 
+                Please Wait
               </option>
-            )} */}
-            {options?.map((option, index) => (
-              <option key={index} value={option.label}>
-                {option.label}
-              </option>
-            ))}
+            )}
           </select>
         ) : (
           <div className="position-relative">

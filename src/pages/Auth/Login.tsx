@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/styles/auth-page.css";
-import { useAppDispatch } from "../../hooks/ReduxHook";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import { useAuthLoginMutation } from "../../redux/api/auth";
 import { setAuthUser } from "../../redux/slices/authSlice";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
@@ -13,11 +13,13 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [error, setError] = useState("");
-  const [authLogin, { data: LoginDetialsData, isLoading, isError }] =
+
+  // hook to get the response from the mutation of authLogin mutation
+  const [authLogin, { data: LoginDetialsData, isSuccess: loginIsSuccess }] =
     useAuthLoginMutation();
 
-  const handleLogin = async (e) => {
+  // form submit handler for login
+  const handleLogin = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     try {
       dispatch(setIsLoading(true));
@@ -26,36 +28,45 @@ const Login = () => {
         password: password,
       };
       await authLogin(formData).unwrap();
-      dispatch(setIsLoading(false));
     } catch (error) {
       dispatch(setIsLoading(false));
       console.log(error);
     }
   };
 
-  // only if loin success and logindetails exist
-  if (LoginDetialsData) {
-    // destuct access_token from LoginDetialsData
+  // useEffect to handle auth data when loginIsSuccess is true
 
-    const { access_token, user } = LoginDetialsData;
-    const { status } = user;
+  useEffect(() => {
+    if (LoginDetialsData) {
+      // destuct access_token from LoginDetialsData
 
-    // payload details send to setAuthReducer
-    const payloadData = {
-      access_token,
-      isAuthenticate: true,
-      status,
-    };
-    // dispatch the toast action for toast message
-    dispatch(setToast(LoginDetialsData.message));
+      const { access_token, user } = LoginDetialsData;
+      const { status, id } = user;
 
-    if (LoginDetialsData.result) {
-      // dispatch the setAuthUser action
-      dispatch(setAuthUser(payloadData));
-      // navigate to dashboard page
-      navigate("/dashboard");
+      console.log(LoginDetialsData);
+      console.log(user);
+
+      // payload details send to setAuthReducer
+      const payloadData = {
+        access_token,
+        isAuthenticate: true,
+        user_id: id,
+        status,
+      };
+
+      // if result true then set authData
+      if (LoginDetialsData?.result) {
+        // dispatch the setAuthUser action
+        dispatch(setAuthUser(payloadData));
+        // navigate to dashboard page
+        navigate("/dashboard");
+      }
+
+      // set loading false and set toast message
+      dispatch(setIsLoading(false));
+      dispatch(setToast(LoginDetialsData?.message));
     }
-  }
+  }, [loginIsSuccess]);
 
   return (
     <div className="login-container">
@@ -81,7 +92,7 @@ const Login = () => {
                   onSubmit={handleLogin}
                 >
                   <h3>Login to HRMS</h3>
-                  {/* {error && <p className="error-message">{error}</p>} */}
+
                   <div className="form-outline">
                     <input
                       type="text"

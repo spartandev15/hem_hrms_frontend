@@ -25,6 +25,17 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: ["leaveStatus"],
     }),
 
+    // endpoint for getting  leaves status who applied (users only)
+    getAppliedLeavesStatusById: builder.query<any, any>({
+      query: (id) => {
+        return {
+          url: `/api/get/employeeLeaves/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["leaveStatus"],
+    }),
+
     // endpoint for post apply leaves,
     postLeaves: builder.mutation<any, any>({
       query: (leaveData) => {
@@ -34,6 +45,7 @@ export const categoryApi = baseApi.injectEndpoints({
           body: leaveData,
         };
       },
+      invalidatesTags: ["leaveStatus"],
     }),
 
     // endpoint for post apply leaves,
@@ -47,42 +59,6 @@ export const categoryApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["leaveStatus"],
     }),
-
-    // endpoint for create a new category
-    // postLeaves: builder.mutation<void, any>({
-    //   query: (leavesUserData: any) => {
-    //     return {
-    //       url: "/api/create/leaves",
-    //       method: "POST",
-    //       body: leavesUserData,
-    //     };
-    //   },
-    //   invalidatesTags: ["category"],
-    // }),
-
-    // // endpoint for update category
-    // updateCategory: builder.mutation<void, void>({
-    //   query: (data) => {
-    //     return {
-    //       url: "/api/update/category",
-    //       method: "POST",
-    //       body: data,
-    //     };
-    //   },
-    //   invalidatesTags: ["category"],
-    // }),
-
-    // // endpoint for delete category
-    // deleteCategory: builder.mutation<void, CategoryDeleteData>({
-    //   query: (data) => {
-    //     return {
-    //       url: `/api/delete/category`,
-    //       method: "POST",
-    //       body: data,
-    //     };
-    //   },
-    //   invalidatesTags: ["category"],
-    // }),
   }),
 });
 
@@ -91,6 +67,7 @@ export const categoryApi = baseApi.injectEndpoints({
 export const {
   useGetAllLeavesQuery,
   usePostLeavesMutation,
-  useUpdateLeavesStatusMutation,
   useGetAppliedLeavesQuery,
+  useGetAppliedLeavesStatusByIdQuery,
+  useUpdateLeavesStatusMutation,
 } = categoryApi;

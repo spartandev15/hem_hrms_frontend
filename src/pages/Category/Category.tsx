@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdDelete, MdEdit, MdOutlineDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
@@ -40,20 +40,26 @@ const Category = () => {
   const [categoryId, setCategoryId] = useState(-1);
 
   const { data: allCategory, isLoading } = useGetAllCategoryQuery();
-  const [postCategory, { data: getCategoryDataDetails }] =
+
+  const [postCategory, { data: getCategoryDataDetails, isSuccess }] =
     usePostCategoryMutation();
-  const [deleteCategory, { data: deleteCategoryDataDetails }] =
-    useDeleteCategoryMutation();
+
+  const [
+    deleteCategory,
+    { data: deleteCategoryDataDetails, isSuccess: deleteIsSuccess },
+  ] = useDeleteCategoryMutation();
 
   const [showCreateForm, setCreateShowFrom] = useState(false);
 
-  const hanldeFormSubmit = (data) => {
+  const hanldeFormSubmit = async (data) => {
     dispatch(setIsLoading(true));
     const formData = {
       name: data.category,
     };
-    postCategory(formData);
-    reset();
+    const ressponse = await postCategory(formData);
+    console.log(ressponse);
+    // reset();
+    // dispatch(setIsLoading(false));
   };
 
   const handleDeleteCategory = (id: number) => {
@@ -61,7 +67,7 @@ const Category = () => {
     setConfirmPopup(true);
   };
 
-  const handleCloseDialog = (isYesClcik) => {
+  const handleCloseDialog = (isYesClcik: string) => {
     setConfirmPopup(false);
     if (isYesClcik) {
       dispatch(setIsLoading(true));
@@ -70,17 +76,17 @@ const Category = () => {
     }
   };
 
-  if (getCategoryDataDetails) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(getCategoryDataDetails.message));
-  }
+  useEffect(() => {
+    if (getCategoryDataDetails?.result && isSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(getCategoryDataDetails?.message));
+    }
 
-  if (deleteCategoryDataDetails) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(deleteCategoryDataDetails.message));
-  }
-
-  console.log(allCategory);
+    if (deleteCategoryDataDetails?.result && deleteIsSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(deleteCategoryDataDetails?.message));
+    }
+  }, [isSuccess, deleteIsSuccess]);
 
   return (
     <div>
@@ -134,7 +140,7 @@ const Category = () => {
             {isLoading ? (
               <p>Loading....</p>
             ) : allCategory && allCategory?.categories?.length > 0 ? (
-              <table className="category-table shadow-sm rounded-5">
+              <table className="category-table shadow-sm">
                 <thead className="thead-dark">
                   <tr>
                     <th
@@ -190,7 +196,7 @@ const TableRow = ({ name, id, onClick, index }: any) => {
     resolver: zodResolver(categorySchema),
   });
   const dispatch = useAppDispatch();
-  const [updateCategory, { data: updateCategoryDataDetails }] =
+  const [updateCategory, { data: updateCategoryDataDetails, isSuccess }] =
     useUpdateCategoryMutation();
 
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(
@@ -212,10 +218,12 @@ const TableRow = ({ name, id, onClick, index }: any) => {
     setEditingCategoryId(null);
   };
 
-  if (updateCategoryDataDetails) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(updateCategoryDataDetails?.message));
-  }
+  useEffect(() => {
+    if (updateCategoryDataDetails?.result && isSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(updateCategoryDataDetails?.message));
+    }
+  }, [isSuccess]);
 
   return (
     <tr key={id}>

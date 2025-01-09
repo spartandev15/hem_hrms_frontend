@@ -3,46 +3,42 @@ import { FaCaretDown } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdMenu } from "react-icons/md";
-import { useDispatch } from "react-redux";
+import { CiLogout } from "react-icons/ci";
+import { PiUserCircleCheckThin } from "react-icons/pi";
+
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/styles/dashboard.css";
 import "../../assets/styles/header.css";
-import { useAppSelector } from "../../hooks/ReduxHook";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useAuthLogoutMutation } from "../../redux/api/auth";
 import { useGetProfileQuery } from "../../redux/api/profile";
 import { Nav_List } from "./Nav_List";
 
-const logo = "/images/orpect1.png";
-const user = "/images/account.png";
+import logo from "../../assets/images/orpect1.png";
+import user from "../../assets/images/account.png";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
+import { logoutAuthUser, setAuthStatus } from "../../redux/slices/authSlice";
+import { setIsLoading } from "../../redux/slices/loadingSlice";
 
 const Header = () => {
+  const dispatch = useAppDispatch();
   const [profile_data, setProfile_data] = useState("");
   const { data: userData, isLoading } = useGetProfileQuery();
-  const [authLogout, { data, isError, error }] = useAuthLogoutMutation();
+
+  const [authLogout, { data: logoutDetails, isSuccess: logoutIsSuccess }] =
+    useAuthLogoutMutation();
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [showProfileDropDown, setShowProfileDropDown] = useState(false);
-  const { status, isAuthenticateUser } = useAppSelector(
-    (state) => state.authUser
-  );
+  const { status } = useAppSelector((state) => state.authUser);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const getProfile = async () => {
-    try {
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const onLogout = async () => {
     try {
+      dispatch(setIsLoading(true));
       setShowProfileDropDown(false);
       authLogout();
-      // dispatch(logoutAuthUser());
-      // navigate("/sign-in");
     } catch (err) {
       console.log(err);
     }
@@ -60,14 +56,21 @@ const Header = () => {
     setActiveIndex(-1);
   });
 
+  console.log(logoutDetails);
+
   useEffect(() => {
-    getProfile();
-  }, []);
+    if (logoutDetails?.result && logoutIsSuccess) {
+      dispatch(logoutAuthUser());
+      dispatch(setIsLoading(false));
+      navigate("/sign-in");
+    }
+  }, [logoutDetails]);
 
   return (
     <header>
       <nav>
         <div className="container header-container">
+          {/* ORPECT Logo  */}
           <Link
             to={"/dashboard"}
             className="header-logo"
@@ -76,6 +79,7 @@ const Header = () => {
             <img src={logo} alt="Orpect" width={150} />
           </Link>
 
+          {/* navigation Links  */}
           <div className="nav-bar-container">
             <ul className="nav-bar" ref={navLinkRef}>
               {Nav_List.map((link, index) => (
@@ -125,43 +129,6 @@ const Header = () => {
                   )}
                 </li>
               ))}
-              {/* <li
-                className="font-light"
-                onClick={() => navigate("/dashboard/manage_employee")}
-              >
-                <NavLink activeclassname="active" className="nav-link" to=" ">
-                  Employees
-                </NavLink>
-              </li>
-              <li
-                className="nav-item"
-                onClick={() => navigate("/dashboard/checklist")}
-              >
-                <NavLink activeclassname="active" className="nav-link" to=" ">
-                  Checklists
-                </NavLink>
-              </li>
-
-              <li
-                className="nav-item"
-                onClick={() => navigate("/dashboard/timeoff")}
-              >
-                <NavLink activeclassname="active" className="nav-link" to=" ">
-                  Time Off
-                </NavLink>
-              </li>
-              <li onClick={() => navigate("/dashboard/attendance")}>
-                <NavLink activeclassname="active" className="nav-link" to=" ">
-                  {" "}
-                  Attendance
-                </NavLink>
-              </li>
-
-              <li onClick={() => navigate("/dashboard/recruitment")}>
-                <NavLink activeclassname="active" className="nav-link" to=" ">
-                  Recruitment
-                </NavLink>
-              </li> */}
             </ul>
           </div>
 
@@ -170,6 +137,7 @@ const Header = () => {
             <MdMenu size={30} />
           </div>
 
+          {/* prfoile dropdown  */}
           <div
             className="d-flex gap-3 align-items-center position-relative"
             ref={profileDropDwonRef}
@@ -206,16 +174,37 @@ const Header = () => {
 
             {showProfileDropDown && (
               <div className="drop-down-menu">
+                <div className="text-wrap">
+                  <h2 className="text-small m-0">developer</h2>
+                  <Link
+                    to={""}
+                    className="text-gray text-xxsmall px-2 text-center text-none"
+                  >
+                    testdeveloper@gmail.com
+                  </Link>
+                </div>
+
+                <hr className="m-0" />
+
                 <Link
                   to="/profile"
-                  className="nav-txt"
+                  className="nav-txt d-flex gap-1 align-items-center"
                   onClick={() => setShowProfileDropDown(false)}
                 >
-                  Profile
+                  <PiUserCircleCheckThin size={22} />
+                  <span>My Profile</span>
                 </Link>
-                <button className="nav-txt" onClick={onLogout}>
-                  Logout
-                </button>
+
+                <div
+                  className="nav-txt d-flex gap-1 align-items-center"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                  onClick={onLogout}
+                >
+                  <CiLogout size={18} />
+                  <span>Logout</span>
+                </div>
               </div>
             )}
           </div>

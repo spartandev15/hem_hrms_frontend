@@ -72,7 +72,6 @@ header {
 
 .drop-down-menu {
   position: absolute;
-  width: fit-content;
   top: 120%;
   right: 0;
   z-index: 999;
@@ -81,17 +80,19 @@ header {
   border: 1px solid var(--bs-border-color);
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(231, 231, 231, 0.815);
-  padding: 5px 2px;
-  min-width: 150px;
+  padding: 10px 2px;
+  width: 180px;
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
 .drop-down-menu .nav-txt {
-  padding: 4px 8px;
+  padding: 4px 6px;
   color: var(--black-color);
   text-decoration: none;
 }
+
 .drop-down-menu .nav-txt:hover {
   background-color: var(--primary-color);
   color: var(--white-color);

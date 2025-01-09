@@ -3,6 +3,7 @@
   --second-color: #f6a21e;
   --ternary-color: #5f7d95;
   --black-color: #171717;
+  --gray-color: #5f5e5e;
   --white-color: #fff;
   --bs-border-color: #dee2e6;
 }
@@ -23,6 +24,10 @@ code {
 }
 
 /* resuable class for text (color,font weight,color)  */
+.text-xxsmall {
+  font-size: 0.78rem;
+}
+
 .text-xsmall {
   font-size: 0.875rem;
 }
@@ -51,6 +56,21 @@ code {
   color: var(--ternary-color);
 }
 
+.text-gray {
+  color: var(--gray-color);
+}
+
+.text-wrap {
+  /* word-wrap: break-word; */
+  /* overflow-wrap: break-word; */
+  /* white-space: normal; */
+  text-align: center; /* Centers the text horizontally */
+}
+
+.text-none {
+  text-decoration: none;
+}
+
 .font-light {
   font-weight: 400;
 }
@@ -67,6 +87,9 @@ code {
   text-decoration: underline;
 }
 
+.bg-blue-primary {
+  background-color: var(--primary-color);
+}
 /* common btn class for buttons  */
 .btn {
   background-color: var(--primary-color);

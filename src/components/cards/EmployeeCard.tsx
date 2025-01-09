@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
 const ProfileImage = "/images/profile.png";
@@ -63,11 +63,17 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   });
   const dispatch = useAppDispatch();
 
-  const [deleteEmployee, { data: deleteEmployeeDetails, isLoading }] =
-    useDeleteEmployeeMutation();
-
-  const [updateEmployee, { data: editEmployeeData }] =
+  const [updateEmployee, { data: editEmployeeData, isSuccess: editIsSuccess }] =
     useUpdateEmployeeMutation();
+
+  const [
+    deleteEmployee,
+    {
+      data: deleteEmployeeDetails,
+      isLoading,
+      isSuccess: deleteEmployeeIsSuccess,
+    },
+  ] = useDeleteEmployeeMutation();
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [actionsPopupOpen, setActionsPopupOpen] = useState(false);
@@ -233,16 +239,28 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   };
 
   // if edit employee successfully then perfom action
-  if (editEmployeeData) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(editEmployeeData?.message));
-  }
+  // if (editEmployeeData) {
+  //   dispatch(setIsLoading(false));
+  //   dispatch(setToast(editEmployeeData?.message));
+  // }
 
   // if delete employee successfully data get then perfom action
   if (deleteEmployeeDetails) {
     dispatch(setIsLoading(false));
     dispatch(setToast(deleteEmployeeDetails?.message));
   }
+
+  useEffect(() => {
+    if (editEmployeeData?.result && editIsSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(editEmployeeData?.message));
+    }
+
+    if (deleteEmployeeDetails?.result && editIsSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(deleteEmployeeDetails?.message));
+    }
+  }, [editIsSuccess, deleteEmployeeIsSuccess]);
 
   return (
     <div className=" employee-card-container">
