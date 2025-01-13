@@ -1,24 +1,23 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import "../../assets/styles/dialogbox.css";
 import "../../assets/styles/employee.css";
 import EmployeeCard from "../../components/cards/EmployeeCard";
-import { useGetEmployeesQuery } from "../../redux/api/employee";
 import InputWithLabel from "../../components/ui/InputWithLabel";
-import { useForm } from "react-hook-form";
 import { useGetAllCategoryQuery } from "../../redux/api/category";
-import { Link } from "react-router-dom";
+import { useGetEmployeesQuery } from "../../redux/api/employee";
 
 const Employees = () => {
   const { data: allEmployeData, isLoading } = useGetEmployeesQuery();
   const { data: allCategory } = useGetAllCategoryQuery();
 
-  const options = allCategory?.categories?.map((category) => ({
+  const options = allCategory?.categories?.map((category: any) => ({
     label: category.name,
   }));
 
   const { register, handleSubmit } = useForm();
 
-  const handleSearchSubmit = (values) => {
+  const handleSearchSubmit = (values: any) => {
     console.log("Search", values);
   };
 
@@ -71,7 +70,7 @@ const Employees = () => {
 
       <div className="row g-4 mt-2">
         {allEmployeData?.employee?.length > 0 ? (
-          allEmployeData?.employee?.map((item, index) => (
+          allEmployeData?.employee?.map((item: any, index: number) => (
             <div className="col-md-4 " key={index}>
               <EmployeeCard {...item} />
             </div>

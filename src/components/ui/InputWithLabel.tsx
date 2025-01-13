@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { InputWithLabelProps } from "../../types";
 import { IoMdSearch } from "react-icons/io";
+import { BiHide, BiShow } from "react-icons/bi";
 
 const InputWithLabel: React.FC<InputWithLabelProps> = ({
   label,
@@ -15,7 +16,10 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   labelAnimated = true,
   serachIcon,
 }) => {
+  const today = new Date().toISOString().split("T")[0];
+
   const [focused, setFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleFocus = () => {
     setFocused(true);
@@ -25,6 +29,10 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
     if (!e.target.value) {
       setFocused(false);
     }
+  };
+
+  const handleShowHidePassword = () => {
+    setShowPassword(!showPassword);
   };
 
   useEffect(() => {
@@ -59,10 +67,26 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               </option>
             )}
           </select>
+        ) : type === "date" ? (
+          <div>
+            <input
+              type="date"
+              id={id}
+              {...register(name!)}
+              placeholder={
+                focused ? (labelAnimated ? "" : placeholder) : placeholder
+              }
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              required={required}
+              max={today}
+              className=" w-100"
+            />
+          </div>
         ) : (
           <div className="position-relative">
             <input
-              type={type}
+              type={type === "password" && showPassword ? "text" : type}
               id={id}
               {...register(name!)}
               placeholder={
@@ -73,6 +97,21 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               required={required}
               className=" w-100"
             />
+            {type === "password" && (
+              <div
+                className="position-absolute"
+                style={{
+                  right: "20px",
+                  top: "50%",
+                  transform: "translate(20%, -50%)",
+                  cursor: "pointer",
+                }}
+                onClick={handleShowHidePassword}
+              >
+                {showPassword ? <BiShow /> : <BiHide />}
+              </div>
+            )}
+
             {serachIcon && (
               <IoMdSearch
                 size={20}

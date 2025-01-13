@@ -36,6 +36,7 @@ export interface IProfileCommonSection {
   title: string;
   fields: IField[];
   onSubmit: () => void;
+  data?: any;
 }
 
 export interface ProfileCardProps {
@@ -54,6 +55,7 @@ export interface ProfileCardProps {
 export interface EditableFormProps {
   fields: IField[];
   onSubmit: (values: any) => void;
+  defaultValues?: any;
   // validationSchema: Yup.ObjectSchema; // Pass validation schema as a prop
 }
 
@@ -74,6 +76,7 @@ export interface InputWithLabelProps {
 
 interface EmployeeDetails {
   id: number;
+  user_id: string;
   first_name: string;
   last_name: string;
   designation: string;

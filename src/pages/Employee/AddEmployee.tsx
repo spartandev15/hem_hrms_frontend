@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import "../../assets/styles/inputWithLabel.css";
 import { usePostEmployeeMutation } from "../../redux/api/employee";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
-import { useAppDispatch } from "../../hooks/ReduxHook";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import { setToast } from "../../redux/slices/toastSlice";
 import { useGetAllCategoryQuery } from "../../redux/api/category";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,74 +26,72 @@ const AddEmployee = () => {
 
   const { data: allCategory } = useGetAllCategoryQuery();
 
-  console.log(allCategory);
-
   const addEmployeeFormFields = [
     {
       label: "First Name",
       name: "first_name",
       type: "text",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Last Name",
       name: "last_name",
       type: "text",
       required: true,
-      value: "hem",
+      value: "",
     },
-    {
-      label: "Line Manager",
-      type: "text",
-      name: "line_manager",
-      required: true,
-      value: "hem",
-    },
+    // {
+    //   label: "Line Manager",
+    //   type: "text",
+    //   name: "line_manager",
+    //   required: true,
+    //   value: "",
+    // },
     {
       label: "Email",
       type: "email",
       name: "email",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Password",
       type: "password",
       name: "password",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Confirm Password",
       name: "confirm_Password",
       type: "password",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Employee Id",
       name: "employee_id",
       type: "string",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
-      label: "Joining Date",
+      // label: "Joining Date",
       name: "joining_date",
       type: "date",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Phone Number",
       name: "phone",
       type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
-      label: "Designation",
+      // label: "Designation",
       name: "designation",
       type: "select",
       options: allCategory?.categories?.map((category: any) => ({
@@ -101,53 +99,54 @@ const AddEmployee = () => {
         value: category.name,
       })),
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Total Leaves",
       name: "total_leaves",
-      type: "text",
+      type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Paid Leaves",
       name: "paid_leaves",
-      type: "text",
+      type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Unpaid Leaves",
       name: "unpaid_leaves",
-      type: "text",
+      type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Sick Leaves",
       name: "sick_leaves",
-      type: "text",
+      type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
   ];
 
   const handleFormSubmit = (data: any) => {
     // const leavesFormData = {};
+    console.log("aaya");
     dispatch(setIsLoading(true));
     postEmployee(data);
   };
-
-  // if (EmployeeDetailsData) {
-  //   dispatch(setIsLoading(false));
-  //   dispatch(setToast(EmployeeDetailsData?.message));
-  // }
 
   useEffect(() => {
     if (EmployeeDetailsData?.result && postEmployeeIsSuccess) {
       dispatch(setIsLoading(false));
       dispatch(setToast(EmployeeDetailsData?.message));
+    } else {
+      if (EmployeeDetailsData?.message) {
+        dispatch(setIsLoading(false));
+        dispatch(setToast(EmployeeDetailsData?.message));
+      }
     }
   }, [postEmployeeIsSuccess]);
 

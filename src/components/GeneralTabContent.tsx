@@ -1,6 +1,5 @@
 import React from "react";
 import { ProfileCommonSection } from "./ProfileCommonSection";
-import { useGetProfileQuery } from "../redux/api/profile";
 
 const GeneralTabContent = ({ data }: any) => {
   console.log(data);
@@ -9,65 +8,72 @@ const GeneralTabContent = ({ data }: any) => {
       label: "Full Name",
       value: data?.name as string,
       type: "text",
+      name: "first_name",
     },
     {
       label: "E-Mail",
       value: data?.email as string,
       type: "email",
+      name: "email",
     },
     {
       label: "Employee Id",
       value: data?.employee_id as string,
-      type: "text",
+      type: "employee_id",
     },
     {
       label: "Date of Joining",
       value: data?.joining_date as string,
       type: "date",
+      name: "joining_date",
     },
     {
       label: "Tax Number",
       value: data?.tax_number as string,
       type: "number",
+      name: "tax_number",
     },
     {
       label: "Date of Birth",
       value: data?.tax_number as string,
       type: "date",
+      name: "dob",
     },
     {
       label: "Phone Number",
       value: data?.tax_number as string,
       type: "number",
+      name: "phone",
     },
     {
       label: "Position",
       value: data?.tax_number as string,
       type: "text",
+      name: "positon",
     },
   ];
 
   const AddressFields = [
     {
       label: "Address",
-      value: data?.name as string,
+      value: data?.address as string,
       type: "textarea",
     },
     {
       label: "Country",
-      value: data?.email as string,
+      value: data?.country as string,
     },
     {
       label: "State",
-      value: data?.employee_id as string,
+      value: data?.state as string,
     },
     {
       label: "City",
-      value: data?.joining_date as string,
+      value: data?.city as string,
     },
     {
       label: "Zip Code",
-      value: data?.tax_number as string,
+      value: data?.zipcode as string,
     },
   ];
 
@@ -104,6 +110,7 @@ const GeneralTabContent = ({ data }: any) => {
         title="Information"
         onSubmit={() => {}}
         fields={GeneralFields}
+        data={data}
       />
 
       <ProfileCommonSection

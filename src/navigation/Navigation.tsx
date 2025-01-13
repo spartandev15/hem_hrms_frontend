@@ -11,6 +11,8 @@ import Category from "../pages/Category/Category";
 import Leave from "../pages/Leave/Leave";
 import NotFound from "../pages/NotFound/NotFound";
 import { EmployeeDetails } from "../pages/Employee/EmployeeDetails";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
+import ChangePassword from "../pages/Auth/ChangePassword";
 
 const Navigation = () => {
   return (
@@ -18,6 +20,9 @@ const Navigation = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/change-password" element={<ChangePassword />} />
+
         <Route path="/" element={<Navigate to="/dashboard" />} />
 
         {/* Protected Routes  */}

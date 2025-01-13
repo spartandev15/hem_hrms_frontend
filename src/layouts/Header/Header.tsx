@@ -28,9 +28,11 @@ const Header = () => {
   const [authLogout, { data: logoutDetails, isSuccess: logoutIsSuccess }] =
     useAuthLogoutMutation();
 
+  const { status } = useAppSelector((state) => state.authUser);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [showProfileDropDown, setShowProfileDropDown] = useState(false);
-  const { status } = useAppSelector((state) => state.authUser);
+  const [isOpenNavMenu, setIsOpenNavMenu] = useState(false);
+  const [subLinksVisible, setSubLinksVisible] = useState<number | null>(null);
 
   const navigate = useNavigate();
 
@@ -56,7 +58,14 @@ const Header = () => {
     setActiveIndex(-1);
   });
 
-  console.log(logoutDetails);
+  // Toggle Mobile Nav
+  const toggleMobileNav = () => {
+    setIsOpenNavMenu(!isOpenNavMenu);
+  };
+
+  const toggleMobileSubLinks = (index: number) => {
+    setSubLinksVisible(subLinksVisible === index ? null : index);
+  };
 
   useEffect(() => {
     if (logoutDetails?.result && logoutIsSuccess) {
@@ -133,7 +142,13 @@ const Header = () => {
           </div>
 
           {/* hamburge menu for toogle  */}
-          <div className="ham-burger-menu">
+          <div
+            className="ham-burger-menu"
+            onClick={toggleMobileNav}
+            style={{
+              zIndex: 9999,
+            }}
+          >
             <MdMenu size={30} />
           </div>
 
@@ -175,12 +190,14 @@ const Header = () => {
             {showProfileDropDown && (
               <div className="drop-down-menu">
                 <div className="text-wrap">
-                  <h2 className="text-small m-0">developer</h2>
+                  <h2 className="text-small m-0">
+                    {userData?.user?.name as string}
+                  </h2>
                   <Link
                     to={""}
                     className="text-gray text-xxsmall px-2 text-center text-none"
                   >
-                    testdeveloper@gmail.com
+                    {userData?.user?.email as string}
                   </Link>
                 </div>
 
@@ -209,9 +226,98 @@ const Header = () => {
             )}
           </div>
         </div>
+
+        <MobileNav
+          isOpen={isOpenNavMenu}
+          toggleMobileNav={toggleMobileNav}
+          subLinksVisible={subLinksVisible}
+          toggleMobileSubLinks={toggleMobileSubLinks}
+        />
       </nav>
     </header>
   );
 };
 
 export default Header;
+
+const MobileNav = ({
+  isOpen,
+  toggleMobileNav,
+  subLinksVisible,
+  toggleMobileSubLinks,
+}: any) => {
+  return (
+    <div
+      className={`mobile-nav ${isOpen ? "open" : ""}`} // Apply open class when the nav is open
+      style={{
+        transition: "transform 0.8s ease-in-out", // Smooth sliding transition
+        transform: isOpen ? "translateY(0)" : "translateY(-200%)", // Sliding effect
+      }}
+    >
+      <ul className="mobile-nav-list mt-3">
+        {Nav_List.map((link, index) => (
+          <li key={index}>
+            <div
+              onClick={() => {
+                if (link.subLinks) {
+                  toggleMobileSubLinks(index); // Toggle sublinks visibility on click
+                }
+              }}
+              className="nav-item-toggle d-flex align-items-center nav-links"
+            >
+              {link.subLinks ? (
+                <div>{link.label}</div>
+              ) : (
+                <Link
+                  to={link.href}
+                  className="text-black"
+                  onClick={() => toggleMobileNav(false)}
+                >
+                  {link.label}
+                </Link>
+              )}
+              {link.subLinks && (
+                <FaCaretDown
+                  size={12}
+                  style={{
+                    marginLeft: "8px",
+                    transform:
+                      subLinksVisible === index
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                  }}
+                />
+              )}
+            </div>
+
+            {/* Show sublinks if this parent link is active and has sublinks */}
+            {link.subLinks && subLinksVisible === index && (
+              <ul className="sublinks-list">
+                {link.subLinks.map((subLink, subIndex) => (
+                  <li
+                    key={subIndex}
+                    className="m-0 py-1"
+                    onClick={() => toggleMobileNav(false)}
+                  >
+                    <Link className="text-black" to={subLink.href}>
+                      {subLink.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+      {/* <ul className="mobile-nav-list mt-4">
+        {Nav_List.map((link, index) => (
+          <li key={index} onClick={toggleMobileNav}>
+            <Link className="text-black" to={link.href}>
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul> */}
+    </div>
+  );
+};

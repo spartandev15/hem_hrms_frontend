@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { MdDelete, MdEdit, MdOutlineDelete } from "react-icons/md";
-import { FaRegEdit } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
+import { MdOutlineDelete } from "react-icons/md";
 import { z } from "zod";
 import "../../assets/styles/category.css";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import InputWithLabel from "../../components/ui/InputWithLabel";
-import { useAppDispatch } from "../../hooks/ReduxHook";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import {
   useDeleteCategoryMutation,
   useGetAllCategoryQuery,
@@ -16,7 +16,6 @@ import {
 } from "../../redux/api/category";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
-import ConfirmDialog from "../../components/ConfirmDialog";
 
 const categorySchema = z.object({
   category: z
@@ -51,7 +50,7 @@ const Category = () => {
 
   const [showCreateForm, setCreateShowFrom] = useState(false);
 
-  const hanldeFormSubmit = async (data) => {
+  const hanldeFormSubmit = async (data: any) => {
     dispatch(setIsLoading(true));
     const formData = {
       name: data.category,
@@ -67,7 +66,7 @@ const Category = () => {
     setConfirmPopup(true);
   };
 
-  const handleCloseDialog = (isYesClcik: string) => {
+  const handleCloseDialog = (isYesClcik: boolean) => {
     setConfirmPopup(false);
     if (isYesClcik) {
       dispatch(setIsLoading(true));
@@ -134,9 +133,8 @@ const Category = () => {
         )}
 
         <div>
-          <div className="container mt-5">
+          <div className="container mt-4">
             <h1 className="mb-4 text-start text-medium">Categories Lists</h1>
-
             {isLoading ? (
               <p>Loading....</p>
             ) : allCategory && allCategory?.categories?.length > 0 ? (
@@ -159,15 +157,17 @@ const Category = () => {
                 </thead>
 
                 <tbody>
-                  {allCategory?.categories?.map((category, index) => (
-                    <TableRow
-                      key={index}
-                      name={category.name}
-                      id={category.id}
-                      onClick={handleDeleteCategory}
-                      index={index}
-                    />
-                  ))}
+                  {allCategory?.categories?.map(
+                    (category: any, index: number) => (
+                      <TableRow
+                        key={index}
+                        name={category.name}
+                        id={category.id}
+                        onClick={handleDeleteCategory}
+                        index={index}
+                      />
+                    )
+                  )}
                 </tbody>
               </table>
             ) : (
@@ -209,7 +209,7 @@ const TableRow = ({ name, id, onClick, index }: any) => {
     );
   };
 
-  const hanldeEditFormSubmit = (data) => {
+  const hanldeEditFormSubmit = (data: any) => {
     dispatch(setIsLoading(true));
     updateCategory({
       id: id,

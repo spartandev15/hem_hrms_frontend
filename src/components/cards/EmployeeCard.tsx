@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
+import { BiShowAlt } from "react-icons/bi";
 const ProfileImage = "/images/profile.png";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdOutlineClose } from "react-icons/md";
@@ -22,6 +23,7 @@ import ConfirmDialog from "../ConfirmDialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { employeeFormSchema } from "../../validations/formValidation";
 import { Link } from "react-router-dom";
+import { useGetAllCategoryQuery } from "../../redux/api/category";
 
 const EmployeeCard: React.FC<EmployeeCardProps> = ({
   id,
@@ -35,6 +37,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   profile_photo,
   joining_date,
   leaves,
+  user_id,
 }) => {
   const {
     handleSubmit,
@@ -62,6 +65,8 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
     },
   });
   const dispatch = useAppDispatch();
+
+  const { data: allCategory } = useGetAllCategoryQuery();
 
   const [updateEmployee, { data: editEmployeeData, isSuccess: editIsSuccess }] =
     useUpdateEmployeeMutation();
@@ -108,13 +113,13 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       required: true,
       value: "",
     },
-    {
-      label: "Line Manager",
-      type: "text",
-      name: "line_manager",
-      required: true,
-      value: line_manager,
-    },
+    // {
+    //   label: "Line Manager",
+    //   type: "text",
+    //   name: "line_manager",
+    //   required: true,
+    //   value: line_manager,
+    // },
     {
       label: "Email",
       type: "email",
@@ -144,7 +149,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       value: "",
     },
     {
-      label: "Joining Date",
+      // label: "Joining Date",
       name: "joining_date",
       type: "date",
       required: true,
@@ -158,9 +163,13 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       value: phone,
     },
     {
-      label: "Designation",
+      // label: "Designation",
       name: "designation",
-      type: "text",
+      type: "select",
+      options: allCategory?.categories?.map((category: any) => ({
+        label: category.name,
+        value: category.name,
+      })),
       required: true,
       value: designation,
     },
@@ -224,7 +233,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   };
 
   // perform delete after confirmation dialog
-  const handleClose = (isConfirm) => {
+  const handleClose = (isConfirm: boolean) => {
     if (isConfirm) {
       setIsOpenDialog(false);
       dispatch(setIsLoading(true));
@@ -238,17 +247,11 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
     }
   };
 
-  // if edit employee successfully then perfom action
-  // if (editEmployeeData) {
-  //   dispatch(setIsLoading(false));
-  //   dispatch(setToast(editEmployeeData?.message));
-  // }
-
   // if delete employee successfully data get then perfom action
-  if (deleteEmployeeDetails) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(deleteEmployeeDetails?.message));
-  }
+  // if (deleteEmployeeDetails) {
+  //   dispatch(setIsLoading(false));
+  //   dispatch(setToast(deleteEmployeeDetails?.message));
+  // }
 
   useEffect(() => {
     if (editEmployeeData?.result && editIsSuccess) {
@@ -291,17 +294,12 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
               className="d-flex align-items-center px-2 py-1 text-small font-normal"
               onClick={handleDeleteConfirmDialog}
             >
+              <BiShowAlt size={18} />
               <Link
-                to="/"
-                className=""
-                style={{
-                  // color: "#000",
-                  textDecoration: "none",
-                  cursor: "pointer",
-                  transition: "color 0.3s ease-in-out",
-                }}
+                to={`/employee-details/${first_name}/${user_id}`}
+                className="text-none"
               >
-                View Details
+                View
               </Link>
             </div>
           </div>
@@ -333,7 +331,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
         <div className="employee-detail-edit-form py-4">
           <div className="container">
             <div className="d-flex justify-content-between align-items-center">
-              <h2 className="text-large font-bold mt-3">
+              <h2 className="text-large font-bold mt-3 text-blue-primary">
                 Employee Update Form
               </h2>
               <MdOutlineClose
@@ -347,7 +345,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
             </div>
 
             <form action="" onSubmit={handleSubmit(handleFormSubmitEdit)}>
-              <div className="row mt-4">
+              <div className="row">
                 {editEmployeeFormFields.map((item, index) => (
                   <div className="col-md-6 my-2" key={`${item.label}-${index}`}>
                     <InputWithLabel
@@ -357,9 +355,10 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
                       register={register}
                       type={item.type}
                       value={item.value}
+                      options={item.options}
                     />
 
-                    {errors[item.name] && (
+                    {errors[item.name as keyof typeof errors] && (
                       <p className="text-danger">
                         {errors[item.name]?.message}
                       </p>

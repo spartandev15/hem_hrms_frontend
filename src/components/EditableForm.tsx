@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 import { EditableFormProps } from "../types";
+import { useForm } from "react-hook-form";
 
-export const EditableForm = ({ fields, onSubmit }: EditableFormProps) => {
+export const EditableForm = ({
+  fields,
+  onSubmit,
+  defaultValues,
+}: EditableFormProps) => {
   const [formFields, setFormFields] = useState(fields);
+
+  const { handleSubmit, register } = useForm({
+    defaultValues: {},
+  });
 
   const handleChange = (index: number, value: string) => {
     const updatedFields = [...formFields];
@@ -59,7 +68,7 @@ export const EditableForm = ({ fields, onSubmit }: EditableFormProps) => {
           <button className="edit-btn" type="submit">
             Save
           </button>
-          <button className="opacity-50">cancel</button>
+          <button className="opacity-75 edit-btn">cancel</button>
         </div>
       </form>
     </div>

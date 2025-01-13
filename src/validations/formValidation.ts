@@ -28,19 +28,39 @@ export const employeeFormSchema = z
 
     last_name: z.string().min(1, "Last name is required"),
 
-    line_manager: z.string().min(1, "Line manager is required"),
+    // line_manager: z.string().min(1, "Line manager is required"),
 
-    paid_leaves: z.string().min(1, "Paid leaves is required"),
-
-    phone: z.string().min(1, "Phone is required"),
+    phone: z
+      .string()
+      .min(1, "Phone is required")
+      .length(10, "Invalid phone number"),
 
     sick_leaves: z.string().min(1, "Sick leaves is required"),
 
     total_leaves: z.string().min(1, "Total leaves is required"),
+
+    paid_leaves: z.string().min(1, "Paid leaves is required"),
 
     unpaid_leaves: z.string().min(1, "Unpaid leaves is required"),
   })
   .refine((data) => data.password === data.confirm_Password, {
     message: "Passwords don't match",
     path: ["confirm_Password"], // This will show the error on the confirm_Password field
+  });
+
+export const changePasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .max(20, "Password must not exceed 20 characters"),
+
+    confirm_password: z
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .max(20, "Password must not exceed 20 characters"),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    message: "Passwords don't match",
+    path: ["confirm_password"], // This will show the error on the confirm_Password field
   });

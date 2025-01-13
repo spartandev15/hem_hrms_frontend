@@ -6,8 +6,11 @@ import { EditableForm } from "./EditableForm";
 export const ProfileCommonSection = ({
   title,
   fields,
+  data,
 }: IProfileCommonSection) => {
   const [showEditableForm, setShowEditableForm] = useState(false);
+  // console.log(fields);
+  console.log(data);
 
   const toggleEditableForm = () => {
     setShowEditableForm(!showEditableForm);
@@ -25,7 +28,7 @@ export const ProfileCommonSection = ({
           className="bg-blue-primary text-xsmall edit-btn"
           onClick={toggleEditableForm}
         >
-          Edit
+          {showEditableForm ? "Cancel" : "Edit"}
         </button>
       </div>
 
@@ -45,7 +48,13 @@ export const ProfileCommonSection = ({
           </div>
         ) : (
           <div>
-            {fields && <EditableForm fields={fields} onSubmit={handleSubmit} />}
+            {fields && (
+              <EditableForm
+                defaultValues={data}
+                fields={fields}
+                onSubmit={handleSubmit}
+              />
+            )}
           </div>
         )}
       </div>

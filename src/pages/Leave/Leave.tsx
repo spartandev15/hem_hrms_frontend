@@ -1,20 +1,16 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import "../../assets/styles/leave.css";
+import LeavesStatusTable from "../../components/LeavesStatusTable";
+import InputWithLabel from "../../components/ui/InputWithLabel";
+import { useAppSelector } from "../../hooks/reduxHook";
 import {
   useGetAllLeavesQuery,
   useGetAppliedLeavesQuery,
 } from "../../redux/api/leave";
-import InputWithLabel from "../../components/ui/InputWithLabel";
-import { useForm } from "react-hook-form";
-import { IoMdSearch } from "react-icons/io";
-import LeaveApplicationForm from "../../components/LeaveForm";
-import LeavesStatusTable from "../../components/LeavesStatusTable";
 import { formatDate } from "../../utils/formatDate";
-import { Link } from "react-router-dom";
-import { getLocalStorageItem } from "../../utils/getLocalStorageItem";
-import { AUTH_STATUS } from "../../constantsPaths/Constant";
 import EmployeeLeaves from "./EmployeeLeaves";
-import { useAppSelector } from "../../hooks/reduxHook";
 
 const Leave = () => {
   const { handleSubmit, register } = useForm();
@@ -38,30 +34,31 @@ const Leave = () => {
 
       {status === "HR" && (
         <div>
-          {allAppliedLeavesDetailsData && (
-            <div className="mt-4 d-flex flex-column gap-4 border rounded-2 p-3">
-              <h2 className="text-start text-medium m-0 underline">
-                Who Applied Leaves
-              </h2>
+          {allAppliedLeavesDetailsData &&
+            allAppliedLeavesDetailsData?.data?.length > 0 && (
+              <div className="mt-4 d-flex flex-column gap-4 border rounded-2 p-3">
+                <h2 className="text-start text-medium m-0 underline">
+                  Who Applied Leaves
+                </h2>
 
-              {allAppliedLeavesDetailsData?.data ? (
-                Object.entries(allAppliedLeavesDetailsData?.data).map(
-                  ([key, value]) => {
-                    return (
-                      <div>
-                        <h3 className="text-large font-bold text-start">
-                          {formatDate(key)}
-                        </h3>
-                        <LeavesStatusTable allAppliedLeavesData={value} />
-                      </div>
-                    );
-                  }
-                )
-              ) : (
-                <h2>No Data Avialable</h2>
-              )}
-            </div>
-          )}
+                {allAppliedLeavesDetailsData?.data ? (
+                  Object.entries(allAppliedLeavesDetailsData?.data).map(
+                    ([key, value]) => {
+                      return (
+                        <div>
+                          <h3 className="text-large font-bold text-start">
+                            {formatDate(key)}
+                          </h3>
+                          <LeavesStatusTable allAppliedLeavesData={value} />
+                        </div>
+                      );
+                    }
+                  )
+                ) : (
+                  <h2>No Data Avialable</h2>
+                )}
+              </div>
+            )}
 
           {isLoadinLeavesDetails ? (
             <p>Loading...</p>

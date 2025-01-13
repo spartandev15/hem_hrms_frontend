@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../assets/styles/profile.css";
 const user = "/images/profile.png";
 
@@ -11,7 +11,11 @@ import { useGetProfileQuery } from "../../redux/api/profile";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 
 const Profile = () => {
-  const { data: userData, isLoading } = useGetProfileQuery();
+  const {
+    data: userData,
+    isLoading,
+    isSuccess: userDataIsSuccess,
+  } = useGetProfileQuery();
   const [profileImageFile, setprofileImageFile] = useState();
   const [activeTab, setActiveTab] = useState("");
   const navigate = useNavigate();
@@ -61,7 +65,7 @@ const Profile = () => {
   const TabsData = [
     {
       label: "general",
-      content: <GeneralTabContent />,
+      content: <GeneralTabContent data={userData?.user} />,
     },
     {
       label: "job",
@@ -78,8 +82,11 @@ const Profile = () => {
   ];
 
   // show or hide the loading based on data fully load or not
-  if (isLoading) dispatch(setIsLoading(true));
-  else dispatch(setIsLoading(false));
+
+  useEffect(() => {
+    if (isLoading) dispatch(setIsLoading(true));
+    else dispatch(setIsLoading(false));
+  }, [userDataIsSuccess]);
 
   return (
     <div className="profile-wrapper">
@@ -99,7 +106,7 @@ const Profile = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-3 col-md-3 col-sm-12 pd-4">
-              <ProfileCard />
+              <ProfileCard {...userData?.user} />
             </div>
 
             {/* <div className="col-lg-3 col-md-3 col-sm-12 pd-4 ">

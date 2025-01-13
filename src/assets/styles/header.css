@@ -98,6 +98,52 @@ header {
   color: var(--white-color);
 }
 
+/* Mobile navigation styles */
+.mobile-nav {
+  position: fixed;
+  top: 0%;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgb(248, 247, 247);
+  z-index: 999;
+  transform: translateY(-100%);
+  overflow: auto;
+}
+
+.mobile-nav.open {
+  transform: translateY(0); /* Show when open */
+}
+
+.mobile-nav-list {
+  padding: 2rem;
+  list-style: none;
+  text-align: center;
+  color: black;
+}
+
+.mobile-nav-list li {
+  margin: 1rem 0;
+}
+
+.mobile-nav-list li a {
+  color: white;
+  text-decoration: none;
+}
+
+.mobile-nav-list .sublinks-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0;
+}
+
+.mobile-nav-list .sublinks-list li a {
+  font-size: 14px;
+  padding: 0;
+}
+
 @media (max-width: 1024px) {
   .header-container .nav-bar {
     display: none;

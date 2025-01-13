@@ -1,12 +1,8 @@
-.category-wrapper {
-}
-
 .category-wrapper .category-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
   overflow: auto;
-  border-radius: 44px;
   border: 1px solid #d8d4d4;
 }
 

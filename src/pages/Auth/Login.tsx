@@ -35,7 +35,6 @@ const Login = () => {
   };
 
   // useEffect to handle auth data when loginIsSuccess is true
-
   useEffect(() => {
     if (LoginDetialsData) {
       // destuct access_token from LoginDetialsData
@@ -144,12 +143,12 @@ const Login = () => {
                         </a>
                       </p>
                       <p>
-                        <a
-                          href=" "
+                        <Link
+                          to="/forgot-password"
                           style={{ color: "#134d75", fontWeight: "600" }}
                         >
                           Forget Password
-                        </a>
+                        </Link>
                       </p>
                     </div>
                   </div>
