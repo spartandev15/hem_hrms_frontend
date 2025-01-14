@@ -80,7 +80,7 @@ const Signup = () => {
                   className="text-center signup_pd_inner "
                 >
                   <h3>Signup Form</h3>
-                  <div className="d-flex p-0">
+                  <div className="d-flex p-0 gap-1">
                     <div className="w-50">
                       <div className="form-outline">
                         <input
@@ -101,6 +101,7 @@ const Signup = () => {
                         </label>
                       </div>
                     </div>
+
                     <div className="w-50">
                       <div className="form-outline">
                         <input
@@ -144,7 +145,7 @@ const Signup = () => {
                     </div>
                   </div>
 
-                  <div className="d-flex p-0">
+                  <div className="d-flex p-0 gap-1">
                     <div className="w-50">
                       <div className="form-outline">
                         <input
@@ -207,7 +208,7 @@ const Signup = () => {
                     </div>
                   </div>
 
-                  <div className="d-flex p-0">
+                  <div className="d-flex p-0 gap-1">
                     <div className="w-50">
                       <div className="form-outline">
                         <input

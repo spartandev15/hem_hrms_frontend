@@ -12,7 +12,7 @@ import {
   useDeleteEmployeeMutation,
   useUpdateEmployeeMutation,
 } from "../../redux/api/employee";
-import { useAppDispatch } from "../../hooks/ReduxHook";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -259,7 +259,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       dispatch(setToast(editEmployeeData?.message));
     }
 
-    if (deleteEmployeeDetails?.result && editIsSuccess) {
+    if (deleteEmployeeDetails?.result && deleteEmployeeIsSuccess) {
       dispatch(setIsLoading(false));
       dispatch(setToast(deleteEmployeeDetails?.message));
     }
@@ -297,7 +297,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
               <BiShowAlt size={18} />
               <Link
                 to={`/employee-details/${first_name}/${user_id}`}
-                className="text-none"
+                className="text-none text-black"
               >
                 View
               </Link>

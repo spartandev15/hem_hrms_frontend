@@ -35,17 +35,16 @@ interface IField {
 export interface IProfileCommonSection {
   title: string;
   fields: IField[];
-  onSubmit: () => void;
   data?: any;
 }
 
 export interface ProfileCardProps {
-  id: number;
-  name: string;
-  last_name: string;
-  designation: string;
-  phone: number;
-  email: string;
+  id?: number;
+  name?: string;
+  last_name?: string;
+  designation?: string;
+  phone?: number;
+  email?: string;
   profile_photo?: string;
   line_manager?: string;
   joining_date?: string;

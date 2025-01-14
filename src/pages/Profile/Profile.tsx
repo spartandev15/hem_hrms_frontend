@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../../assets/styles/profile.css";
 const user = "/images/profile.png";
 
-import { useNavigate } from "react-router-dom";
 import ProfileCard from "../../components/cards/ProfileCard";
 import GeneralTabContent from "../../components/GeneralTabContent";
 import TabContainer, { Tabs } from "../../components/Tabs";
-import { useAppDispatch } from "../../hooks/ReduxHook";
 import { useGetProfileQuery } from "../../redux/api/profile";
-import { setIsLoading } from "../../redux/slices/loadingSlice";
 
 const Profile = () => {
   const {
@@ -16,10 +13,11 @@ const Profile = () => {
     isLoading,
     isSuccess: userDataIsSuccess,
   } = useGetProfileQuery();
-  const [profileImageFile, setprofileImageFile] = useState();
-  const [activeTab, setActiveTab] = useState("");
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+
+  // const [profileImageFile, setprofileImageFile] = useState();
+  // const [activeTab, setActiveTab] = useState("");
+  // const navigate = useNavigate();
+  // const dispatch = useAppDispatch();
 
   const oldData = JSON.parse(localStorage.getItem("user")!);
 
@@ -36,31 +34,31 @@ const Profile = () => {
     profile_photo: oldData?.profile_photo || "",
   });
 
-  const onSave = async (e) => {
-    e.preventDefault();
-    const postData = {
-      name: data.fullname,
-      email: data.email,
-      emp_id: data.employee_id,
-      joining_date: data.date_of_joining,
-      tax_number: data.tax_number,
-      dob: data.date_of_birth,
-      phone: data.phone_number,
-      job_title: data.position,
-      profile_photo: data.profile_photo,
-      address: data.address,
-    };
-  };
+  // const onSave = async (e) => {
+  //   e.preventDefault();
+  //   const postData = {
+  //     name: data.fullname,
+  //     email: data.email,
+  //     emp_id: data.employee_id,
+  //     joining_date: data.date_of_joining,
+  //     tax_number: data.tax_number,
+  //     dob: data.date_of_birth,
+  //     phone: data.phone_number,
+  //     job_title: data.position,
+  //     profile_photo: data.profile_photo,
+  //     address: data.address,
+  //   };
+  // };
 
-  const handleInput = (e) => {
-    const name = e.target.name;
-    const Value = e.target.value;
-    setData({ ...data, [name]: Value });
-  };
+  // const handleInput = (e) => {
+  //   const name = e.target.name;
+  //   const Value = e.target.value;
+  //   setData({ ...data, [name]: Value });
+  // };
 
-  const profileUpload = async (e) => {
-    // dispatch(isLoader(true))
-  };
+  // const profileUpload = async (e) => {
+  //   // dispatch(isLoader(true))
+  // };
 
   const TabsData = [
     {
@@ -81,35 +79,36 @@ const Profile = () => {
     },
   ];
 
+  console.log(userData?.user);
+
   // show or hide the loading based on data fully load or not
 
-  useEffect(() => {
-    if (isLoading) dispatch(setIsLoading(true));
-    else dispatch(setIsLoading(false));
-  }, [userDataIsSuccess]);
-
   return (
-    <div className="profile-wrapper">
-      <section>
-        <div className="container">
-          <div className="row py-3">
-            <div className="col-12  text-start">
-              <div className="heading-text-msg">
-                <h5 className="m-0">View Test</h5>
+    <div className="profile-wrapper container">
+      {isLoading ? (
+        <p>Loading....</p>
+      ) : (
+        <>
+          <section>
+            <div>
+              <div className="row py-3">
+                <div className="col-12  text-start">
+                  <div className="heading-text-msg">
+                    <h5 className="m-0">View Test</h5>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      <section className="">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-3 col-md-3 col-sm-12 pd-4">
-              <ProfileCard {...userData?.user} />
-            </div>
+          <section>
+            <div>
+              <div className="row">
+                <div className="col-lg-3 col-md-3 col-sm-12 pd-4">
+                  {userData?.user && <ProfileCard {...userData?.user} />}
+                </div>
 
-            {/* <div className="col-lg-3 col-md-3 col-sm-12 pd-4 ">
+                {/* <div className="col-lg-3 col-md-3 col-sm-12 pd-4 ">
               <div className="viewem border">
                 <div className="employebox">
                   <div className="d-flex justify-content-center">
@@ -208,18 +207,20 @@ const Profile = () => {
               </div>
             </div> */}
 
-            <div className="col-lg-9 col-md-9 col-sm-12 pb-4">
-              <TabContainer defaultValue={0}>
-                {TabsData.map((item, index) => (
-                  <Tabs key={`${item.label}-${index}`} label={item.label}>
-                    {item.content}
-                  </Tabs>
-                ))}
-              </TabContainer>
+                <div className="col-lg-9 col-md-9 col-sm-12 pb-4">
+                  <TabContainer defaultValue={0}>
+                    {TabsData.map((item, index) => (
+                      <Tabs key={`${item.label}-${index}`} label={item.label}>
+                        {item.content}
+                      </Tabs>
+                    ))}
+                  </TabContainer>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        </>
+      )}
     </div>
   );
 };

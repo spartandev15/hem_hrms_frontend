@@ -9,6 +9,7 @@ import { setToast } from "../../redux/slices/toastSlice";
 
 const ForgotPassword = () => {
   const dispatch = useAppDispatch();
+  const [emailMessage, setEmailMessage] = useState("");
   const { handleSubmit, register } = useForm();
   const [
     authForgotPassword,
@@ -16,6 +17,7 @@ const ForgotPassword = () => {
   ] = useAuthForgotPasswordMutation();
 
   const handleFormSubmit = (data: any) => {
+    if (emailMessage) setEmailMessage("");
     dispatch(setIsLoading(true));
     authForgotPassword(data);
   };
@@ -24,6 +26,12 @@ const ForgotPassword = () => {
     if (fortgotDataDetails) {
       dispatch(setIsLoading(false));
       dispatch(setToast(fortgotDataDetails?.message));
+
+      if (fortgotDataDetails.result) {
+        setEmailMessage("We've sent a password reset link to your email.");
+      }
+
+      console.log(fortgotDataDetails);
     }
   }, [forgotAuthIsSuccess]);
   return (
@@ -36,8 +44,8 @@ const ForgotPassword = () => {
               <p>
                 Enter your Organization details and start your journey with us.
               </p>
-              <Link to="/sign-up">
-                <button className="btn signupbtn">Sign Up</button>
+              <Link to="/sign-in">
+                <button className="btn signupbtn">Sign In</button>
               </Link>
             </div>
           </div>
@@ -45,6 +53,17 @@ const ForgotPassword = () => {
           <div className="col-lg-6 contact_form12">
             <div className="w-75 mx-auto py-3">
               <h3 className="text-small mb-3">Forgot Password</h3>
+              {emailMessage && (
+                <p
+                  className="text-xsmall"
+                  style={{
+                    color: "#188351",
+                  }}
+                >
+                  {emailMessage}
+                </p>
+              )}
+
               <form onSubmit={handleSubmit(handleFormSubmit)}>
                 <div className="form-group">
                   <InputWithLabel
@@ -62,6 +81,7 @@ const ForgotPassword = () => {
                   </button>
                 </div>
               </form>
+
               <p className="mt-3 text-center">
                 <Link to="/login" style={{ color: "#134d75" }}>
                   Back to Login

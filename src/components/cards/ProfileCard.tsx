@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
@@ -19,9 +19,9 @@ const ProfileCard = ({
   const [previewImage, setPreviewImage] = useState(null);
   const profilePicRef = useRef<HTMLInputElement | null>(null);
 
-  const changeProfilePicture = (e) => {
+  const changeProfilePicture = (e: ChangeEvent<HTMLInputElement>) => {
     try {
-      const file = e.target.files[0];
+      const file = e.target.files?.[0];
       // if (file) {
       //   const reader = new FileReader();
       //   reader.onloadend = () => {
@@ -37,6 +37,7 @@ const ProfileCard = ({
       console.log(error);
     }
   };
+
   return (
     <div className="profile-card">
       <div className="profile-div">

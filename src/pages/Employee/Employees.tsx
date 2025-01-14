@@ -21,8 +21,6 @@ const Employees = () => {
     console.log("Search", values);
   };
 
-  console.log(allEmployeData);
-
   return (
     <div className="container py-4">
       <h2 className="text-blue-primary text-start text-large">All Employees</h2>

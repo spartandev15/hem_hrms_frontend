@@ -9,15 +9,13 @@ export const ProfileCommonSection = ({
   data,
 }: IProfileCommonSection) => {
   const [showEditableForm, setShowEditableForm] = useState(false);
-  // console.log(fields);
-  console.log(data);
 
   const toggleEditableForm = () => {
     setShowEditableForm(!showEditableForm);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (formData: any) => {
+    console.log(formData);
   };
 
   return (

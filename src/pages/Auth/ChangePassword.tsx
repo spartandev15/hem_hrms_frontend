@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import InputWithLabel from "../../components/ui/InputWithLabel";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { useAppDispatch } from "../../hooks/reduxHook";
 import { useForm } from "react-hook-form";
@@ -11,8 +11,11 @@ import {
 import { setToast } from "../../redux/slices/toastSlice";
 import { changePasswordSchema } from "../../validations/formValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getLocalStorageItem } from "../../utils/getLocalStorageItem";
+import { PassThrough } from "stream";
 
 const ChangePassword = () => {
+  const params = useParams();
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
@@ -27,7 +30,7 @@ const ChangePassword = () => {
   ] = useAuthChangePasswordMutation();
 
   const handleFormSubmit = (data: any) => {
-    dispatch(setIsLoading(true));
+    // dispatch(setIsLoading(true));
     authChangePassword(data);
   };
 
@@ -49,8 +52,8 @@ const ChangePassword = () => {
               <p>
                 Enter your Organization details and start your journey with us.
               </p>
-              <Link to="/sign-up">
-                <button className="btn signupbtn">Sign Up</button>
+              <Link to="/sign-in">
+                <button className="btn signupbtn">Sign In</button>
               </Link>
             </div>
           </div>
@@ -59,13 +62,27 @@ const ChangePassword = () => {
             <div className="w-75 mx-auto py-3">
               <h3 className="text-small mb-3">Change Password</h3>
               <form onSubmit={handleSubmit(handleFormSubmit)}>
-                <div className="form-group">
+                {/* <div className="form-group">
+                  <InputWithLabel
+                    type="email"
+                    label="Email"
+                    name="email"
+                    value={getLocalStorageItem("email") as string}
+                    register={register}
+                  />
+                  {errors.email && (
+                    <p className="text-danger">
+                      {errors?.email?.message as string}
+                    </p>
+                  )}
+                </div> */}
+
+                <div className="form-group mt-3">
                   <InputWithLabel
                     type="password"
-                    label="Password"
+                    label="New Password"
                     register={register}
                     name="password"
-                    // required
                   />
                   {errors.password && (
                     <p className="text-danger">
@@ -80,7 +97,6 @@ const ChangePassword = () => {
                     label="Confim Password"
                     register={register}
                     name="confirm_password"
-                    // required
                   />
                   {errors.confirm_password && (
                     <p className="text-danger">

@@ -21,7 +21,7 @@ const Navigation = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/change-password/:token" element={<ChangePassword />} />
 
         <Route path="/" element={<Navigate to="/dashboard" />} />
 

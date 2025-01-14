@@ -147,7 +147,7 @@ const Login = () => {
                           to="/forgot-password"
                           style={{ color: "#134d75", fontWeight: "600" }}
                         >
-                          Forget Password
+                          Forgot Password
                         </Link>
                       </p>
                     </div>

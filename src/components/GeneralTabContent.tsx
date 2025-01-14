@@ -2,13 +2,12 @@ import React from "react";
 import { ProfileCommonSection } from "./ProfileCommonSection";
 
 const GeneralTabContent = ({ data }: any) => {
-  console.log(data);
   const GeneralFields = [
     {
       label: "Full Name",
       value: data?.name as string,
       type: "text",
-      name: "first_name",
+      name: "name",
     },
     {
       label: "E-Mail",
@@ -19,7 +18,8 @@ const GeneralTabContent = ({ data }: any) => {
     {
       label: "Employee Id",
       value: data?.employee_id as string,
-      type: "employee_id",
+      name: "employee_id",
+      type: "text",
     },
     {
       label: "Date of Joining",
@@ -58,22 +58,31 @@ const GeneralTabContent = ({ data }: any) => {
       label: "Address",
       value: data?.address as string,
       type: "textarea",
+      name: "address",
     },
     {
       label: "Country",
       value: data?.country as string,
+      type: "text",
+      name: "country",
     },
     {
       label: "State",
       value: data?.state as string,
+      type: "text",
+      name: "state",
     },
     {
       label: "City",
       value: data?.city as string,
+      type: "text",
+      name: "city",
     },
     {
       label: "Zip Code",
       value: data?.zipcode as string,
+      type: "text",
+      name: "zip code",
     },
   ];
 
@@ -81,53 +90,58 @@ const GeneralTabContent = ({ data }: any) => {
     {
       label: "Total Leaves",
       value: data?.leaves?.overall_total_leaves as string,
-      type: "textarea",
+      type: "text",
+      name: "total_leaves",
     },
     {
       label: "Paid Leaves",
       value: data?.leaves?.leave_data?.paid_leaves?.Total as string,
+      type: "text",
+      name: "paid_leaves",
     },
     {
       label: "Unpaid Leaves",
       value: data?.leaves?.leave_data?.unpaid_leaves?.Total as string,
+      type: "text",
+      name: "unpaid_leaves",
     },
     {
       label: "Sick Leaves",
       value: data?.leaves?.leave_data?.sick_leaves?.Total as string,
+      type: "text",
+      name: "sick_leaves",
     },
     {
       label: "Taken",
       value: data?.leaves?.taken as string,
+      type: "text",
+      name: "total_leaves",
     },
     {
       label: "Remaining",
       value: data?.leaves?.pending as string,
+      type: "text",
+      name: "taken_leaves",
     },
   ];
+
+  console.log(data);
+
   return (
     <div>
       <ProfileCommonSection
         title="Information"
-        onSubmit={() => {}}
         fields={GeneralFields}
         data={data}
       />
 
       <ProfileCommonSection
         title="Address"
-        onSubmit={() => {
-          console.log("first");
-        }}
         fields={AddressFields}
+        data={data}
       />
 
-      <ProfileCommonSection
-        title="Leaves"
-        onSubmit={() => {
-          console.log("first");
-        }}
-        fields={LeavesFields}
-      />
+      <ProfileCommonSection title="Leaves" fields={LeavesFields} data={data} />
     </div>
   );
 };
