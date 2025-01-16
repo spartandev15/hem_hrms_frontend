@@ -21,8 +21,6 @@ const Leave = () => {
     useGetAllLeavesQuery();
   const { data: allAppliedLeavesDetailsData } = useGetAppliedLeavesQuery();
 
-  console.log(allAppliedLeavesDetailsData);
-
   //
   const handleSearchSubmit = (values: any) => {
     console.log("Search", values);
@@ -35,7 +33,7 @@ const Leave = () => {
       {status === "HR" && (
         <div>
           {allAppliedLeavesDetailsData &&
-            allAppliedLeavesDetailsData?.data?.length > 0 && (
+            Object.keys(allAppliedLeavesDetailsData?.data).length > 0 && (
               <div className="mt-4 d-flex flex-column gap-4 border rounded-2 p-3">
                 <h2 className="text-start text-medium m-0 underline">
                   Who Applied Leaves

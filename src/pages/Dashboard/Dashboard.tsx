@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import PunchInOut from "../../components/PunchInOut";
 
 const userLogo = "/images/account.png";
 const user = "/images/profile.png";
@@ -144,47 +145,7 @@ const Dashboard = () => {
             </div>
 
             <div className="col-lg-4">
-              <div className="shadow sechrcard">
-                <div>
-                  <div className="new_section_inner sechrcard-body">
-                    <i className="fas fa-plane new_section_icon"></i>
-                    <h5 className="font-weight-bold">Timesheet</h5>
-                    <a href="#" className="new_section_t">
-                      30 Aug 2023
-                    </a>
-                  </div>
-
-                  <div className="punch-info mt-3">
-                    <div className="punch-hours">
-                      <span>3.45 hrs</span>
-                    </div>
-                  </div>
-                  <div className="punch-btn-section mb-0">
-                    <button
-                      type="button"
-                      onClick={PunchOut}
-                      className="btn mybtn punch-btn"
-                    >
-                      Punch Out
-                    </button>
-                    <button
-                      type="button"
-                      onClick={PunchIn}
-                      className="btn mybtn punch-btn"
-                    >
-                      Punch In
-                    </button>
-                  </div>
-                  <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-1">
-                    <div className="punch-det text-start">
-                      <h6>Punch In at</h6>
-                      <div className="puch_t">
-                        <p>Wed, 30 Aug 2023</p> <span>10.00 AM</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <PunchInOut />
             </div>
           </div>
         </div>

@@ -1,22 +1,18 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
-import InputWithLabel from "../../components/ui/InputWithLabel";
-import { Link, useParams } from "react-router-dom";
-import { setIsLoading } from "../../redux/slices/loadingSlice";
-import { useAppDispatch } from "../../hooks/reduxHook";
 import { useForm } from "react-hook-form";
-import {
-  useAuthChangePasswordMutation,
-  useAuthForgotPasswordMutation,
-} from "../../redux/api/auth";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import InputWithLabel from "../../components/ui/InputWithLabel";
+import { useAppDispatch } from "../../hooks/reduxHook";
+import { useAuthChangePasswordMutation } from "../../redux/api/auth";
+import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 import { changePasswordSchema } from "../../validations/formValidation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { getLocalStorageItem } from "../../utils/getLocalStorageItem";
-import { PassThrough } from "stream";
 
 const ChangePassword = () => {
-  const params = useParams();
+  const { token } = useParams();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     handleSubmit,
     register,
@@ -30,8 +26,15 @@ const ChangePassword = () => {
   ] = useAuthChangePasswordMutation();
 
   const handleFormSubmit = (data: any) => {
-    // dispatch(setIsLoading(true));
-    authChangePassword(data);
+    dispatch(setIsLoading(true));
+    const formData = {
+      password: data.password,
+      token,
+    };
+
+    console.log(formData);
+
+    authChangePassword(formData);
   };
 
   console.log(changePasswordDataDetails);
@@ -40,8 +43,13 @@ const ChangePassword = () => {
     if (changePasswordDataDetails) {
       dispatch(setIsLoading(false));
       dispatch(setToast(changePasswordDataDetails?.message));
+
+      if (changePasswordDataDetails?.result) {
+        navigate("/login");
+      }
     }
   }, [changePasswordIsSuccess]);
+
   return (
     <div className="login-container px-4">
       <div className="container">

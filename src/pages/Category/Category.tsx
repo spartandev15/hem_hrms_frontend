@@ -57,7 +57,7 @@ const Category = () => {
     };
     const ressponse = await postCategory(formData);
     console.log(ressponse);
-    // reset();
+    reset();
     // dispatch(setIsLoading(false));
   };
 

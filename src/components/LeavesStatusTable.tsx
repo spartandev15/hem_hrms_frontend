@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useOutsideClick from "../hooks/useOutsideClick";
 import { useUpdateLeavesStatusMutation } from "../redux/api/leave";
-import { useAppDispatch } from "../hooks/ReduxHook";
+import { useAppDispatch } from "../hooks/reduxHook";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
 
@@ -50,10 +50,12 @@ const TableRow = (item: any) => {
     setDropdownVisible(!isDropdownVisible);
   };
 
-  const [updateLeavesStatus, { data: updateLeaveStatusDetailsData }] =
-    useUpdateLeavesStatusMutation();
+  const [
+    updateLeavesStatus,
+    { data: updateLeaveStatusDetailsData, isSuccess: updateLeavesIsSuccess },
+  ] = useUpdateLeavesStatusMutation();
 
-  const handleStatusSubmit = (status) => {
+  const handleStatusSubmit = (status: string) => {
     dispatch(setIsLoading(true));
     updateLeavesStatus({
       id: item.id,
@@ -61,10 +63,12 @@ const TableRow = (item: any) => {
     });
   };
 
-  if (updateLeaveStatusDetailsData) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(updateLeaveStatusDetailsData.message));
-  }
+  useEffect(() => {
+    if (updateLeaveStatusDetailsData) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(updateLeaveStatusDetailsData.message));
+    }
+  }, [updateLeavesIsSuccess]);
 
   return (
     <tr key={item.id || item.itemIndex}>

@@ -5,7 +5,7 @@ const GeneralTabContent = ({ data }: any) => {
   const GeneralFields = [
     {
       label: "Full Name",
-      value: data?.name as string,
+      value: data?.first_name as string,
       type: "text",
       name: "name",
     },

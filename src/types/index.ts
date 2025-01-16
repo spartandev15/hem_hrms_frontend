@@ -1,5 +1,4 @@
 import { UseFormRegister } from "react-hook-form";
-import { string } from "zod";
 
 export interface SignUpFormData {
   first_name: string;

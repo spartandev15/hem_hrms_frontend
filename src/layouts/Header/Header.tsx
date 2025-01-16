@@ -17,7 +17,11 @@ import { Nav_List } from "./Nav_List";
 import logo from "../../assets/images/orpect1.png";
 import user from "../../assets/images/account.png";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
-import { logoutAuthUser, setAuthStatus } from "../../redux/slices/authSlice";
+import {
+  logoutAuthUser,
+  setAuthStatus,
+  setAuthUser,
+} from "../../redux/slices/authSlice";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 
 const Header = () => {

@@ -20,7 +20,7 @@ export const employeeApi = baseApi.injectEndpoints({
     getEmployeeDetailsById: builder.query<any, any>({
       query: (id) => {
         return {
-          url: `/api/get/userLeaves/${id}`,
+          url: `/api/get/employee/${id}`,
           method: "GET",
         };
       },

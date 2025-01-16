@@ -15,6 +15,7 @@ const AddEmployee = () => {
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(employeeFormSchema),
@@ -136,6 +137,7 @@ const AddEmployee = () => {
     console.log("aaya");
     dispatch(setIsLoading(true));
     postEmployee(data);
+    reset();
   };
 
   useEffect(() => {

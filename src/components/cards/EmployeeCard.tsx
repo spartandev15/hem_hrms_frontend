@@ -240,7 +240,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
 
       // call the delete api using deleteEmployee
       deleteEmployee({
-        id,
+        id: user_id,
       });
     } else {
       setIsOpenDialog(false);
