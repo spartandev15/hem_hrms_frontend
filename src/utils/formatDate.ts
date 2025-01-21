@@ -29,3 +29,33 @@ export function formatDate(date: string | Date): string {
 
   // If it's not today or yesterday, return the date in a readable format
 }
+
+export const formatDateType = (
+  date: string | Date,
+  formatType: "short" | "long" = "long"
+): string => {
+  // Convert date to Date object if it's a string
+  const d = new Date(date);
+
+  // Options for 'long' format (e.g., Wed, 30 Aug 2023)
+  const longFormatOptions: Intl.DateTimeFormatOptions = {
+    weekday: "short", // 'Wed'
+    day: "2-digit", // '30'
+    month: "short", // 'Aug'
+    year: "numeric", // '2023'
+  };
+
+  // Options for 'short' format (e.g., 20-01-2025)
+  const shortFormatOptions: Intl.DateTimeFormatOptions = {
+    day: "2-digit", // '20'
+    month: "2-digit", // '01'
+    year: "numeric", // '2025'
+  };
+
+  // Select options based on formatType
+  const options =
+    formatType === "long" ? longFormatOptions : shortFormatOptions;
+
+  // Return formatted date using Intl.DateTimeFormat
+  return new Intl.DateTimeFormat("en-GB", options).format(d);
+};

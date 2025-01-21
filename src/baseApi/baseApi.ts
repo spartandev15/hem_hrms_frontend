@@ -4,7 +4,7 @@ import { AUTH_TOKEN_KEY } from "../constantsPaths/Constant";
 
 export const baseApi = createApi({
   reducerPath: "baseApi",
-  tagTypes: ["category", "employess", "leaves", "leaveStatus"],
+  tagTypes: ["category", "employess", "leaves", "leaveStatus", "punchInOut"],
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_KEY_BASE_URL,
     prepareHeaders: (headers) => {
