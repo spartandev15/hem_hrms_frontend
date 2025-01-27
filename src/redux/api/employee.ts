@@ -34,7 +34,7 @@ export const employeeApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["employess"],
+      providesTags: ["allEmployess"],
     }),
 
     // endpoint for update employess
@@ -46,6 +46,7 @@ export const employeeApi = baseApi.injectEndpoints({
           body: data,
         };
       },
+      invalidatesTags: ["allEmployess"],
     }),
 
     // endpoint for delete employee

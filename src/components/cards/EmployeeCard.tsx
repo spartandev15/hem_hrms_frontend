@@ -38,6 +38,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   joining_date,
   leaves,
   user_id,
+  date_of_birth,
 }) => {
   const {
     handleSubmit,
@@ -58,6 +59,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       joining_date,
       address: "",
       password: "",
+      date_of_birth,
       total_leaves: String(leaves?.overall_total_leaves),
       paid_leaves: leaves?.leave_data?.paid_leaves.Total,
       unpaid_leaves: leaves?.leave_data?.unpaid_leaves.Total,
@@ -149,7 +151,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       value: "",
     },
     {
-      // label: "Joining Date",
+      label: "Joining Date",
       name: "joining_date",
       type: "date",
       required: true,
@@ -172,6 +174,14 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       })),
       required: true,
       value: designation,
+      labelAnimated: false,
+    },
+    {
+      label: "DOB",
+      name: "date_of_birth",
+      type: "date",
+      required: true,
+      value: date_of_birth,
     },
     {
       label: "Total Leaves",
@@ -203,6 +213,8 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
     },
   ];
 
+  // console.log(editEmployeeFormFields);
+
   // submit the form for update editEmployee
   const handleFormSubmitEdit = (data: any) => {
     const editFormData = {
@@ -215,6 +227,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       designation: data.designation,
       employee_id: data.employee_id,
       joining_date: data.joining_date,
+      date_of_birth: data.date_of_birth,
       password: data.password,
       address: data.address,
     };
@@ -257,6 +270,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
     if (editEmployeeData?.result && editIsSuccess) {
       dispatch(setIsLoading(false));
       dispatch(setToast(editEmployeeData?.message));
+      setIsEditPopupOpen(false);
     }
 
     if (deleteEmployeeDetails?.result && deleteEmployeeIsSuccess) {
@@ -356,6 +370,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
                       type={item.type}
                       value={item.value}
                       options={item.options}
+                      labelAnimated={item.labelAnimated}
                     />
 
                     {errors[item.name as keyof typeof errors] && (

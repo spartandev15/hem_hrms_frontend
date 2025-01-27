@@ -13,6 +13,7 @@ const Employees = () => {
 
   const options = allCategory?.categories?.map((category: any) => ({
     label: category.name,
+    value: category.name,
   }));
 
   const { register, handleSubmit } = useForm();

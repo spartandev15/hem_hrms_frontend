@@ -70,6 +70,7 @@ export interface InputWithLabelProps {
   options?: any;
   labelAnimated?: boolean;
   serachIcon?: boolean;
+  isLoading?: boolean;
 }
 
 interface EmployeeDetails {
@@ -85,7 +86,7 @@ interface EmployeeDetails {
   line_manager: string;
   joining_date: string;
   employeeprofile?: string;
-  dob?: Date;
+  date_of_birth?: Date;
   gender?: string;
   address?: string;
   leaves?: {

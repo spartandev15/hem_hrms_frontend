@@ -15,6 +15,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   options,
   labelAnimated = true,
   serachIcon,
+  isLoading,
 }) => {
   const today = new Date().toISOString().split("T")[0];
 
@@ -43,6 +44,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
     }
   }, [value]);
 
+  console.log(value);
   return (
     <div className="form-group">
       <div className={`input-wrapper ${focused ? "focused" : ""}`}>
@@ -53,17 +55,18 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             onFocus={handleFocus}
             required={required}
             className="input-animation w-100"
-            defaultValue={options ? options[0]?.value : ""}
+            defaultValue={value || "kc"}
+            // value={value}
           >
             {options && options.length > 0 ? (
               options?.map((option: any, index: number) => (
-                <option key={index} value={option.label}>
+                <option key={index} value={option.value}>
                   {option.label}
                 </option>
               ))
             ) : (
               <option value="" disabled>
-                Please Wait
+                {isLoading ? "wait..." : "No data"}
               </option>
             )}
           </select>

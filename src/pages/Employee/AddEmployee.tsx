@@ -9,8 +9,10 @@ import { setToast } from "../../redux/slices/toastSlice";
 import { useGetAllCategoryQuery } from "../../redux/api/category";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { employeeFormSchema } from "../../validations/formValidation";
+import { useNavigate } from "react-router-dom";
 
 const AddEmployee = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {
     handleSubmit,
@@ -25,7 +27,8 @@ const AddEmployee = () => {
     { data: EmployeeDetailsData, isSuccess: postEmployeeIsSuccess },
   ] = usePostEmployeeMutation();
 
-  const { data: allCategory } = useGetAllCategoryQuery();
+  const { data: allCategory, isLoading: isAllCategoryLoading } =
+    useGetAllCategoryQuery();
 
   const addEmployeeFormFields = [
     {
@@ -78,7 +81,7 @@ const AddEmployee = () => {
       value: "",
     },
     {
-      // label: "Joining Date",
+      label: "Joining Date",
       name: "joining_date",
       type: "date",
       required: true,
@@ -92,6 +95,13 @@ const AddEmployee = () => {
       value: "",
     },
     {
+      label: "Date of Birth",
+      name: "date_of_birth",
+      type: "date",
+      required: true,
+      value: "",
+    },
+    {
       // label: "Designation",
       name: "designation",
       type: "select",
@@ -100,7 +110,7 @@ const AddEmployee = () => {
         value: category.name,
       })),
       required: true,
-      value: "",
+      value: allCategory?.categories[0]?.name,
     },
     {
       label: "Total Leaves",
@@ -134,7 +144,7 @@ const AddEmployee = () => {
 
   const handleFormSubmit = (data: any) => {
     // const leavesFormData = {};
-    console.log("aaya");
+    console.log(data);
     dispatch(setIsLoading(true));
     postEmployee(data);
     reset();
@@ -144,6 +154,7 @@ const AddEmployee = () => {
     if (EmployeeDetailsData?.result && postEmployeeIsSuccess) {
       dispatch(setIsLoading(false));
       dispatch(setToast(EmployeeDetailsData?.message));
+      navigate("/dashboard/employees");
     } else {
       if (EmployeeDetailsData?.message) {
         dispatch(setIsLoading(false));
@@ -177,6 +188,7 @@ const AddEmployee = () => {
                     type={item.type}
                     value={item.value}
                     options={item.options}
+                    isLoading={isAllCategoryLoading}
                   />
                   {errors[item.name] && (
                     <p className="text-danger">

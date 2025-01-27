@@ -16,8 +16,6 @@ const PunchInOut = () => {
     usePunchInOutDetailsQuery();
   const [punchIn, { data: punchInDataDetails }] = usePunchInMutation();
   const [punchOut, { data: punchOutDataDetails }] = usePunchOutMutation();
-  console.log("punchout", punchOutDataDetails);
-  console.log("punchinoutdetails", punchInOutDataDetals);
 
   // console.log(punchInDataDetails);
 
@@ -61,6 +59,8 @@ const PunchInOut = () => {
     }
   };
 
+  // console.log(punchInOutDataDetals);
+
   const PunchIn = async () => {
     try {
       setPunchIn(true);
@@ -98,15 +98,16 @@ const PunchInOut = () => {
               <i className="fas fa-plane new_section_icon"></i>Timesheet
             </h5>
             <p className="new_section_t">
-              {formatDateType(currentDate, "short")}
+              {/* {formatDateType(currentDate, "short")} */}
             </p>
           </div>
 
           <div className="punch-info mt-3">
             <div className="punch-hours position-relative">
-              {punchInOutDataDetals?.data?.timer?.running_duration ? (
+              {punchInOutDataDetals?.data?.timers[0] &&
+              punchInOutDataDetals?.data?.timers[0]?.stopped_at ? (
                 <span>
-                  {punchInOutDataDetals?.data?.timer?.running_duration}
+                  {punchInOutDataDetals?.data?.timers[0]?.running_duration}
                   <span
                     className="position-absolute start-50 "
                     style={{
@@ -127,22 +128,28 @@ const PunchInOut = () => {
           {/* <Timer isPunchIn={isPunchIn} /> */}
 
           <div className="punch-btn-section mb-0">
-            <button
-              type="button"
-              onClick={PunchOut}
-              className="btn mybtn punch-btn"
-              style={{
-                opacity:
-                  punchInOutDataDetals?.data?.timer?.stopped_at || isPunchOut
-                    ? 0.4
-                    : 1,
-              }}
-              disabled={
-                punchInOutDataDetals?.data?.timer?.stopped_at ? true : false
-              }
-            >
-              Punch Out
-            </button>
+            {punchInOutDataDetals?.data && (
+              <button
+                type="button"
+                onClick={PunchOut}
+                className="btn mybtn punch-btn"
+                style={{
+                  opacity:
+                    punchInOutDataDetals?.data?.timers[0]?.stopped_at ||
+                    isPunchOut
+                      ? 0.4
+                      : 1,
+                }}
+                disabled={
+                  punchInOutDataDetals?.data?.timers[0]?.stopped_at
+                    ? true
+                    : false
+                }
+              >
+                Punch Out
+              </button>
+            )}
+
             <button
               type="button"
               onClick={PunchIn}
@@ -156,29 +163,29 @@ const PunchInOut = () => {
             </button>
           </div>
 
-          <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-1">
+          <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-1 d-flex justify-content-between">
             <div className="punch-det text-start">
-              <h6>Punch In at</h6>
-              <div className="puch_t">
-                <p>{formatDateType(currentDate, "long")}</p>{" "}
+              <h6 className="text-xsmall">Punch In at</h6>
+              <div className="text-xsmall">
+                {/* <p>{formatDateType(currentDate, "long")}</p> /{" "} */}
                 <span>
-                  {punchInOutDataDetals?.data?.timer?.started_at &&
+                  {punchInOutDataDetals?.data?.timers[0]?.started_at &&
                     new Date(
-                      punchInOutDataDetals?.data?.timer?.started_at
+                      punchInOutDataDetals?.data?.timers[0]?.started_at
                     ).toLocaleTimeString()}
                 </span>
               </div>
             </div>
 
-            {punchInOutDataDetals?.data?.timer?.stopped_at && (
-              <div className="punch-det text-start mt-3">
-                <h6>Punch Out at</h6>
+            {punchInOutDataDetals?.data?.timers[0]?.stopped_at && (
+              <div className="punch-det text-start">
+                <h6 className="text-xsmall">Punch Out at</h6>
                 <div className="puch_t">
-                  <p>{formatDateType(currentDate, "long")}</p>{" "}
+                  {/* <p>{formatDateType(currentDate, "long")}</p>{" "} */}
                   <span>
-                    {punchInOutDataDetals?.data?.timer?.stopped_at &&
+                    {punchInOutDataDetals?.data?.timers[0]?.stopped_at &&
                       new Date(
-                        punchInOutDataDetals?.data?.timer?.stopped_at
+                        punchInOutDataDetals?.data?.timers[0]?.stopped_at
                       ).toLocaleTimeString()}
                   </span>
                 </div>

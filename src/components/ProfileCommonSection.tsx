@@ -14,9 +14,7 @@ export const ProfileCommonSection = ({
     setShowEditableForm(!showEditableForm);
   };
 
-  const handleSubmit = (formData: any) => {
-    console.log(formData);
-  };
+  const handleSubmit = (formData: any) => {};
 
   return (
     <div className="profile-common-section mt-3 py-4">

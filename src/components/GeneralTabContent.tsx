@@ -125,8 +125,6 @@ const GeneralTabContent = ({ data }: any) => {
     },
   ];
 
-  console.log(data);
-
   return (
     <div>
       <ProfileCommonSection

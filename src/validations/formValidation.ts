@@ -25,7 +25,7 @@ export const employeeFormSchema = z
     first_name: z.string().min(1, "First name is required"),
 
     joining_date: z.string().min(1, "Joining date is required"),
-
+    date_of_birth: z.string().min(1, "Joining date is required"),
     last_name: z.string().min(1, "Last name is required"),
 
     // line_manager: z.string().min(1, "Line manager is required"),

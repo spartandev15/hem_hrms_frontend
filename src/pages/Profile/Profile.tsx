@@ -65,18 +65,18 @@ const Profile = () => {
       label: "general",
       content: <GeneralTabContent data={userData?.user} />,
     },
-    {
-      label: "job",
-      content: <GeneralTabContent />,
-    },
-    {
-      label: "qualification",
-      content: <GeneralTabContent />,
-    },
-    {
-      label: "salary",
-      content: <GeneralTabContent />,
-    },
+    // {
+    //   label: "job",
+    //   content: <GeneralTabContent />,
+    // },
+    // {
+    //   label: "qualification",
+    //   content: <GeneralTabContent />,
+    // },
+    // {
+    //   label: "salary",
+    //   content: <GeneralTabContent />,
+    // },
   ];
 
   console.log(userData?.user);

@@ -17,7 +17,7 @@ const EmployeeLeaves = () => {
     useGetAppliedLeavesStatusByIdQuery(getLocalStorageItem(AUTH_UID));
 
   const leaveDataArray = userLeavesStatus?.user?.leaves;
-  const leaves = employeeLeavesDetails?.user?.leaves;
+  const leaves = employeeLeavesDetails?.EmployeeDetails?.leaves;
   const leaveData = leaves?.leave_data;
 
   return (
@@ -33,8 +33,8 @@ const EmployeeLeaves = () => {
               <div className="d-flex flex-column align-items-start">
                 <h6 className="text-center mb-3">
                   <strong>User Name: </strong>
-                  {employeeLeavesDetails?.user?.name}{" "}
-                  {employeeLeavesDetails?.user?.last_name}
+                  {employeeLeavesDetails?.EmployeeDetails?.name}{" "}
+                  {employeeLeavesDetails?.EmployeeDetails?.last_name}
                 </h6>
 
                 {/* <p className="text-center">
@@ -43,18 +43,19 @@ const EmployeeLeaves = () => {
                 </p> */}
 
                 <p className="text-center">
-                  <strong>Email:</strong> {employeeLeavesDetails?.user?.email}
+                  <strong>Email:</strong>{" "}
+                  {employeeLeavesDetails?.EmployeeDetails?.email}
                 </p>
 
                 <p className="text-center">
                   <strong>Designation:</strong>{" "}
-                  {employeeLeavesDetails?.user?.designation}
+                  {employeeLeavesDetails?.EmployeeDetails?.designation}
                 </p>
 
-                <p className="text-center">
+                {/* <p className="text-center">
                   <strong>Line Manager:</strong>{" "}
-                  {employeeLeavesDetails?.user?.line_manager}
-                </p>
+                  {employeeLeavesDetails?.EmployeeDetails?.line_manager}
+                </p> */}
               </div>
 
               <ul className="list-group">
