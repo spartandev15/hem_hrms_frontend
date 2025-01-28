@@ -59,3 +59,24 @@ export const formatDateType = (
   // Return formatted date using Intl.DateTimeFormat
   return new Intl.DateTimeFormat("en-GB", options).format(d);
 };
+
+export const getDurationInDays = (startDate: string, endDate: string) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  // Calculate difference in time
+  const timeDifference = end.getTime() - start.getTime();
+
+  // Convert time difference to days (milliseconds in a day = 24 * 60 * 60 * 1000)
+  const dayDifference = timeDifference / (1000 * 3600 * 24);
+
+  // Return appropriate day string
+  if (dayDifference === 1) {
+    return "1 day";
+  } else if (dayDifference > 1) {
+    return `${dayDifference} days`;
+  } else if (dayDifference === 0) {
+    return "0 days";
+  }
+  return "Invalid dates";
+};

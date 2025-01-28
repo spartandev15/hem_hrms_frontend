@@ -6,6 +6,7 @@ const LeavesStatus = ({
   approvedLeaves,
   pendingLeaves,
   rejectedLeaves,
+  isLoading,
 }: any) => {
   const leavesStatus = [
     ...(Array.isArray(approvedLeaves) ? approvedLeaves : []),
@@ -20,12 +21,12 @@ const LeavesStatus = ({
           <div className="d-flex justify-content-between align-items-center">
             <h5 className="font-weight-bold">Pending / approval</h5>
             <span className="badge-sec">
-              <p>5</p>
+              <p>{leavesStatus?.length}</p>
             </span>
           </div>
         </div>
 
-        <div className="overflow-scroll">
+        <div className="overflow-scroll mt-3">
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
@@ -41,7 +42,13 @@ const LeavesStatus = ({
               </tr>
             </thead>
             <tbody>
-              {leavesStatus && leavesStatus?.length > 0 ? (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={9} className="text-center">
+                    Loading
+                  </td>
+                </tr>
+              ) : leavesStatus && leavesStatus?.length > 0 ? (
                 leavesStatus.map((leave: any, index: number) => (
                   <tr key={leave.id}>
                     <td>{index + 1}</td>

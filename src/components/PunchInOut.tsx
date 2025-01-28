@@ -128,27 +128,30 @@ const PunchInOut = () => {
           {/* <Timer isPunchIn={isPunchIn} /> */}
 
           <div className="punch-btn-section mb-0">
-            {punchInOutDataDetals?.data && (
-              <button
-                type="button"
-                onClick={PunchOut}
-                className="btn mybtn punch-btn"
-                style={{
-                  opacity:
-                    punchInOutDataDetals?.data?.timers[0]?.stopped_at ||
-                    isPunchOut
-                      ? 0.4
-                      : 1,
-                }}
-                disabled={
-                  punchInOutDataDetals?.data?.timers[0]?.stopped_at
-                    ? true
-                    : false
-                }
-              >
-                Punch Out
-              </button>
-            )}
+            <div className="d-flex flex-sm-row flex-column gap-1">
+              <button className="btn mybtn punch-btn">Pause</button>
+              {punchInOutDataDetals?.data && (
+                <button
+                  type="button"
+                  onClick={PunchOut}
+                  className="btn mybtn punch-btn"
+                  style={{
+                    opacity:
+                      punchInOutDataDetals?.data?.timers[0]?.stopped_at ||
+                      isPunchOut
+                        ? 0.4
+                        : 1,
+                  }}
+                  disabled={
+                    punchInOutDataDetals?.data?.timers[0]?.stopped_at
+                      ? true
+                      : false
+                  }
+                >
+                  Punch Out
+                </button>
+              )}
+            </div>
 
             <button
               type="button"

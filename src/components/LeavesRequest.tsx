@@ -3,7 +3,6 @@ import React from "react";
 const userLogo = "/images/account.png";
 
 const LeavesRequest = ({ leavesData, isLoading }: any) => {
-  console.log(leavesData);
   return (
     <div>
       {isLoading ? (
