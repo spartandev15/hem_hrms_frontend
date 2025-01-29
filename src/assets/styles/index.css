@@ -114,6 +114,43 @@ input[type="number"] {
   color: var(--white-color);
 }
 
+.react-paginate {
+  background-color: var(--bs-border-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  list-style: none;
+  padding: 0.6rem 0;
+  margin-top: 1rem;
+}
+
+.react-paginate li.previous,
+.react-paginate li.next {
+  background-color: var(--white-color);
+  border: 1px solid var(--gray-color);
+  border-radius: 0%;
+  /* margin-right: 1rem; */
+}
+
+.react-paginate li {
+  /* background-color: var(); */
+  font-size: 0.8rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.react-paginate li.selected {
+  /* background-color: red !important; */
+  background-color: var(--primary-color);
+  color: var(--bs-border-color);
+  padding: 0.2rem 0.4rem;
+}
+
 /*Table CSS*/
 .table-scroll {
   position: relative;

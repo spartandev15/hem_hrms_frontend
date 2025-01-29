@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CiEdit } from "react-icons/ci";
-import { MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDelete, MdOutlineSkipNext } from "react-icons/md";
 import { z } from "zod";
 import "../../assets/styles/category.css";
 import ConfirmDialog from "../../components/ConfirmDialog";
@@ -11,11 +11,15 @@ import { useAppDispatch } from "../../hooks/reduxHook";
 import {
   useDeleteCategoryMutation,
   useGetAllCategoryQuery,
+  useLazyGetAllCategoryWithPaginationQuery,
   usePostCategoryMutation,
   useUpdateCategoryMutation,
 } from "../../redux/api/category";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
+import { MdOutlineSkipPrevious } from "react-icons/md";
+
+import ReactPaginate from "react-paginate";
 
 const categorySchema = z.object({
   category: z
@@ -38,7 +42,10 @@ const Category = () => {
   const [confirmPopup, setConfirmPopup] = useState(false);
   const [categoryId, setCategoryId] = useState(-1);
 
-  const { data: allCategory, isLoading } = useGetAllCategoryQuery();
+  const [
+    getAllCategoryWithPagination,
+    { data: allCategory, isLoading: isGetAllCategoryWithPaginationLoading },
+  ] = useLazyGetAllCategoryWithPaginationQuery();
 
   const [postCategory, { data: getCategoryDataDetails, isSuccess }] =
     usePostCategoryMutation();
@@ -56,7 +63,6 @@ const Category = () => {
       name: data.category,
     };
     const ressponse = await postCategory(formData);
-    console.log(ressponse);
     reset();
     // dispatch(setIsLoading(false));
   };
@@ -74,6 +80,29 @@ const Category = () => {
       setConfirmPopup(false);
     }
   };
+
+  const handlePageClick = ({ selected }: { selected: number }) => {
+    // dispatch(setIsLoading(true));
+    getAllCategoryWithPagination(selected + 1);
+  };
+
+  useEffect(() => {
+    // if (getCategoryDataDetails?.result && isSuccess) {
+    //   dispatch(setIsLoading(false));
+    //   dispatch(setToast(getCategoryDataDetails?.message));
+    // }
+
+    // if (deleteCategoryDataDetails?.result && deleteIsSuccess) {
+    //   dispatch(setIsLoading(false));
+    //   dispatch(setToast(deleteCategoryDataDetails?.message));
+    // }
+
+    // if (allCategory) {
+    //   dispatch(setIsLoading(false));
+    // }
+
+    getAllCategoryWithPagination(1);
+  }, []);
 
   useEffect(() => {
     if (getCategoryDataDetails?.result && isSuccess) {
@@ -135,41 +164,57 @@ const Category = () => {
         <div>
           <div className="container mt-4">
             <h1 className="mb-4 text-start text-medium">Categories Lists</h1>
-            {isLoading ? (
+            {isGetAllCategoryWithPaginationLoading ? (
               <p>Loading....</p>
             ) : allCategory && allCategory?.categories?.length > 0 ? (
-              <table className="category-table shadow-sm">
-                <thead className="thead-dark">
-                  <tr>
-                    <th
-                      className="text-medium px-3"
-                      style={{
-                        width: "10%",
-                      }}
-                    >
-                      #
-                    </th>
-                    <th className="text-medium px-3">Category</th>
-                    <th className="text-medium text-center actions-column">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
+              <div>
+                <div className="px-2">
+                  <table className="category-table shadow-sm">
+                    <thead className="thead-dark">
+                      <tr>
+                        <th
+                          className="text-medium px-3"
+                          style={{
+                            width: "10%",
+                          }}
+                        >
+                          #
+                        </th>
+                        <th className="text-medium px-3">Category</th>
+                        <th className="text-medium text-center actions-column">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
 
-                <tbody>
-                  {allCategory?.categories?.map(
-                    (category: any, index: number) => (
-                      <TableRow
-                        key={index}
-                        name={category.name}
-                        id={category.id}
-                        onClick={handleDeleteCategory}
-                        index={index}
-                      />
-                    )
-                  )}
-                </tbody>
-              </table>
+                    <tbody>
+                      {allCategory?.categories?.map(
+                        (category: any, index: number) => (
+                          <TableRow
+                            key={index}
+                            name={category.name}
+                            id={category.id}
+                            onClick={handleDeleteCategory}
+                            index={index}
+                          />
+                        )
+                      )}
+                    </tbody>
+                  </table>
+
+                  <ReactPaginate
+                    className="react-paginate"
+                    // breakLabel="..."
+                    nextLabel={<MdOutlineSkipNext />}
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={2}
+                    pageCount={allCategory?.pagination?.last_page}
+                    previousLabel={<MdOutlineSkipPrevious />}
+                    renderOnZeroPageCount={null}
+                    disabledClassName="disabled"
+                  />
+                </div>
+              </div>
             ) : (
               <h2>No Data Available</h2>
             )}

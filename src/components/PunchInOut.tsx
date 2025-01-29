@@ -11,6 +11,9 @@ import { formatDateType } from "../utils/formatDate";
 const PunchInOut = () => {
   const [isPunchIn, setPunchIn] = useState(false);
   const [isPunchOut, setPunchOut] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [pauseTime, setPauseTime] = useState<number | null>(null);
+  const [timeGap, setTimeGap] = useState("");
 
   const { data: punchInOutDataDetals, isLoading: isPunchInOutLoading } =
     usePunchInOutDetailsQuery();
@@ -59,26 +62,51 @@ const PunchInOut = () => {
     }
   };
 
-  // console.log(punchInOutDataDetals);
-
   const PunchIn = async () => {
     try {
       setPunchIn(true);
       const timer = new Date().getTime();
       startTimer(timer);
       localStorage.setItem("startTimer", JSON.stringify(timer));
-      await punchIn(undefined);
+      // await punchIn(undefined);
     } catch (error) {
       console.error(error);
     }
   };
 
+  const pauseTimer = () => {
+    setIsPaused(true);
+    setPauseTime(Date.now() as number);
+    localStorage.setItem("isPaused", JSON.stringify(true));
+    stopTimer();
+  };
+
+  const resumeTimer = () => {
+    if (pauseTime) {
+      setIsPaused(false);
+      const timeGap = Date.now() - pauseTime;
+      const startTime = getLocalStorageItem("startTimer") as number; // The time you originally started the timer from local storage
+      const newStartTime = startTime + timeGap; // Add timeGap to the original start time to adjust for the pause
+
+      // Update local storage with the adjusted start time and isPaused time
+      localStorage.setItem("isPaused", JSON.stringify(false));
+      localStorage.setItem("startTimer", JSON.stringify(newStartTime));
+
+      // Start the timer from the updated start time
+      startTimer(newStartTime);
+    }
+  };
+
+  console.log(pauseTime);
+
   const currentDate = new Date().toLocaleDateString();
 
   useEffect(() => {
     const timer = getLocalStorageItem("startTimer");
+    const isPaused = getLocalStorageItem("isPaused");
     if (timer) {
       startTimer(timer as string);
+
       // setPunchIn(true);
     }
     return () => {
@@ -129,7 +157,12 @@ const PunchInOut = () => {
 
           <div className="punch-btn-section mb-0">
             <div className="d-flex flex-sm-row flex-column gap-1">
-              <button className="btn mybtn punch-btn">Pause</button>
+              <button
+                onClick={isPaused ? resumeTimer : pauseTimer}
+                className="btn mybtn punch-btn"
+              >
+                {isPaused ? "Resume" : "Pause"}
+              </button>
               {punchInOutDataDetals?.data && (
                 <button
                   type="button"
