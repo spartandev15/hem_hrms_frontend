@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import PunchInOut from "../../components/PunchInOut";
-import { useGetDashboardDetailsQuery } from "../../redux/api/dashboard";
-import UpcommingEvetns from "../../components/UpcommingEvetns";
-import UserProfileCard from "../../components/cards/UserProfileCard";
-import { useAppSelector } from "../../hooks/reduxHook";
 import LeavesRequest from "../../components/LeavesRequest";
 import LeavesStatus from "../../components/LeavesStatus";
+import PunchInOut from "../../components/PunchInOut";
+import UpcommingEvetns from "../../components/UpcommingEvetns";
 import { WhoOffToday } from "../../components/WhoOffToday";
+import UserProfileCard from "../../components/cards/UserProfileCard";
+import { useAppSelector } from "../../hooks/reduxHook";
+import { useGetDashboardDetailsQuery } from "../../redux/api/dashboard";
 
 const userLogo = "/images/account.png";
 const user = "/images/profile.png";

@@ -3,22 +3,33 @@ import {
   usePunchOutMutation,
   usePunchInMutation,
   usePunchInOutDetailsQuery,
+  useResumeTimeMutation,
 } from "../redux/api/punchInOut";
 import { getLocalStorageItem } from "../utils/getLocalStorageItem";
 import { number } from "zod";
-import { formatDateType } from "../utils/formatDate";
+import { formatDateType, formatElapsedTime } from "../utils/formatDate";
+import { useAppDispatch } from "../hooks/reduxHook";
+import { setIsLoading } from "../redux/slices/loadingSlice";
 
 const PunchInOut = () => {
   const [isPunchIn, setPunchIn] = useState(false);
   const [isPunchOut, setPunchOut] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [pauseTime, setPauseTime] = useState<number | null>(null);
+  const [lastTime, setLastTime] = useState("00:00:00");
   const [timeGap, setTimeGap] = useState("");
+
+  const dispatch = useAppDispatch();
 
   const { data: punchInOutDataDetals, isLoading: isPunchInOutLoading } =
     usePunchInOutDetailsQuery();
-  const [punchIn, { data: punchInDataDetails }] = usePunchInMutation();
-  const [punchOut, { data: punchOutDataDetails }] = usePunchOutMutation();
+  const [punchIn, { data: punchInDataDetails, isSuccess: isPunchInSuccess }] =
+    usePunchInMutation();
+  const [
+    punchOut,
+    { data: punchOutDataDetails, isSuccess: isPunchOutSuccess },
+  ] = usePunchOutMutation();
+  const [resumeTime, { data: resumeTimeDataDetails }] = useResumeTimeMutation();
 
   // console.log(punchInDataDetails);
 
@@ -27,19 +38,13 @@ const PunchInOut = () => {
     useRef(null);
 
   const startTimer = (timer: string | number) => {
+    if (interValId.current) clearInterval(interValId.current);
     interValId.current = setInterval(() => {
       const elapsed = Date.now() - Number(timer);
-      const hours = Math.floor(elapsed / (1000 * 60 * 60));
-      const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+      const { hours, minutes, seconds } = formatElapsedTime(elapsed);
 
-      // Explicitly check for null before assignment
       if (timerRefDom.current) {
-        timerRefDom.current.textContent = `${hours
-          .toString()
-          .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds
-          .toString()
-          .padStart(2, "0")}`;
+        timerRefDom.current.textContent = `${hours}:${minutes}:${seconds}`;
       }
     }, 1000);
   };
@@ -51,24 +56,29 @@ const PunchInOut = () => {
     }
   };
 
-  const PunchOut = async () => {
+  const PunchIn = async () => {
     try {
-      setPunchOut(true);
-      stopTimer();
-      localStorage.removeItem("startTimer");
-      await punchOut();
+      dispatch(setIsLoading(true));
+      setPunchIn(true);
+      const currentTime = new Date().getTime();
+      startTimer(currentTime);
+      localStorage.setItem("startTimer", JSON.stringify(currentTime));
+      localStorage.setItem("isPaused", JSON.stringify(false));
+      await punchIn(undefined);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const PunchIn = async () => {
+  const PunchOut = async () => {
     try {
-      setPunchIn(true);
-      const timer = new Date().getTime();
-      startTimer(timer);
-      localStorage.setItem("startTimer", JSON.stringify(timer));
-      // await punchIn(undefined);
+      dispatch(setIsLoading(true));
+      setPunchOut(true);
+      stopTimer();
+      localStorage.removeItem("startTimer");
+      localStorage.removeItem("pauseTime");
+      localStorage.removeItem("isPaused");
+      await punchOut();
     } catch (error) {
       console.error(error);
     }
@@ -76,8 +86,12 @@ const PunchInOut = () => {
 
   const pauseTimer = () => {
     setIsPaused(true);
-    setPauseTime(Date.now() as number);
+    const currentPauseTime = Date.now();
+    setPauseTime(currentPauseTime); // Save the pause time
+
+    // Store paused state and time in localStorage
     localStorage.setItem("isPaused", JSON.stringify(true));
+    localStorage.setItem("pauseTime", JSON.stringify(currentPauseTime));
     stopTimer();
   };
 
@@ -94,25 +108,44 @@ const PunchInOut = () => {
 
       // Start the timer from the updated start time
       startTimer(newStartTime);
+      resumeTime({
+        time_gap: timeGap,
+      });
     }
   };
 
-  console.log(pauseTime);
-
-  const currentDate = new Date().toLocaleDateString();
+  // const currentDate = new Date().toLocaleDateString();
 
   useEffect(() => {
-    const timer = getLocalStorageItem("startTimer");
-    const isPaused = getLocalStorageItem("isPaused");
-    if (timer) {
-      startTimer(timer as string);
+    const storedStartTime = getLocalStorageItem("startTimer");
+    const storedIsPaused = getLocalStorageItem("isPaused");
+    const storedPauseTime = getLocalStorageItem("pauseTime");
 
-      // setPunchIn(true);
+    if (!storedIsPaused && storedStartTime) {
+      startTimer(storedStartTime as string);
+      setIsPaused(isPaused as boolean);
+    } else if (storedPauseTime) {
+      const elapsedTime = Number(storedPauseTime) - Number(storedStartTime); // Calculate time elapsed before pause
+      const { hours, minutes, seconds } = formatElapsedTime(elapsedTime);
+      setLastTime(`${hours}:${minutes}:${seconds}`);
+      setIsPaused(true);
+      setPauseTime(storedPauseTime as number);
     }
     return () => {
       stopTimer();
     };
   }, []);
+
+  console.log(punchInOutDataDetals);
+
+  useEffect(() => {
+    if (punchInDataDetails) {
+      dispatch(setIsLoading(false));
+    }
+    if (punchOutDataDetails) {
+      dispatch(setIsLoading(false));
+    }
+  }, [isPunchInSuccess, isPunchOutSuccess]);
 
   return (
     <div className="shadow sechrcard">
@@ -148,7 +181,7 @@ const PunchInOut = () => {
                 </span>
               ) : (
                 <span className="timerRef" ref={timerRefDom}>
-                  00:00:00
+                  {lastTime}
                 </span>
               )}
             </div>

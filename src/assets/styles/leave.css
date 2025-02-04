@@ -50,6 +50,10 @@ h2 {
   border: 1px solid #d8d4d4;
 } */
 
+.leave-status-table {
+  overflow-x: auto;
+}
+
 .leave-status-table th,
 .leaves-status-table td {
   padding: 12px;

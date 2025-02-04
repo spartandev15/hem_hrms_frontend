@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const userLogo = "/images/account.png";
 
@@ -102,6 +103,21 @@ const LeavesStatus = ({
             </tbody>
           </table>
         </div>
+
+        {leavesStatus?.length > 0 && (
+          <div className="btn mt-4 d-flex justify-content-center">
+            <Link
+              to="/"
+              className="text-white"
+              style={{
+                textDecoration: "none",
+              }}
+            >
+              View More...
+            </Link>
+          </div>
+        )}
+
         {/* <div className="tab-content" id="myTabContent">
           <div
             className="tab-pane fade show active"

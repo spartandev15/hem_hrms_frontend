@@ -16,6 +16,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   labelAnimated = true,
   serachIcon,
   isLoading,
+  onChange,
 }) => {
   const today = new Date().toISOString().split("T")[0];
 
@@ -44,7 +45,6 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
     }
   }, [value]);
 
-  console.log(value);
   return (
     <div className="form-group">
       <div className={`input-wrapper ${focused ? "focused" : ""}`}>
@@ -99,6 +99,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               onBlur={handleBlur}
               required={required}
               className=" w-100"
+              onChange={type === "file" ? onChange : undefined}
             />
             {type === "password" && (
               <div

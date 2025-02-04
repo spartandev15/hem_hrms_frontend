@@ -39,6 +39,18 @@ export const punchInOutApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["punchInOut"],
     }),
+
+    // endpoint for resumeTime
+    resumeTime: builder.mutation<any, any>({
+      query: (data) => {
+        return {
+          url: `api/projects/timers/resumetime`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["punchInOut"],
+    }),
   }),
 });
 
@@ -47,5 +59,6 @@ export const punchInOutApi = baseApi.injectEndpoints({
 export const {
   usePunchInMutation,
   usePunchOutMutation,
+  useResumeTimeMutation,
   usePunchInOutDetailsQuery,
 } = punchInOutApi;

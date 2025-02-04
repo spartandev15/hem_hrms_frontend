@@ -65,3 +65,58 @@ export const changePasswordSchema = z
     message: "Passwords don't match",
     path: ["confirm_password"], // This will show the error on the confirm_Password field
   });
+
+export const overTimeFormSchema = z.object({
+  // Overtime Date
+  overtime_date: z
+    .string()
+    .min(1, "Overtime date is required")
+    .refine((val) => !isNaN(Date.parse(val)), {
+      message: "Invalid date format",
+    }),
+
+  // Working Hours
+  working_hours: z
+    .string()
+    .min(1, "Working hours is required")
+    .regex(/^\d+$/, "Working hours must be a number")
+    .transform(Number) // Ensure it's a number after validation
+    .refine((hours) => hours > 0, {
+      message: "Working hours must be greater than 0",
+    }),
+
+  // Per Hour Rate
+  salary_per_hour: z
+    .string()
+    .min(1, "Per hour rate is required")
+    .regex(/^\d+(\.\d{1,2})?$/, "Invalid rate format")
+    .transform(Number)
+    .refine((rate) => rate > 0, {
+      message: "Per hour rate must be greater than 0",
+    }),
+
+  // Final Balance
+  final_balance: z
+    .string()
+    .min(1, "Final balance is required")
+    .regex(/^\d+(\.\d{1,2})?$/, "Invalid balance format")
+    .transform(Number)
+    .refine((balance) => balance >= 0, {
+      message: "Final balance must be greater than or equal to 0",
+    }),
+
+  // Project Name
+  project_name: z.string().min(1, "Project name is required"),
+
+  project_url: z
+    .string()
+    .min(1, "Project URL is required")
+    .url("Invalid URL format"),
+
+  // Screenshot
+  screenshot: z
+    .optional(z.union([z.instanceof(File), z.instanceof(FileList)])) // Allow either File or FileList
+    .refine((val) => !val || val instanceof File || val instanceof FileList, {
+      message: "Input must be a file",
+    }), // Allow undefined or null
+});

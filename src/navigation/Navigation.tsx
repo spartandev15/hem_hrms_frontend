@@ -13,6 +13,9 @@ import NotFound from "../pages/NotFound/NotFound";
 import { EmployeeDetails } from "../pages/Employee/EmployeeDetails";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import ChangePassword from "../pages/Auth/ChangePassword";
+import EmployeeBirthday from "../pages/Employee/EmployeeBirthday";
+import EmployeeWorkAniversary from "../pages/Employee/EmployeeWorkAniversary";
+import OverTime from "../pages/OverTime/OverTime";
 
 const Navigation = () => {
   return (
@@ -32,10 +35,16 @@ const Navigation = () => {
           <Route path="employees" element={<Employees />} />
           <Route path="create/category" element={<Category />} />
           <Route path="leave-details" element={<Leave />} />
+          <Route path="employees-birthdays" element={<EmployeeBirthday />} />
+          <Route
+            path="employees-anniversary"
+            element={<EmployeeWorkAniversary />}
+          />
         </Route>
 
         <Route element={<ProtectedRoute />}>
           <Route path="profile" element={<Profile />} />
+          <Route path="overtime" element={<OverTime />} />
           <Route
             path="/employee-details/:employee-name/:id"
             element={<EmployeeDetails />}

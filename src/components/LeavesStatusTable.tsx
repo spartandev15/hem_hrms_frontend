@@ -12,7 +12,12 @@ const LeavesStatusTable: React.FC<{ allAppliedLeavesData: any }> = ({
     <div className="container">
       {allAppliedLeavesData && (
         <div className="">
-          <table className="leave-status-table shadow-sm rounded-2 w-100">
+          <table
+            className="leave-status-table shadow-sm rounded-2 w-100"
+            style={{
+              whiteSpace: "nowrap", // Prevent wrapping of table cells
+            }}
+          >
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -78,13 +83,9 @@ const TableRow = (item: any) => {
       <td>{item?.end_date}</td>
       <td>{item?.reason}</td>
 
-      <td
-        onClick={toggleDropdown}
-        style={{ cursor: "pointer" }}
-        className="position-relative"
-      >
+      <td onClick={toggleDropdown} style={{ cursor: "pointer" }}>
         <div
-          className="text-capitalize"
+          className="text-capitalize position-relative"
           style={{
             width: "fit-content",
             backgroundColor:
@@ -104,31 +105,34 @@ const TableRow = (item: any) => {
           }}
         >
           {item.status}
-        </div>
 
-        {isDropdownVisible && (
-          <div
-            ref={dropDownRef}
-            className="position-absolute bg-white px-4 py-2 border rounded-2"
-            style={{
-              top: "85%",
-              zIndex: 999,
-            }}
-          >
-            <p
-              className="m-0 py-1"
-              onClick={() => handleStatusSubmit("approved")}
+          {isDropdownVisible && (
+            <div
+              ref={dropDownRef}
+              className="position-absolute bg-white px-4 py-2 border rounded-2"
+              style={{
+                top: "80%",
+                transform: "translate(-50% 0)",
+                left: "0%",
+                zIndex: 99999,
+                width: "auto",
+              }}
             >
-              Approved
-            </p>
-            <p
-              className="m-0 py-1"
-              onClick={() => handleStatusSubmit("rejected")}
-            >
-              Rejected
-            </p>
-          </div>
-        )}
+              <p
+                className="m-0 py-1"
+                onClick={() => handleStatusSubmit("approved")}
+              >
+                Approved
+              </p>
+              <p
+                className="m-0 py-1"
+                onClick={() => handleStatusSubmit("rejected")}
+              >
+                Rejected
+              </p>
+            </div>
+          )}
+        </div>
       </td>
     </tr>
   );

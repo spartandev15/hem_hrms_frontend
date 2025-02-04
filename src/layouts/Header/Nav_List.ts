@@ -13,11 +13,11 @@ export const Nav_List = [
       },
       {
         label: "Employee Birthday",
-        href: "",
+        href: "/dashboard/employees-birthdays",
       },
       {
         label: "Employee Work Anniversary",
-        href: "",
+        href: "/dashboard/employees-anniversary",
       },
       {
         label: "Provisional Employee",

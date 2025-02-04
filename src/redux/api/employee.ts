@@ -60,6 +60,26 @@ export const employeeApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["employess"],
     }),
+
+    // endpoint for get employee Birthdays
+    getEmployeesBirthday: builder.query<any, void>({
+      query: () => {
+        return {
+          url: `/api/get/birthdays`,
+          method: "GET",
+        };
+      },
+    }),
+
+    // endpoint for get employee anniversary
+    getEmployeesAnniversary: builder.query<any, void>({
+      query: () => {
+        return {
+          url: `/api/get/anniversaries`,
+          method: "GET",
+        };
+      },
+    }),
   }),
 });
 
@@ -70,5 +90,7 @@ export const {
   useGetEmployeesQuery,
   useDeleteEmployeeMutation,
   useUpdateEmployeeMutation,
+  useGetEmployeesBirthdayQuery,
+  useGetEmployeesAnniversaryQuery,
   useGetEmployeeDetailsByIdQuery,
 } = employeeApi;

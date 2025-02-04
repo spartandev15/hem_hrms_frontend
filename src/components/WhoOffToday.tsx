@@ -5,8 +5,6 @@ import ReactPaginate from "react-paginate";
 const userLogo = "/images/account.png";
 const user = "/images/profile.png";
 
-const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-
 export const WhoOffToday = ({ todayOff, isLoading }: any) => {
   return (
     <div className="sechrcard shadow">
@@ -77,22 +75,13 @@ export const WhoOffToday = ({ todayOff, isLoading }: any) => {
           )}
 
           {/* load more button  */}
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel="next >"
-            // onPageChange={handlePageClick}
-            pageRangeDisplayed={5}
-            pageCount={8}
-            previousLabel="< previous"
-            renderOnZeroPageCount={null}
-            // className="d-flex gap-2"
-          />
-          {/* <div className="mt-4 text-center">
-            <button type="button" className="hrloadbtn rounded">
-              {" "}
-              Load More
-            </button>
-          </div> */}
+          {todayOff.length > 0 && (
+            <div className="mt-4 text-center">
+              <button type="button" className="hrloadbtn rounded">
+                Load More
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
