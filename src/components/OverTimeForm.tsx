@@ -73,23 +73,35 @@ const OverTimeForm = () => {
   const {
     handleSubmit,
     register,
-    getValues,
     reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(overTimeFormSchema),
   });
 
-  const handleFormSubmit = (data: any) => {
-    // dispatch(setIsLoading(true));
+  const handleFormSubmit = async (data: any) => {
+    const formData = new FormData();
+    dispatch(setIsLoading(true));
     const dateFormat = formatDate(data.overtime_date).replace(/\//g, "-");
-    const formData = { ...data, overtime_date: dateFormat };
-    if (data.screenshot.length === 0) {
-      console.log("first");
-      delete formData.screenshot;
+    formData.append("overtime_date", dateFormat);
+    formData.append("working_hours", data.working_hours);
+    formData.append("salary_per_hour", data.salary_per_hour);
+    formData.append("final_balance", data.final_balance);
+    formData.append("project_name", data.project_name);
+    formData.append("project_url", data.project_url);
+
+    if (data.screenshot.length !== 0) {
+      const file = data.screenshot[0];
+      formData.append("screenshot", file);
     }
 
-    console.log(formData);
+    try {
+      const response = await postOverTime(formData).unwrap();
+      console.log("Post over time response:", response);
+    } catch (err) {
+      console.error("Error during post over time:", err);
+    }
+
     // postOverTime(formData);
     // reset();
   };
@@ -105,6 +117,8 @@ const OverTimeForm = () => {
     }
   };
 
+  // console.log(postOverTimeDataDetails);
+  // console.log(isPostOverTimeSuccess);
   useEffect(() => {
     if (postOverTimeDataDetails) {
       dispatch(setIsLoading(false));
@@ -114,9 +128,12 @@ const OverTimeForm = () => {
 
   return (
     <div>
+      <h2 className="text-start text-small text-blue-primary m-0">
+        OverTime Form
+      </h2>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
-        className="border p-3 rounded shadow-sm"
+        className="border p-3 rounded shadow-sm mt-2"
       >
         <div className="row mt-4">
           {overTimeFormFields.map((item, index) => (
@@ -128,7 +145,7 @@ const OverTimeForm = () => {
                 register={register}
                 type={item.type}
                 value={item.value}
-                onChange={handleChange}
+                // onChange={handleChange}
               />
               {errors[item.name] && (
                 <p className="text-danger">

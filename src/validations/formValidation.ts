@@ -79,7 +79,6 @@ export const overTimeFormSchema = z.object({
   working_hours: z
     .string()
     .min(1, "Working hours is required")
-    .regex(/^\d+$/, "Working hours must be a number")
     .transform(Number) // Ensure it's a number after validation
     .refine((hours) => hours > 0, {
       message: "Working hours must be greater than 0",
@@ -115,8 +114,6 @@ export const overTimeFormSchema = z.object({
 
   // Screenshot
   screenshot: z
-    .optional(z.union([z.instanceof(File), z.instanceof(FileList)])) // Allow either File or FileList
-    .refine((val) => !val || val instanceof File || val instanceof FileList, {
-      message: "Input must be a file",
-    }), // Allow undefined or null
+    .any() // Allow either File or FileList
+    .optional(), // Allow undefined or null
 });

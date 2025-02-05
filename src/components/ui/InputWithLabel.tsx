@@ -99,7 +99,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               onBlur={handleBlur}
               required={required}
               className=" w-100"
-              onChange={type === "file" ? onChange : undefined}
+              // onChange={type === "file" ? onChange : undefined}
             />
             {type === "password" && (
               <div
