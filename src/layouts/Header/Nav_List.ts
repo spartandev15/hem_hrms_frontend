@@ -1,6 +1,3 @@
-import { getLocalStorageItem } from "../../utils/getLocalStorageItem";
-const status = getLocalStorageItem("AUTH_USER_STATUS");
-
 export const Nav_List = [
   {
     label: "Employee",

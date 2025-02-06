@@ -11,7 +11,10 @@ const OverTime = () => {
     <div className="container py-3">
       {/* <h2 className="text-start">Over Time</h2> */}
       <div>
-        <OvetimeTable data={overTimeDataDetials?.data} />
+        <OvetimeTable
+          data={overTimeDataDetials?.data}
+          isLoading={isOverTimeLoading}
+        />
       </div>
 
       <div className="mt-4">

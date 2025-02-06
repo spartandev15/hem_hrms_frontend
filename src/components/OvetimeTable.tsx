@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { IoEyeOutline } from "react-icons/io5";
 import { TiEdit } from "react-icons/ti";
 import "../assets/styles/ovetimeTable.css";
@@ -13,10 +13,9 @@ import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
 import { overTimeFormSchema } from "../validations/formValidation";
 import InputWithLabel from "./ui/InputWithLabel";
-import { formatDate } from "../utils/formatDate";
+import { formatDate, formatDateType } from "../utils/formatDate";
 
-const OvetimeTable = ({ data }: any) => {
-  const [isEdit, setIsEdit] = useState(false);
+const OvetimeTable = ({ data, isLoading }: any) => {
   const [screenShotPreviewImage, setScreenShotPreviewImage] = useState("");
   const [
     updateOverTime,
@@ -36,7 +35,11 @@ const OvetimeTable = ({ data }: any) => {
   const handleEdit = async (data: any) => {
     dispatch(setIsLoading(true));
     const formData = new FormData();
-    const dateFormat = formatDate(data.overtime_date).replace(/\//g, "-");
+    const dateFormat = formatDate(data.overtime_date, "d-m-y").replace(
+      /\//g,
+      "-"
+    );
+    console.log(dateFormat);
     formData.append("overtime_date", dateFormat);
     formData.append("working_hours", data.working_hours);
     formData.append("salary_per_hour", data.salary_per_hour);
@@ -47,23 +50,27 @@ const OvetimeTable = ({ data }: any) => {
     if (typeof data.screenshot === "string") {
       formData.append("screenshot", data.screenshot);
     } else {
-      const file = data.screenshot[0];
-      formData.append("screenshot", file);
+      if (data.screenshot) {
+        const file = data.screenshot[0];
+        formData.append("screenshot", file);
+      }
     }
 
     try {
-      const response = await updateOverTime(formData).unwrap();
-      console.log("Post over time response:", response);
+      await updateOverTime(formData).unwrap();
     } catch (err) {
-      console.error("Error during post over time:", err);
+      const error = err as { data: { message: string } };
+      if (error) {
+        dispatch(setIsLoading(false));
+        dispatch(setToast(error?.data?.message));
+      }
     }
   };
 
   useEffect(() => {
     if (updateOverTimeData) {
       dispatch(setIsLoading(false));
-      setToast(updateOverTimeData.message);
-      setIsEdit(false);
+      dispatch(setToast(updateOverTimeData.message));
     }
   }, [isUpdateOverTimeSuccess]);
 
@@ -89,49 +96,28 @@ const OvetimeTable = ({ data }: any) => {
           </thead>
 
           <tbody>
-            {data?.map((record: any, index: number) => (
-              <TableRow
-                key={index}
-                record={record}
-                handleViewScreenshot={handleViewScreenshot}
-                handleEdit={handleEdit}
-                setIsEdit={setIsEdit}
-                isEdit={isEdit}
-              />
-              //   <tr key={record.id}>
-              //     <td>{record.overtime_date}</td>
-              //     <td>{record.working_hours}</td>
-              //     <td>{record.salary_per_hour}</td>
-              //     <td>{record.project_name}</td>
-              //     <td>{record.project_url}</td>
-              //     <td>
-              //       <img
-              //         src={`${record.screenshot}`}
-              //         alt="Screenshot"
-              //         className="screenshot-thumbnail"
-              //         onClick={() => handleViewScreenshot(record.screenshot)}
-              //       />
-              //     </td>
-              //     <td>
-              //       <div
-              //         className="d-flex gap-2 justify-content-center align-items-center"
-              //         style={{
-              //           cursor: "pointer",
-              //         }}
-              //       >
-              //         <div>
-              //           <IoEyeOutline
-              //             size="20"
-              //             onClick={() => handleViewScreenshot(record.screenshot)}
-              //           />
-              //         </div>
-              //         <div>
-              //           <TiEdit size="20" />
-              //         </div>
-              //       </div>
-              //     </td>
-              //   </tr>
-            ))}
+            {isLoading ? (
+              <tr>
+                <td colSpan={8} className="text-center">
+                  Loading...
+                </td>
+              </tr>
+            ) : data?.length > 0 ? (
+              data?.map((record: any, index: number) => (
+                <TableRow
+                  key={index}
+                  record={record}
+                  handleViewScreenshot={handleViewScreenshot}
+                  handleEdit={handleEdit}
+                />
+              ))
+            ) : (
+              <tr>
+                <td colSpan={8} className="text-center">
+                  No Data
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -179,13 +165,9 @@ const OvetimeTable = ({ data }: any) => {
   );
 };
 
-const TableRow = ({
-  record,
-  handleViewScreenshot,
-  handleEdit,
-  setIsEdit,
-  isEdit,
-}: any) => {
+const TableRow = ({ record, handleViewScreenshot, handleEdit }: any) => {
+  const [isEdit, setIsEdit] = useState(false);
+
   const overTimeFormFields = [
     {
       label: "Overtime Date",
@@ -241,6 +223,7 @@ const TableRow = ({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -255,6 +238,8 @@ const TableRow = ({
     resolver: zodResolver(overTimeFormSchema),
   });
 
+  const screenShotImageName = useWatch({ control, name: "screenshot" });
+
   return (
     <>
       <tr>
@@ -264,7 +249,6 @@ const TableRow = ({
         <td>{record.final_balance}</td>
         <td>{record.project_name}</td>
         <td>{record.project_url}</td>
-
         <td>
           {record.screenshot ? (
             <img
@@ -277,7 +261,7 @@ const TableRow = ({
             "No Screenshot"
           )}
         </td>
-
+        {/* {record.status && <td>{record.status}</td>} */}
         <td>
           <div
             className="d-flex gap-2 justify-content-center align-items-center"
@@ -336,11 +320,20 @@ const TableRow = ({
                       register={register}
                       type={item.type}
                       value={item.value}
-                      // onChange={handleChange}
                     />
-                    {errors[item.name] && (
+                    {item.name === "screenshot" && screenShotImageName && (
+                      <p>
+                        {typeof screenShotImageName === "string"
+                          ? screenShotImageName?.split("/").pop()
+                          : screenShotImageName[0]?.name}
+                      </p>
+                    )}{" "}
+                    {errors[item.name as keyof typeof errors] && (
                       <p className="text-danger">
-                        {errors[item.name]?.message as string}
+                        {
+                          errors[item.name as keyof typeof errors]
+                            ?.message as string
+                        }
                       </p>
                     )}
                   </div>

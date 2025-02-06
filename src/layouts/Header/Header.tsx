@@ -71,6 +71,17 @@ const Header = () => {
     setSubLinksVisible(subLinksVisible === index ? null : index);
   };
 
+  const Nav_Lists = Nav_List.map((item) => {
+    if (item.label === "OverTime") {
+      return {
+        ...item,
+        label: "Overtime",
+        href: status === "HR" ? "/dashboard/overtime" : "/overtime",
+      };
+    }
+    return item;
+  });
+
   useEffect(() => {
     if (logoutDetails?.result && logoutIsSuccess) {
       dispatch(logoutAuthUser());
@@ -95,7 +106,7 @@ const Header = () => {
           {/* navigation Links  */}
           <div className="nav-bar-container">
             <ul className="nav-bar" ref={navLinkRef}>
-              {Nav_List.map((link, index) => (
+              {Nav_Lists.map((link, index) => (
                 <li
                   className="position-relative nav-list p-0"
                   key={`${index}-${link.label}`}
@@ -232,6 +243,8 @@ const Header = () => {
         </div>
 
         <MobileNav
+          status={status}
+          navLists={Nav_Lists}
           isOpen={isOpenNavMenu}
           toggleMobileNav={toggleMobileNav}
           subLinksVisible={subLinksVisible}
@@ -246,6 +259,8 @@ export default Header;
 
 const MobileNav = ({
   isOpen,
+  status,
+  navLists,
   toggleMobileNav,
   subLinksVisible,
   toggleMobileSubLinks,
@@ -259,7 +274,7 @@ const MobileNav = ({
       }}
     >
       <ul className="mobile-nav-list mt-3">
-        {Nav_List.map((link, index) => (
+        {navLists.map((link: any, index: number) => (
           <li key={index}>
             <div
               onClick={() => {
@@ -270,7 +285,11 @@ const MobileNav = ({
               className="nav-item-toggle d-flex align-items-center nav-links"
             >
               {link.subLinks ? (
-                <div>{link.label}</div>
+                <div>
+                  {link.label === "Employee" && status != "HR"
+                    ? null
+                    : link.label}
+                </div>
               ) : (
                 <Link
                   to={link.href}
@@ -280,18 +299,21 @@ const MobileNav = ({
                   {link.label}
                 </Link>
               )}
-              {link.subLinks && (
-                <FaCaretDown
-                  size={12}
-                  style={{
-                    marginLeft: "8px",
-                    transform:
-                      subLinksVisible === index
-                        ? "rotate(180deg)"
-                        : "rotate(0deg)",
-                  }}
-                />
-              )}
+
+              {link.label === "Employee" && status != "HR"
+                ? null
+                : link.subLinks && (
+                    <FaCaretDown
+                      size={12}
+                      style={{
+                        marginLeft: "8px",
+                        transform:
+                          subLinksVisible === index
+                            ? "rotate(180deg)"
+                            : "rotate(0deg)",
+                      }}
+                    />
+                  )}
             </div>
 
             {/* Show sublinks if this parent link is active and has sublinks */}

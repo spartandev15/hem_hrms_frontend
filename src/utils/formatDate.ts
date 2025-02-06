@@ -1,4 +1,11 @@
-export function formatDate(date: string | Date): string {
+export function formatDate(date: string | Date, type?: "d-m-y"): string {
+  if (type === "d-m-y") {
+    const day = new Date(date).getDate().toString().padStart(2, "0");
+    const month = (new Date(date).getMonth() + 1).toString().padStart(2, "0"); // Month is 0-indexed, so add 1
+    const year = new Date(date).getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
   const inputDate = new Date(date);
   const today = new Date();
   const yesterday = new Date(today);

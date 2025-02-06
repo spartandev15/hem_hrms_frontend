@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
-import InputWithLabel from "./ui/InputWithLabel";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { overTimeFormSchema } from "../validations/formValidation";
-import { usePostOverTimeMutation } from "../redux/api/overTime";
-import { usePostEmployeeMutation } from "../redux/api/employee";
-import { formatDate } from "../utils/formatDate";
+import React, { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { useAppDispatch } from "../hooks/reduxHook";
+import { usePostOverTimeMutation } from "../redux/api/overTime";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
+import { formatDate } from "../utils/formatDate";
+import { overTimeFormSchema } from "../validations/formValidation";
+import InputWithLabel from "./ui/InputWithLabel";
 
 const overTimeFormFields = [
   {
@@ -63,7 +62,6 @@ const overTimeFormFields = [
 ];
 
 const OverTimeForm = () => {
-  const [screenShotPreview, setScreenShotPreview] = useState<File | string>("");
   const dispatch = useAppDispatch();
   const [
     postOverTime,
@@ -74,6 +72,7 @@ const OverTimeForm = () => {
     handleSubmit,
     register,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(overTimeFormSchema),
@@ -82,7 +81,10 @@ const OverTimeForm = () => {
   const handleFormSubmit = async (data: any) => {
     const formData = new FormData();
     dispatch(setIsLoading(true));
-    const dateFormat = formatDate(data.overtime_date).replace(/\//g, "-");
+    const dateFormat = formatDate(data.overtime_date, "d-m-y").replace(
+      /\//g,
+      "-"
+    );
     formData.append("overtime_date", dateFormat);
     formData.append("working_hours", data.working_hours);
     formData.append("salary_per_hour", data.salary_per_hour);
@@ -96,29 +98,21 @@ const OverTimeForm = () => {
     }
 
     try {
-      const response = await postOverTime(formData).unwrap();
-      console.log("Post over time response:", response);
+      await postOverTime(formData).unwrap();
     } catch (err) {
+      const error = err as { data: { error: string } };
+      if (error) {
+        dispatch(setIsLoading(false));
+        dispatch(setToast(error?.data?.error));
+      }
       console.error("Error during post over time:", err);
     }
 
-    // postOverTime(formData);
-    // reset();
+    reset();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    const reader = new FileReader();
-    if (file) {
-      reader.onloadend = () => {
-        setScreenShotPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const screenShotPreview = useWatch({ control, name: "screenshot" });
 
-  // console.log(postOverTimeDataDetails);
-  // console.log(isPostOverTimeSuccess);
   useEffect(() => {
     if (postOverTimeDataDetails) {
       dispatch(setIsLoading(false));
@@ -145,7 +139,6 @@ const OverTimeForm = () => {
                 register={register}
                 type={item.type}
                 value={item.value}
-                // onChange={handleChange}
               />
               {errors[item.name] && (
                 <p className="text-danger">
@@ -161,7 +154,7 @@ const OverTimeForm = () => {
                   }}
                 >
                   <img
-                    src={`${screenShotPreview}`}
+                    src={`${URL.createObjectURL(screenShotPreview[0])}`}
                     alt="Screenshot Preview"
                     className="w-100 h-100 object-fit-cover"
                   />

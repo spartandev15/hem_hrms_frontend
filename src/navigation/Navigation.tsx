@@ -16,6 +16,7 @@ import ChangePassword from "../pages/Auth/ChangePassword";
 import EmployeeBirthday from "../pages/Employee/EmployeeBirthday";
 import EmployeeWorkAniversary from "../pages/Employee/EmployeeWorkAniversary";
 import OverTime from "../pages/OverTime/OverTime";
+import OverTimeManagement from "../pages/OverTime/OverTimeManagement";
 
 const Navigation = () => {
   return (
@@ -40,6 +41,7 @@ const Navigation = () => {
             path="employees-anniversary"
             element={<EmployeeWorkAniversary />}
           />
+          <Route path="overtime" element={<OverTimeManagement />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>
