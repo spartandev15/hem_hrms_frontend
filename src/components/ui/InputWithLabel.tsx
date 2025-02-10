@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { InputWithLabelProps } from "../../types";
 import { IoMdSearch } from "react-icons/io";
 import { BiHide, BiShow } from "react-icons/bi";
+import { FaCloudUploadAlt } from "react-icons/fa";
 
 const InputWithLabel: React.FC<InputWithLabelProps> = ({
   label,
@@ -16,13 +17,13 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   labelAnimated = true,
   serachIcon,
   isLoading,
-  onChange,
+  disabled,
 }) => {
   const today = new Date().toISOString().split("T")[0];
-
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const fileRef = useRef<HTMLInputElement | null>(null);
   const handleFocus = () => {
     setFocused(true);
   };
@@ -55,8 +56,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             onFocus={handleFocus}
             required={required}
             className="input-animation w-100"
-            defaultValue={value || "kc"}
-            // value={value}
+            defaultValue={value || ""}
           >
             {options && options.length > 0 ? (
               options?.map((option: any, index: number) => (
@@ -84,36 +84,66 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               required={required}
               max={today}
               className=" w-100"
+              disabled={disabled}
             />
           </div>
         ) : (
           <div className="position-relative">
-            <input
-              type={type === "password" && showPassword ? "text" : type}
-              id={id}
-              {...register(name!)}
-              placeholder={
-                focused ? (labelAnimated ? "" : placeholder) : placeholder
-              }
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              required={required}
-              className=" w-100"
-              // onChange={type === "file" ? onChange : undefined}
-            />
-            {type === "password" && (
-              <div
-                className="position-absolute"
-                style={{
-                  right: "20px",
-                  top: "50%",
-                  transform: "translate(20%, -50%)",
-                  cursor: "pointer",
-                }}
-                onClick={handleShowHidePassword}
-              >
-                {showPassword ? <BiShow /> : <BiHide />}
+            {type === "file" ? (
+              <div>
+                <input
+                  type="file"
+                  {...register(name!)}
+                  hidden
+                  ref={(e) => {
+                    fileRef.current = e;
+                    register(name!).ref(e);
+                  }}
+                />
+                <button
+                  type="button"
+                  disabled={disabled}
+                  className="file text-start"
+                  style={{
+                    cursor: disabled ? "auto" : "pointer",
+                  }}
+                  onClick={() => fileRef?.current?.click()}
+                >
+                  <span className="text-xmall">
+                    <FaCloudUploadAlt /> Upload File
+                  </span>
+                </button>
               </div>
+            ) : (
+              <>
+                <input
+                  type={type === "password" && showPassword ? "text" : type}
+                  id={id}
+                  {...register(name!)}
+                  placeholder={
+                    focused ? (labelAnimated ? "" : placeholder) : placeholder
+                  }
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  required={required}
+                  className="w-100"
+                  disabled={disabled}
+                />
+                {type === "password" && (
+                  <div
+                    className="position-absolute"
+                    style={{
+                      right: "20px",
+                      top: "50%",
+                      transform: "translate(20%, -50%)",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleShowHidePassword}
+                  >
+                    {showPassword ? <BiShow /> : <BiHide />}
+                  </div>
+                )}
+              </>
             )}
 
             {serachIcon && (

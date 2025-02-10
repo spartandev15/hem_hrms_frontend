@@ -144,7 +144,6 @@ const AddEmployee = () => {
 
   const handleFormSubmit = (data: any) => {
     // const leavesFormData = {};
-    console.log(data);
     dispatch(setIsLoading(true));
     postEmployee(data);
     reset();

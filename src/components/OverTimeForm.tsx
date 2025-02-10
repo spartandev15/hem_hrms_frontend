@@ -36,7 +36,7 @@ const overTimeFormFields = [
     name: "final_balance",
     type: "number",
     required: true,
-    value: "",
+    value: "default",
   },
   {
     label: "Project Name",
@@ -73,6 +73,7 @@ const OverTimeForm = () => {
     register,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(overTimeFormSchema),
@@ -111,6 +112,13 @@ const OverTimeForm = () => {
     reset();
   };
 
+  const workingHours = useWatch({ control, name: "working_hours" }); // Default value of 0
+  const salaryPerHour = useWatch({ control, name: "salary_per_hour" }); // Default value of 0
+
+  // Automatically calculate the total balance
+  const totalBalance = workingHours * salaryPerHour;
+  setValue("final_balance", String(totalBalance));
+
   const screenShotPreview = useWatch({ control, name: "screenshot" });
 
   useEffect(() => {
@@ -125,6 +133,7 @@ const OverTimeForm = () => {
       <h2 className="text-start text-small text-blue-primary m-0">
         OverTime Form
       </h2>
+
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
         className="border p-3 rounded shadow-sm mt-2"

@@ -7,6 +7,8 @@ import { setAuthUser } from "../../redux/slices/authSlice";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 import { LoginFormData } from "../../types";
+import { useForm } from "react-hook-form";
+import InputWithLabel from "../../components/ui/InputWithLabel";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,18 +16,19 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const { handleSubmit, register } = useForm();
+
   // hook to get the response from the mutation of authLogin mutation
   const [authLogin, { data: LoginDetialsData, isSuccess: loginIsSuccess }] =
     useAuthLoginMutation();
 
   // form submit handler for login
-  const handleLogin = async (e: React.FormEvent<HTMLElement>) => {
-    e.preventDefault();
+  const handleLogin = async (data: any) => {
     try {
       dispatch(setIsLoading(true));
       const formData: LoginFormData = {
-        email: username,
-        password: password,
+        email: data.email,
+        password: data.password,
       };
       await authLogin(formData).unwrap();
     } catch (error) {
@@ -41,10 +44,6 @@ const Login = () => {
 
       const { access_token, user } = LoginDetialsData;
       const { status, id } = user;
-
-      console.log(LoginDetialsData);
-      console.log(user);
-
       // payload details send to setAuthReducer
       const payloadData = {
         access_token,
@@ -68,7 +67,7 @@ const Login = () => {
   }, [loginIsSuccess]);
 
   return (
-    <div className="login-container">
+    <div className="login-container px-3">
       <div className="container">
         <div className="row">
           <div className="col-lg-6 contact_form11">
@@ -88,12 +87,19 @@ const Login = () => {
               <div className="col-lg-8 col-sm-12">
                 <form
                   className="text-center signin_pd_inner "
-                  onSubmit={handleLogin}
+                  onSubmit={handleSubmit(handleLogin)}
                 >
                   <h3>Login to HRMS</h3>
 
                   <div className="form-outline">
-                    <input
+                    <InputWithLabel
+                      name="email"
+                      label="Email"
+                      register={register}
+                      type="email"
+                      required
+                    />
+                    {/* <input
                       type="text"
                       id="username"
                       value={username}
@@ -106,11 +112,18 @@ const Login = () => {
                       style={{ background: "#fff" }}
                     >
                       E-Mail
-                    </label>
+                    </label> */}
                   </div>
 
                   <div className="form-outline">
-                    <input
+                    <InputWithLabel
+                      name="password"
+                      label="Password"
+                      register={register}
+                      type="password"
+                      required
+                    />
+                    {/* <input
                       type="password"
                       id="password"
                       value={password}
@@ -123,7 +136,7 @@ const Login = () => {
                       style={{ background: "#fff" }}
                     >
                       Password
-                    </label>
+                    </label> */}
                   </div>
 
                   <div className="row proceedbtn">

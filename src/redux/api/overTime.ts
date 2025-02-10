@@ -3,7 +3,7 @@ import { baseApi } from "../../baseApi/baseApi";
 
 export const overTimeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // endpoint for getting overtime
+    // endpoint for getting ones's users overtime data
     getOverTime: builder.query<any, void>({
       query: () => {
         return {
@@ -12,6 +12,17 @@ export const overTimeApi = baseApi.injectEndpoints({
         };
       },
       providesTags: ["overtime"],
+    }),
+
+    // endpoint for getting all overtime data
+    getAllOverTime: builder.query<any, void>({
+      query: () => {
+        return {
+          url: "/api/get/employees/overtimeRecords",
+          method: "GET",
+        };
+      },
+      providesTags: ["allOvertime"],
     }),
 
     // endpoint for create a overtime
@@ -37,13 +48,27 @@ export const overTimeApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["overtime"],
     }),
+
+    // endpoint for update status a overtime
+    updateOverTimeStatus: builder.mutation<any, any>({
+      query: (overTimeStatusData: any) => {
+        return {
+          url: "/api/update/overtimeRecordStatus",
+          method: "POST",
+          body: overTimeStatusData,
+        };
+      },
+      invalidatesTags: ["allOvertime"],
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-  usePostOverTimeMutation,
   useGetOverTimeQuery,
+  useGetAllOverTimeQuery,
+  usePostOverTimeMutation,
   useUpdateOverTimeMutation,
+  useUpdateOverTimeStatusMutation,
 } = overTimeApi;

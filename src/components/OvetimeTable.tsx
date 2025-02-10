@@ -14,8 +14,10 @@ import { setToast } from "../redux/slices/toastSlice";
 import { overTimeFormSchema } from "../validations/formValidation";
 import InputWithLabel from "./ui/InputWithLabel";
 import { formatDate, formatDateType } from "../utils/formatDate";
+import { Link } from "react-router-dom";
 
 const OvetimeTable = ({ data, isLoading }: any) => {
+  const isStatusExist = data?.some((item: any) => item.status !== null);
   const [screenShotPreviewImage, setScreenShotPreviewImage] = useState("");
   const [
     updateOverTime,
@@ -84,6 +86,7 @@ const OvetimeTable = ({ data, isLoading }: any) => {
         <table className="overtime-table mt-2">
           <thead>
             <tr>
+              <th>#</th>
               <th>Overtime Date</th>
               <th>Working Hours</th>
               <th>Per Hour Rate</th>
@@ -91,6 +94,7 @@ const OvetimeTable = ({ data, isLoading }: any) => {
               <th>Project Name</th>
               <th>Project URL</th>
               <th>Screenshot</th>
+              {isStatusExist && <th>Status</th>}
               <th>Actions</th>
             </tr>
           </thead>
@@ -98,7 +102,7 @@ const OvetimeTable = ({ data, isLoading }: any) => {
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={8} className="text-center">
+                <td colSpan={9} className="text-center">
                   Loading...
                 </td>
               </tr>
@@ -109,11 +113,13 @@ const OvetimeTable = ({ data, isLoading }: any) => {
                   record={record}
                   handleViewScreenshot={handleViewScreenshot}
                   handleEdit={handleEdit}
+                  isStatusExist={isStatusExist}
+                  index={index}
                 />
               ))
             ) : (
               <tr>
-                <td colSpan={8} className="text-center">
+                <td colSpan={9} className="text-center">
                   No Data
                 </td>
               </tr>
@@ -165,7 +171,13 @@ const OvetimeTable = ({ data, isLoading }: any) => {
   );
 };
 
-const TableRow = ({ record, handleViewScreenshot, handleEdit }: any) => {
+const TableRow = ({
+  record,
+  handleViewScreenshot,
+  handleEdit,
+  isStatusExist,
+  index,
+}: any) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const overTimeFormFields = [
@@ -174,7 +186,8 @@ const TableRow = ({ record, handleViewScreenshot, handleEdit }: any) => {
       name: "overtime_date",
       type: "date",
       required: true,
-      value: record.overtime,
+      isDisabled: true,
+      value: record.overtime_date,
     },
     {
       label: "Working Hours",
@@ -212,11 +225,11 @@ const TableRow = ({ record, handleViewScreenshot, handleEdit }: any) => {
       value: record.project_url,
     },
     {
-      label: "Screenshot",
+      label: "screenshot",
       name: "screenshot",
       type: "file",
       required: true,
-      value: record.screenshot, // Initial value can be null for file input
+      value: record.screenshot || "default", // Initial value can be null for file input
     },
   ];
 
@@ -224,6 +237,7 @@ const TableRow = ({ record, handleViewScreenshot, handleEdit }: any) => {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -238,17 +252,34 @@ const TableRow = ({ record, handleViewScreenshot, handleEdit }: any) => {
     resolver: zodResolver(overTimeFormSchema),
   });
 
+  const workingHours = useWatch({ control, name: "working_hours" }); // Default value of 0
+  const salaryPerHour = useWatch({ control, name: "salary_per_hour" }); // Default value of 0
+
+  // Automatically calculate the total balance
+  const totalBalance = workingHours * salaryPerHour;
+  setValue("final_balance", String(totalBalance));
+
+  const handleEditForm = async (data: any) => {
+    await handleEdit(data);
+    setIsEdit(false);
+  };
+
   const screenShotImageName = useWatch({ control, name: "screenshot" });
 
   return (
     <>
       <tr>
+        <td>{index + 1}</td>
         <td>{record.overtime_date}</td>
         <td>{record.working_hours}</td>
         <td>{record.salary_per_hour}</td>
         <td>{record.final_balance}</td>
         <td>{record.project_name}</td>
-        <td>{record.project_url}</td>
+        <td>
+          <Link to={record.project_url} className="text-black" target="_blank">
+            {record.project_url}
+          </Link>
+        </td>
         <td>
           {record.screenshot ? (
             <img
@@ -261,6 +292,36 @@ const TableRow = ({ record, handleViewScreenshot, handleEdit }: any) => {
             "No Screenshot"
           )}
         </td>
+
+        {isStatusExist && (
+          <td>
+            {record.status ? (
+              <span
+                className="px-2 py-1 rounded-1"
+                style={{
+                  backgroundColor:
+                    record.status === "approved"
+                      ? "#73A617" // green for approved
+                      : record.status === "pending"
+                      ? "#DD982F" // amber for pending
+                      : "#DF3523",
+
+                  color:
+                    record.status === "approved"
+                      ? "#fff" // green for approved
+                      : record.status === "pending"
+                      ? "#fff" // amber for pending
+                      : "#fff",
+                }}
+              >
+                {record.status}
+              </span>
+            ) : (
+              "No Status"
+            )}
+          </td>
+        )}
+
         {/* {record.status && <td>{record.status}</td>} */}
         <td>
           <div
@@ -303,7 +364,7 @@ const TableRow = ({ record, handleViewScreenshot, handleEdit }: any) => {
         >
           <div className="container position-relative d-flex justify-content-center align-items-center h-100 ">
             <form
-              onSubmit={handleSubmit(handleEdit)}
+              onSubmit={handleSubmit(handleEditForm)}
               className="border p-3 rounded shadow-sm mt-2"
               style={{
                 backgroundColor: "#FFFFFF",
@@ -320,14 +381,39 @@ const TableRow = ({ record, handleViewScreenshot, handleEdit }: any) => {
                       register={register}
                       type={item.type}
                       value={item.value}
+                      disabled={item.isDisabled}
                     />
+
                     {item.name === "screenshot" && screenShotImageName && (
-                      <p>
-                        {typeof screenShotImageName === "string"
-                          ? screenShotImageName?.split("/").pop()
-                          : screenShotImageName[0]?.name}
-                      </p>
-                    )}{" "}
+                      <>
+                        {typeof screenShotImageName === "string" ? (
+                          <img
+                            src={screenShotImageName}
+                            style={{
+                              width: "100px",
+                              height: "80px",
+                              objectFit: "cover",
+                            }}
+                            className="mt-2"
+                          />
+                        ) : (
+                          <img
+                            style={{
+                              width: "120px",
+                              height: "120px",
+                              objectFit: "contain",
+                            }}
+                            src={URL.createObjectURL(screenShotImageName[0])}
+                          />
+                        )}
+                        <p>
+                          {typeof screenShotImageName === "string"
+                            ? screenShotImageName?.split("/").pop()
+                            : screenShotImageName[0]?.name}
+                        </p>
+                      </>
+                    )}
+
                     {errors[item.name as keyof typeof errors] && (
                       <p className="text-danger">
                         {

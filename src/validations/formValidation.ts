@@ -116,4 +116,6 @@ export const overTimeFormSchema = z.object({
   screenshot: z
     .any() // Allow either File or FileList
     .optional(), // Allow undefined or null
+
+  status: z.string().optional(),
 });

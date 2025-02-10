@@ -3,7 +3,7 @@
 }
 
 .overtime-table {
-  width: 100%;
+  /* width: 100%; */
   border-collapse: collapse;
 }
 
@@ -11,12 +11,21 @@
 .overtime-table td {
   padding: 8px;
   border: 1px solid #ddd;
-  text-align: left;
+  text-align: center;
   white-space: nowrap;
 }
 
 .overtime-table th {
   background-color: #f4f4f4;
+  width: 200px;
+  font-size: 14px;
+}
+
+.overtime-table tr {
+  background-color: #f4f4f4;
+  width: 200px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .overtime-table tr:nth-child(even) {
@@ -24,7 +33,8 @@
 }
 
 .screenshot-thumbnail {
-  width: 80px;
+  width: 30px;
+  height: 20px;
   cursor: pointer;
   object-fit: cover;
 }

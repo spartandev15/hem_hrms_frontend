@@ -12,6 +12,7 @@ export const baseApi = createApi({
     "punchInOut",
     "allEmployess",
     "overtime",
+    "allOvertime",
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_KEY_BASE_URL,

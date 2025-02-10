@@ -30,8 +30,6 @@ export const EditableForm = ({
     onSubmit(data);
   };
 
-  console.log(defaultValues);
-  console.log(fields);
   return (
     <div className="mt-3">
       <form onSubmit={handleSubmit(formSubmit)}>

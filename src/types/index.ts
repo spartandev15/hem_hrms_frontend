@@ -71,6 +71,7 @@ export interface InputWithLabelProps {
   labelAnimated?: boolean;
   serachIcon?: boolean;
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
 interface EmployeeDetails {
