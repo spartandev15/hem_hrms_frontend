@@ -119,3 +119,20 @@ export const overTimeFormSchema = z.object({
 
   status: z.string().optional(),
 });
+
+export const noticeFormSchema = z.object({
+  title: z.string().min(1, "title is required"),
+  email: z
+    .array(
+      z.object({
+        label: z.string().min(1, "Label is required"),
+        value: z.string().min(1, "Value is required"),
+      })
+    )
+    .nonempty("Email is required"), // Ensure at least one email is selected
+
+  description: z.string().min(1, "Description is required"),
+  screenshot: z
+    .any() // Allow either File or FileList
+    .optional(), // Allow undefined or null
+});

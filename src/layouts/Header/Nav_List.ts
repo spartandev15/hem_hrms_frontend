@@ -43,6 +43,10 @@ export const Nav_List = [
     href: "Leave",
   },
   {
+    label: "Notice",
+    href: "notices",
+  },
+  {
     label: "Recruitment",
     href: "/dashboard/employee",
     subLinks: [

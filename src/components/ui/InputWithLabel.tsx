@@ -116,19 +116,39 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               </div>
             ) : (
               <>
-                <input
-                  type={type === "password" && showPassword ? "text" : type}
-                  id={id}
-                  {...register(name!)}
-                  placeholder={
-                    focused ? (labelAnimated ? "" : placeholder) : placeholder
-                  }
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  required={required}
-                  className="w-100"
-                  disabled={disabled}
-                />
+                {type === "textarea" ? (
+                  <textarea
+                    id={id}
+                    {...register(name!)}
+                    placeholder={placeholder}
+                    onFocus={handleFocus}
+                    required={required}
+                    className="w-100"
+                    disabled={disabled}
+                    rows={15}
+                  />
+                ) : (
+                  <input
+                    type={
+                      type === "password"
+                        ? showPassword
+                          ? "text"
+                          : type
+                        : type
+                    }
+                    id={id}
+                    {...register(name!)}
+                    placeholder={
+                      focused ? (labelAnimated ? "" : placeholder) : placeholder
+                    }
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    required={required}
+                    className="w-100"
+                    disabled={disabled}
+                  />
+                )}
+
                 {type === "password" && (
                   <div
                     className="position-absolute"

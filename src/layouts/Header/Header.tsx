@@ -78,6 +78,12 @@ const Header = () => {
         label: "Overtime",
         href: status === "HR" ? "/dashboard/overtime" : "/overtime",
       };
+    } else if (item.label === "Notice") {
+      return {
+        ...item,
+        label: "Notice",
+        href: status === "HR" ? "/dashboard/notices" : "/notices",
+      };
     }
     return item;
   });

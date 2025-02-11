@@ -17,6 +17,8 @@ import EmployeeBirthday from "../pages/Employee/EmployeeBirthday";
 import EmployeeWorkAniversary from "../pages/Employee/EmployeeWorkAniversary";
 import OverTime from "../pages/OverTime/OverTime";
 import OverTimeManagement from "../pages/OverTime/OverTimeManagement";
+import { Notice } from "../pages/Notice/Notice";
+import UserNotice from "../components/UsersNotice";
 
 const Navigation = () => {
   return (
@@ -42,11 +44,14 @@ const Navigation = () => {
             element={<EmployeeWorkAniversary />}
           />
           <Route path="overtime" element={<OverTimeManagement />} />
+          <Route path="notices" element={<Notice />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>
           <Route path="profile" element={<Profile />} />
           <Route path="overtime" element={<OverTime />} />
+          <Route path="notices" element={<UserNotice />} />
+
           <Route
             path="/employee-details/:employee-name/:id"
             element={<EmployeeDetails />}
