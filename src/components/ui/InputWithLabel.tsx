@@ -18,6 +18,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   serachIcon,
   isLoading,
   disabled,
+  accept,
 }) => {
   const today = new Date().toISOString().split("T")[0];
   const [focused, setFocused] = useState(false);
@@ -70,10 +71,10 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               </option>
             )}
           </select>
-        ) : type === "date" ? (
+        ) : type === "date" || type === "datetime" ? (
           <div>
             <input
-              type="date"
+              type={type}
               id={id}
               {...register(name!)}
               placeholder={
@@ -93,6 +94,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               <div>
                 <input
                   type="file"
+                  accept={accept}
                   {...register(name!)}
                   hidden
                   ref={(e) => {

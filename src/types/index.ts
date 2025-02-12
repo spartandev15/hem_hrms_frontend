@@ -72,6 +72,7 @@ export interface InputWithLabelProps {
   serachIcon?: boolean;
   isLoading?: boolean;
   disabled?: boolean;
+  accept?: string;
 }
 
 interface EmployeeDetails {

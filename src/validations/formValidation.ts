@@ -136,3 +136,22 @@ export const noticeFormSchema = z.object({
     .any() // Allow either File or FileList
     .optional(), // Allow undefined or null
 });
+
+export const scheduleFormSchema = z.object({
+  candidate_name: z.string().min(1, "name is required"),
+  phone_number: z
+    .string()
+    .min(1, "phone number is required")
+    .refine((data) => data.length > 0),
+  position: z.string().min(1, "profile is required"),
+  interview_type: z.string().min(1, "interview type is required"),
+  interviewer_name: z.string().min(1, "interviewer name is required"),
+  interview_date: z.string().min(1, "date time is required"),
+  email: z.string().min(1, "email is required").email("email is not correct"),
+  resume_file: z.any().refine((file) => file.length > 0, {
+    message: "resume is required",
+  }),
+  // Ensure at least one email is selected
+  // description: z.string().min(1, "Description is required"),
+  // Allow undefined or null
+});
