@@ -1,14 +1,24 @@
 import React, { useState } from "react";
 import { EditableFormProps } from "../types";
+import { useForm } from "react-hook-form";
+import InputWithLabel from "./ui/InputWithLabel";
 
-export const EditableForm = ({ fields, onSubmit }: EditableFormProps) => {
-  const [formFields, setFormFields] = useState(fields);
+export const EditableForm = ({
+  fields,
+  onSubmit,
+  defaultValues,
+}: EditableFormProps) => {
+  const { handleSubmit, register } = useForm({
+    defaultValues: {
+      ...defaultValues,
+    },
+  });
 
-  const handleChange = (index: number, value: string) => {
-    const updatedFields = [...formFields];
-    updatedFields[index].value = value;
-    setFormFields(updatedFields);
-  };
+  // const handleChange = (index: number, value: string) => {
+  //   const updatedFields = [...formFields];
+  //   updatedFields[index].value = value;
+  //   setFormFields(updatedFields);
+  // };
 
   const updateFields = fields.map((item) =>
     item.label === "Address"
@@ -16,9 +26,13 @@ export const EditableForm = ({ fields, onSubmit }: EditableFormProps) => {
       : { ...item, isFullWidth: false }
   );
 
+  const formSubmit = (data: any) => {
+    onSubmit(data);
+  };
+
   return (
     <div className="mt-3">
-      <form action="" onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(formSubmit)}>
         <div className="row g-2">
           {updateFields.map((item, index) => (
             <div
@@ -28,29 +42,23 @@ export const EditableForm = ({ fields, onSubmit }: EditableFormProps) => {
               key={index}
             >
               {item.type === "textarea" ? (
-                <textarea
+                <InputWithLabel
                   // id="password"
+                  label={item.label}
+                  type="textarea"
+                  name={item.name}
                   value={item.value}
-                  onChange={(e) => handleChange(index, e.target.value)}
-                  // required
+                  register={register}
                 />
               ) : (
-                <input
-                  type={item.type}
-                  // id="password"
+                <InputWithLabel
+                  type={item.type!}
+                  name={item.name}
+                  label={item.label}
+                  register={register}
                   value={item.value}
-                  onChange={(e) => handleChange(index, e.target.value)}
-                  // required
                 />
               )}
-
-              <label
-                className="form-label"
-                htmlFor="typeText"
-                style={{ background: "#fff" }}
-              >
-                {item.label}
-              </label>
             </div>
           ))}
         </div>
@@ -59,7 +67,7 @@ export const EditableForm = ({ fields, onSubmit }: EditableFormProps) => {
           <button className="edit-btn" type="submit">
             Save
           </button>
-          <button className="opacity-50">cancel</button>
+          <button className="opacity-75 edit-btn">cancel</button>
         </div>
       </form>
     </div>

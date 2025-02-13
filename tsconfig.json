@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "module": "ESNext",
+    "target": "ESNext", // Ensures modern JavaScript syntax
+    "moduleResolution": "Node"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "vite-env.d.ts" // Ensure vite-env.d.ts is included
+  ]
+}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../hooks/ReduxHook";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { setToast } from "../redux/slices/toastSlice";
 
 const Toast = () => {

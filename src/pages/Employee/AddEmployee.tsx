@@ -1,20 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import InputWithLabel from "../../components/ui/InputWithLabel";
 import { useForm } from "react-hook-form";
 import "../../assets/styles/inputWithLabel.css";
 import { usePostEmployeeMutation } from "../../redux/api/employee";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
-import { useAppDispatch } from "../../hooks/ReduxHook";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import { setToast } from "../../redux/slices/toastSlice";
 import { useGetAllCategoryQuery } from "../../redux/api/category";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { employeeFormSchema } from "../../validations/formValidation";
+import { useNavigate } from "react-router-dom";
 
 const AddEmployee = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { handleSubmit, register } = useForm();
-  const [postEmployee, { data: EmployeeDetailsData, isLoading }] =
-    usePostEmployeeMutation();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(employeeFormSchema),
+  });
+  const [
+    postEmployee,
+    { data: EmployeeDetailsData, isSuccess: postEmployeeIsSuccess },
+  ] = usePostEmployeeMutation();
 
-  const { data: allCategory } = useGetAllCategoryQuery();
+  const { data: allCategory, isLoading: isAllCategoryLoading } =
+    useGetAllCategoryQuery();
 
   const addEmployeeFormFields = [
     {
@@ -22,134 +36,149 @@ const AddEmployee = () => {
       name: "first_name",
       type: "text",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Last Name",
       name: "last_name",
       type: "text",
       required: true,
-      value: "hem",
+      value: "",
     },
-    {
-      label: "Line Manager",
-      type: "text",
-      name: "line_manager",
-      required: true,
-      value: "hem",
-    },
+    // {
+    //   label: "Line Manager",
+    //   type: "text",
+    //   name: "line_manager",
+    //   required: true,
+    //   value: "",
+    // },
     {
       label: "Email",
       type: "email",
       name: "email",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Password",
       type: "password",
       name: "password",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Confirm Password",
       name: "confirm_Password",
       type: "password",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Employee Id",
       name: "employee_id",
       type: "string",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Joining Date",
       name: "joining_date",
       type: "date",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Phone Number",
       name: "phone",
       type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
-      label: "Designation",
+      label: "Date of Birth",
+      name: "date_of_birth",
+      type: "date",
+      required: true,
+      value: "",
+    },
+    {
+      // label: "Designation",
       name: "designation",
       type: "select",
-      options: allCategory?.category?.map((category) => ({
+      options: allCategory?.categories?.map((category: any) => ({
         label: category.name,
+        value: category.name,
       })),
       required: true,
-      value: "hem",
+      value: allCategory?.categories[0]?.name,
     },
     {
       label: "Total Leaves",
       name: "total_leaves",
-      type: "text",
+      type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Paid Leaves",
       name: "paid_leaves",
-      type: "text",
+      type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Unpaid Leaves",
       name: "unpaid_leaves",
-      type: "text",
+      type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
     {
       label: "Sick Leaves",
       name: "sick_leaves",
-      type: "text",
+      type: "number",
       required: true,
-      value: "hem",
+      value: "",
     },
   ];
 
   const handleFormSubmit = (data: any) => {
     // const leavesFormData = {};
-    // console.log(data);
     dispatch(setIsLoading(true));
     postEmployee(data);
+    reset();
   };
 
-  if (EmployeeDetailsData) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(EmployeeDetailsData?.message));
-  }
+  useEffect(() => {
+    if (EmployeeDetailsData?.result && postEmployeeIsSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(EmployeeDetailsData?.message));
+      navigate("/dashboard/employees");
+    } else {
+      if (EmployeeDetailsData?.message) {
+        dispatch(setIsLoading(false));
+        dispatch(setToast(EmployeeDetailsData?.message));
+      }
+    }
+  }, [postEmployeeIsSuccess]);
 
   return (
     <div>
       <div className="mt-4 container pb-4">
         <div className="col-lg-10 m-auto">
           <div>
-            <h2
-              style={{
-                textAlign: "start",
-              }}
-            >
+            <h2 className="text-blue-primary text-start text-large ">
               New Employee Enrollment
             </h2>
           </div>
 
-          <form action="" onSubmit={handleSubmit(handleFormSubmit)}>
+          <form
+            onSubmit={handleSubmit(handleFormSubmit)}
+            className="border p-3 rounded shadow-sm"
+          >
             <div className="row mt-4">
               {addEmployeeFormFields.map((item, index) => (
-                <div className="col-6 my-2" key={`${item.label}-${index}`}>
+                <div className="col-sm-6 my-2" key={`${item.label}-${index}`}>
                   <InputWithLabel
                     id={`${index}`}
                     label={item.label}
@@ -158,7 +187,13 @@ const AddEmployee = () => {
                     type={item.type}
                     value={item.value}
                     options={item.options}
+                    isLoading={isAllCategoryLoading}
                   />
+                  {errors[item.name] && (
+                    <p className="text-danger">
+                      {errors[item.name]?.message as string}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

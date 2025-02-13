@@ -1,98 +1,145 @@
 import React from "react";
 import { ProfileCommonSection } from "./ProfileCommonSection";
-import { useGetProfileQuery } from "../redux/api/profile";
 
-const GeneralTabContent = () => {
-  const { data: userData } = useGetProfileQuery();
+const GeneralTabContent = ({ data }: any) => {
   const GeneralFields = [
     {
       label: "Full Name",
-      value: userData?.user?.name as string,
+      value: data?.first_name as string,
       type: "text",
+      name: "name",
     },
     {
       label: "E-Mail",
-      value: userData?.user?.email as string,
+      value: data?.email as string,
       type: "email",
+      name: "email",
     },
     {
       label: "Employee Id",
-      value: userData?.user?.employee_id as string,
+      value: data?.employee_id as string,
+      name: "employee_id",
       type: "text",
     },
     {
       label: "Date of Joining",
-      value: userData?.user?.joining_date as string,
+      value: data?.joining_date as string,
       type: "date",
+      name: "joining_date",
     },
     {
       label: "Tax Number",
-      value: userData?.user?.tax_number as string,
+      value: data?.tax_number as string,
       type: "number",
+      name: "tax_number",
     },
     {
       label: "Date of Birth",
-      value: userData?.user?.tax_number as string,
+      value: data?.tax_number as string,
       type: "date",
+      name: "dob",
     },
     {
       label: "Phone Number",
-      value: userData?.user?.tax_number as string,
+      value: data?.tax_number as string,
       type: "number",
+      name: "phone",
     },
     {
       label: "Position",
-      value: userData?.user?.tax_number as string,
+      value: data?.tax_number as string,
       type: "text",
+      name: "positon",
     },
   ];
 
   const AddressFields = [
     {
       label: "Address",
-      value: userData?.user?.name as string,
+      value: data?.address as string,
       type: "textarea",
+      name: "address",
     },
     {
       label: "Country",
-      value: userData?.user?.email as string,
+      value: data?.country as string,
+      type: "text",
+      name: "country",
     },
     {
       label: "State",
-      value: userData?.user?.employee_id as string,
+      value: data?.state as string,
+      type: "text",
+      name: "state",
     },
     {
       label: "City",
-      value: userData?.user?.joining_date as string,
+      value: data?.city as string,
+      type: "text",
+      name: "city",
     },
     {
       label: "Zip Code",
-      value: userData?.user?.tax_number as string,
+      value: data?.zipcode as string,
+      type: "text",
+      name: "zip code",
     },
   ];
+
+  const LeavesFields = [
+    {
+      label: "Total Leaves",
+      value: data?.leaves?.overall_total_leaves as string,
+      type: "text",
+      name: "total_leaves",
+    },
+    {
+      label: "Paid Leaves",
+      value: data?.leaves?.leave_data?.paid_leaves?.Total as string,
+      type: "text",
+      name: "paid_leaves",
+    },
+    {
+      label: "Unpaid Leaves",
+      value: data?.leaves?.leave_data?.unpaid_leaves?.Total as string,
+      type: "text",
+      name: "unpaid_leaves",
+    },
+    {
+      label: "Sick Leaves",
+      value: data?.leaves?.leave_data?.sick_leaves?.Total as string,
+      type: "text",
+      name: "sick_leaves",
+    },
+    {
+      label: "Taken",
+      value: data?.leaves?.taken as string,
+      type: "text",
+      name: "total_leaves",
+    },
+    {
+      label: "Remaining",
+      value: data?.leaves?.pending as string,
+      type: "text",
+      name: "taken_leaves",
+    },
+  ];
+
   return (
     <div>
       <ProfileCommonSection
         title="Information"
-        onSubmit={() => {}}
         fields={GeneralFields}
+        data={data}
       />
 
       <ProfileCommonSection
         title="Address"
-        onSubmit={() => {
-          console.log("first");
-        }}
         fields={AddressFields}
+        data={data}
       />
 
-      {/* <ProfileCommonSection
-        title="Emergency Contact"
-        onSubmit={() => {
-          console.log("first");
-        }}
-        fields={GeneralFields}
-      /> */}
+      <ProfileCommonSection title="Leaves" fields={LeavesFields} data={data} />
     </div>
   );
 };

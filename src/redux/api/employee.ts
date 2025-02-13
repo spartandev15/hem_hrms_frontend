@@ -17,6 +17,16 @@ export const employeeApi = baseApi.injectEndpoints({
     }),
 
     // endpoint for getting all employess
+    getEmployeeDetailsById: builder.query<any, any>({
+      query: (id) => {
+        return {
+          url: `/api/get/employee/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["employess"],
+    }),
+
     getEmployees: builder.query<any, void>({
       query: () => {
         return {
@@ -24,7 +34,7 @@ export const employeeApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["employess"],
+      providesTags: ["allEmployess"],
     }),
 
     // endpoint for update employess
@@ -36,6 +46,7 @@ export const employeeApi = baseApi.injectEndpoints({
           body: data,
         };
       },
+      invalidatesTags: ["allEmployess"],
     }),
 
     // endpoint for delete employee
@@ -49,6 +60,26 @@ export const employeeApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["employess"],
     }),
+
+    // endpoint for get employee Birthdays
+    getEmployeesBirthday: builder.query<any, void>({
+      query: () => {
+        return {
+          url: `/api/get/birthdays`,
+          method: "GET",
+        };
+      },
+    }),
+
+    // endpoint for get employee anniversary
+    getEmployeesAnniversary: builder.query<any, void>({
+      query: () => {
+        return {
+          url: `/api/get/anniversaries`,
+          method: "GET",
+        };
+      },
+    }),
   }),
 });
 
@@ -59,4 +90,7 @@ export const {
   useGetEmployeesQuery,
   useDeleteEmployeeMutation,
   useUpdateEmployeeMutation,
+  useGetEmployeesBirthdayQuery,
+  useGetEmployeesAnniversaryQuery,
+  useGetEmployeeDetailsByIdQuery,
 } = employeeApi;

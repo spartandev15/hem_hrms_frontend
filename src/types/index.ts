@@ -34,12 +34,26 @@ interface IField {
 export interface IProfileCommonSection {
   title: string;
   fields: IField[];
-  onSubmit: () => void;
+  data?: any;
+}
+
+export interface ProfileCardProps {
+  id?: number;
+  name?: string;
+  last_name?: string;
+  designation?: string;
+  phone?: number;
+  email?: string;
+  profile_photo?: string;
+  line_manager?: string;
+  joining_date?: string;
+  employeeprofile?: string;
 }
 
 export interface EditableFormProps {
   fields: IField[];
   onSubmit: (values: any) => void;
+  defaultValues?: any;
   // validationSchema: Yup.ObjectSchema; // Pass validation schema as a prop
 }
 
@@ -54,10 +68,16 @@ export interface InputWithLabelProps {
   required?: boolean; // Optional, some fields might not be required
   register: UseFormRegister<any>;
   options?: any;
+  labelAnimated?: boolean;
+  serachIcon?: boolean;
+  isLoading?: boolean;
+  disabled?: boolean;
+  accept?: string;
 }
 
 interface EmployeeDetails {
   id: number;
+  user_id: string;
   first_name: string;
   last_name: string;
   designation: string;
@@ -68,9 +88,29 @@ interface EmployeeDetails {
   line_manager: string;
   joining_date: string;
   employeeprofile?: string;
-  dob?: Date;
+  date_of_birth?: Date;
   gender?: string;
   address?: string;
+  leaves?: {
+    leave_data: {
+      paid_leaves: {
+        Taken: number;
+        Total: string;
+        Pending: string;
+      };
+      sick_leaves: {
+        Taken: number;
+        Total: string;
+        Pending: string;
+      };
+      unpaid_leaves: {
+        Taken: number;
+        Total: string;
+        Pending: string;
+      };
+    };
+    overall_total_leaves: string;
+  };
 }
 
 export interface EmployeeCardProps extends EmployeeDetails {}

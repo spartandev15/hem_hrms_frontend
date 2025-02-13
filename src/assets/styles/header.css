@@ -20,7 +20,7 @@ header {
 .header-container .nav-bar {
   display: flex;
   margin-top: 0.8rem;
-  gap: 5rem;
+  gap: 3rem;
   width: fit-content;
 }
 
@@ -72,7 +72,6 @@ header {
 
 .drop-down-menu {
   position: absolute;
-  width: fit-content;
   top: 120%;
   right: 0;
   z-index: 999;
@@ -81,20 +80,68 @@ header {
   border: 1px solid var(--bs-border-color);
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(231, 231, 231, 0.815);
-  padding: 5px 2px;
-  min-width: 150px;
+  padding: 10px 2px;
+  width: 180px;
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
 .drop-down-menu .nav-txt {
-  padding: 4px 8px;
+  padding: 4px 6px;
   color: var(--black-color);
   text-decoration: none;
 }
+
 .drop-down-menu .nav-txt:hover {
   background-color: var(--primary-color);
   color: var(--white-color);
+}
+
+/* Mobile navigation styles */
+.mobile-nav {
+  position: fixed;
+  top: 0%;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgb(248, 247, 247);
+  z-index: 999;
+  transform: translateY(-100%);
+  overflow: auto;
+}
+
+.mobile-nav.open {
+  transform: translateY(0); /* Show when open */
+}
+
+.mobile-nav-list {
+  padding: 2rem;
+  list-style: none;
+  text-align: center;
+  color: black;
+}
+
+.mobile-nav-list li {
+  margin: 1rem 0;
+}
+
+.mobile-nav-list li a {
+  color: white;
+  text-decoration: none;
+}
+
+.mobile-nav-list .sublinks-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0;
+}
+
+.mobile-nav-list .sublinks-list li a {
+  font-size: 14px;
+  padding: 0;
 }
 
 @media (max-width: 1024px) {

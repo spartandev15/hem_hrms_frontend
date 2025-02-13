@@ -1,20 +1,25 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
+import { MdOutlineDelete, MdOutlineSkipNext } from "react-icons/md";
 import { z } from "zod";
 import "../../assets/styles/category.css";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import InputWithLabel from "../../components/ui/InputWithLabel";
-import { useAppDispatch } from "../../hooks/ReduxHook";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import {
   useDeleteCategoryMutation,
   useGetAllCategoryQuery,
+  useLazyGetAllCategoryWithPaginationQuery,
   usePostCategoryMutation,
   useUpdateCategoryMutation,
 } from "../../redux/api/category";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
-import ConfirmDialog from "../../components/ConfirmDialog";
+import { MdOutlineSkipPrevious } from "react-icons/md";
+
+import ReactPaginate from "react-paginate";
 
 const categorySchema = z.object({
   category: z
@@ -37,21 +42,29 @@ const Category = () => {
   const [confirmPopup, setConfirmPopup] = useState(false);
   const [categoryId, setCategoryId] = useState(-1);
 
-  const { data: allCategory, isLoading } = useGetAllCategoryQuery();
-  const [postCategory, { data: getCategoryDataDetails }] =
+  const [
+    getAllCategoryWithPagination,
+    { data: allCategory, isLoading: isGetAllCategoryWithPaginationLoading },
+  ] = useLazyGetAllCategoryWithPaginationQuery();
+
+  const [postCategory, { data: getCategoryDataDetails, isSuccess }] =
     usePostCategoryMutation();
-  const [deleteCategory, { data: deleteCategoryDataDetails }] =
-    useDeleteCategoryMutation();
+
+  const [
+    deleteCategory,
+    { data: deleteCategoryDataDetails, isSuccess: deleteIsSuccess },
+  ] = useDeleteCategoryMutation();
 
   const [showCreateForm, setCreateShowFrom] = useState(false);
 
-  const hanldeFormSubmit = (data) => {
+  const hanldeFormSubmit = async (data: any) => {
     dispatch(setIsLoading(true));
     const formData = {
       name: data.category,
     };
-    postCategory(formData);
+    const ressponse = await postCategory(formData);
     reset();
+    // dispatch(setIsLoading(false));
   };
 
   const handleDeleteCategory = (id: number) => {
@@ -59,7 +72,7 @@ const Category = () => {
     setConfirmPopup(true);
   };
 
-  const handleCloseDialog = (isYesClcik) => {
+  const handleCloseDialog = (isYesClcik: boolean) => {
     setConfirmPopup(false);
     if (isYesClcik) {
       dispatch(setIsLoading(true));
@@ -68,21 +81,46 @@ const Category = () => {
     }
   };
 
-  if (getCategoryDataDetails) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(getCategoryDataDetails.message));
-  }
+  const handlePageClick = ({ selected }: { selected: number }) => {
+    // dispatch(setIsLoading(true));
+    getAllCategoryWithPagination(selected + 1);
+  };
 
-  if (deleteCategoryDataDetails) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(deleteCategoryDataDetails.message));
-  }
+  useEffect(() => {
+    // if (getCategoryDataDetails?.result && isSuccess) {
+    //   dispatch(setIsLoading(false));
+    //   dispatch(setToast(getCategoryDataDetails?.message));
+    // }
+
+    // if (deleteCategoryDataDetails?.result && deleteIsSuccess) {
+    //   dispatch(setIsLoading(false));
+    //   dispatch(setToast(deleteCategoryDataDetails?.message));
+    // }
+
+    // if (allCategory) {
+    //   dispatch(setIsLoading(false));
+    // }
+
+    getAllCategoryWithPagination(1);
+  }, []);
+
+  useEffect(() => {
+    if (getCategoryDataDetails?.result && isSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(getCategoryDataDetails?.message));
+    }
+
+    if (deleteCategoryDataDetails?.result && deleteIsSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(deleteCategoryDataDetails?.message));
+    }
+  }, [isSuccess, deleteIsSuccess]);
 
   return (
     <div>
       <div className="container category-wrapper py-3">
-        <div className="d-flex justify-content-between">
-          <h2>Add Category</h2>
+        <div className="d-flex justify-content-between align-items-center">
+          <h2 className="mt-2">Add Category</h2>
           <button
             className="btn w-auto px-4"
             onClick={() => setCreateShowFrom(!showCreateForm)}
@@ -124,32 +162,61 @@ const Category = () => {
         )}
 
         <div>
-          <div className="container mt-5">
-            <h1 className="mb-4 text-center">Categories Lists</h1>
-
-            {isLoading ? (
+          <div className="container mt-4">
+            <h1 className="mb-4 text-start text-medium">Categories Lists</h1>
+            {isGetAllCategoryWithPaginationLoading ? (
               <p>Loading....</p>
-            ) : (
-              <table className="category-table ">
-                <thead className="thead-dark">
-                  <tr>
-                    <th className="text-medium px-3">Category</th>
-                    <th className="text-medium text-center actions-column">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
+            ) : allCategory && allCategory?.categories?.length > 0 ? (
+              <div>
+                <div className="px-2">
+                  <table className="category-table shadow-sm">
+                    <thead className="thead-dark">
+                      <tr>
+                        <th
+                          className="text-medium px-3"
+                          style={{
+                            width: "10%",
+                          }}
+                        >
+                          #
+                        </th>
+                        <th className="text-medium px-3">Category</th>
+                        <th className="text-medium text-center actions-column">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
 
-                <tbody>
-                  {allCategory?.category?.map((category, index) => (
-                    <TableRow
-                      name={category.name}
-                      id={category.id}
-                      onClick={handleDeleteCategory}
-                    />
-                  ))}
-                </tbody>
-              </table>
+                    <tbody>
+                      {allCategory?.categories?.map(
+                        (category: any, index: number) => (
+                          <TableRow
+                            key={index}
+                            name={category.name}
+                            id={category.id}
+                            onClick={handleDeleteCategory}
+                            index={index}
+                          />
+                        )
+                      )}
+                    </tbody>
+                  </table>
+
+                  <ReactPaginate
+                    className="react-paginate"
+                    // breakLabel="..."
+                    nextLabel={<MdOutlineSkipNext />}
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={2}
+                    pageCount={allCategory?.pagination?.last_page}
+                    previousLabel={<MdOutlineSkipPrevious />}
+                    renderOnZeroPageCount={null}
+                    disabledClassName="disabled"
+                  />
+                </div>
+              </div>
+            ) : (
+              <h2>No Data Available</h2>
             )}
           </div>
         </div>
@@ -162,7 +229,7 @@ const Category = () => {
 
 export default Category;
 
-const TableRow = ({ name, id, onClick }: any) => {
+const TableRow = ({ name, id, onClick, index }: any) => {
   const {
     register,
     handleSubmit,
@@ -174,7 +241,7 @@ const TableRow = ({ name, id, onClick }: any) => {
     resolver: zodResolver(categorySchema),
   });
   const dispatch = useAppDispatch();
-  const [updateCategory, { data: updateCategoryDataDetails }] =
+  const [updateCategory, { data: updateCategoryDataDetails, isSuccess }] =
     useUpdateCategoryMutation();
 
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(
@@ -187,7 +254,7 @@ const TableRow = ({ name, id, onClick }: any) => {
     );
   };
 
-  const hanldeEditFormSubmit = (data) => {
+  const hanldeEditFormSubmit = (data: any) => {
     dispatch(setIsLoading(true));
     updateCategory({
       id: id,
@@ -196,13 +263,16 @@ const TableRow = ({ name, id, onClick }: any) => {
     setEditingCategoryId(null);
   };
 
-  if (updateCategoryDataDetails) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(updateCategoryDataDetails?.message));
-  }
+  useEffect(() => {
+    if (updateCategoryDataDetails?.result && isSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(updateCategoryDataDetails?.message));
+    }
+  }, [isSuccess]);
 
   return (
     <tr key={id}>
+      <td>{index + 1}</td>
       <td className="px-3 text-small font-medium ">
         {editingCategoryId === id ? (
           <form
@@ -226,7 +296,7 @@ const TableRow = ({ name, id, onClick }: any) => {
       </td>
 
       <td className="d-flex gap-2  justify-content-center align-items-center">
-        <MdEdit
+        <CiEdit
           size={20}
           color="#417090"
           className=""
@@ -235,7 +305,8 @@ const TableRow = ({ name, id, onClick }: any) => {
           }}
           onClick={() => handleEditClick(id, name)}
         />
-        <MdDelete
+
+        <MdOutlineDelete
           size={20}
           color="#D11A2A"
           className=""

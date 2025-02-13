@@ -1,64 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/styles/auth-page.css";
-import { useAppDispatch } from "../../hooks/ReduxHook";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import { useAuthLoginMutation } from "../../redux/api/auth";
 import { setAuthUser } from "../../redux/slices/authSlice";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 import { LoginFormData } from "../../types";
+import { useForm } from "react-hook-form";
+import InputWithLabel from "../../components/ui/InputWithLabel";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [error, setError] = useState("");
-  const [authLogin, { data: LoginDetialsData, isLoading, isError }] =
+
+  const { handleSubmit, register } = useForm();
+
+  // hook to get the response from the mutation of authLogin mutation
+  const [authLogin, { data: LoginDetialsData, isSuccess: loginIsSuccess }] =
     useAuthLoginMutation();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  // form submit handler for login
+  const handleLogin = async (data: any) => {
     try {
       dispatch(setIsLoading(true));
       const formData: LoginFormData = {
-        email: username,
-        password: password,
+        email: data.email,
+        password: data.password,
       };
       await authLogin(formData).unwrap();
-      dispatch(setIsLoading(false));
     } catch (error) {
       dispatch(setIsLoading(false));
       console.log(error);
     }
   };
 
-  // only if loin success and logindetails exist
-  if (LoginDetialsData) {
-    // destuct access_token from LoginDetialsData
+  // useEffect to handle auth data when loginIsSuccess is true
+  useEffect(() => {
+    if (LoginDetialsData) {
+      // destuct access_token from LoginDetialsData
 
-    const { access_token, user } = LoginDetialsData;
-    const { status } = user;
+      const { access_token, user } = LoginDetialsData;
+      const { status, id } = user;
+      // payload details send to setAuthReducer
+      const payloadData = {
+        access_token,
+        isAuthenticate: true,
+        user_id: id,
+        status,
+      };
 
-    // payload details send to setAuthReducer
-    const payloadData = {
-      access_token,
-      isAuthenticate: true,
-      status,
-    };
-    // dispatch the toast action for toast message
-    dispatch(setToast(LoginDetialsData.message));
+      // if result true then set authData
+      if (LoginDetialsData?.result) {
+        // dispatch the setAuthUser action
+        dispatch(setAuthUser(payloadData));
+        // navigate to dashboard page
+        navigate("/dashboard");
+      }
 
-    if (LoginDetialsData.result) {
-      // dispatch the setAuthUser action
-      dispatch(setAuthUser(payloadData));
-      // navigate to dashboard page
-      navigate("/dashboard");
+      // set loading false and set toast message
+      dispatch(setIsLoading(false));
+      dispatch(setToast(LoginDetialsData?.message));
     }
-  }
+  }, [loginIsSuccess]);
 
   return (
-    <div className="login-container">
+    <div className="login-container px-3">
       <div className="container">
         <div className="row">
           <div className="col-lg-6 contact_form11">
@@ -67,7 +76,7 @@ const Login = () => {
               <p>
                 Enter your Organization details and start your journey with us.
               </p>
-              <Link to="/signup">
+              <Link to="/sign-up">
                 <button className="btn signupbtn">Sign Up</button>
               </Link>
             </div>
@@ -78,12 +87,19 @@ const Login = () => {
               <div className="col-lg-8 col-sm-12">
                 <form
                   className="text-center signin_pd_inner "
-                  onSubmit={handleLogin}
+                  onSubmit={handleSubmit(handleLogin)}
                 >
                   <h3>Login to HRMS</h3>
-                  {/* {error && <p className="error-message">{error}</p>} */}
+
                   <div className="form-outline">
-                    <input
+                    <InputWithLabel
+                      name="email"
+                      label="Email"
+                      register={register}
+                      type="email"
+                      required
+                    />
+                    {/* <input
                       type="text"
                       id="username"
                       value={username}
@@ -96,11 +112,18 @@ const Login = () => {
                       style={{ background: "#fff" }}
                     >
                       E-Mail
-                    </label>
+                    </label> */}
                   </div>
 
                   <div className="form-outline">
-                    <input
+                    <InputWithLabel
+                      name="password"
+                      label="Password"
+                      register={register}
+                      type="password"
+                      required
+                    />
+                    {/* <input
                       type="password"
                       id="password"
                       value={password}
@@ -113,7 +136,7 @@ const Login = () => {
                       style={{ background: "#fff" }}
                     >
                       Password
-                    </label>
+                    </label> */}
                   </div>
 
                   <div className="row proceedbtn">
@@ -122,7 +145,7 @@ const Login = () => {
                       <p className="submitcontent mb-0">
                         Don't have an account.
                         <a
-                          onClick={() => navigate("/signup")}
+                          onClick={() => navigate("/sign-up")}
                           style={{
                             color: "#134d75",
                             fontWeight: "600",
@@ -133,12 +156,12 @@ const Login = () => {
                         </a>
                       </p>
                       <p>
-                        <a
-                          href=" "
+                        <Link
+                          to="/forgot-password"
                           style={{ color: "#134d75", fontWeight: "600" }}
                         >
-                          Forget Password
-                        </a>
+                          Forgot Password
+                        </Link>
                       </p>
                     </div>
                   </div>

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
+import { BiShowAlt } from "react-icons/bi";
 const ProfileImage = "/images/profile.png";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdOutlineClose } from "react-icons/md";
@@ -11,7 +12,7 @@ import {
   useDeleteEmployeeMutation,
   useUpdateEmployeeMutation,
 } from "../../redux/api/employee";
-import { useAppDispatch } from "../../hooks/ReduxHook";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -19,6 +20,10 @@ import { EditableForm } from "../EditableForm";
 import InputWithLabel from "../ui/InputWithLabel";
 import { useForm } from "react-hook-form";
 import ConfirmDialog from "../ConfirmDialog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { employeeFormSchema } from "../../validations/formValidation";
+import { Link } from "react-router-dom";
+import { useGetAllCategoryQuery } from "../../redux/api/category";
 
 const EmployeeCard: React.FC<EmployeeCardProps> = ({
   id,
@@ -31,9 +36,16 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   employee_id,
   profile_photo,
   joining_date,
-  address,
+  leaves,
+  user_id,
+  date_of_birth,
 }) => {
-  const { handleSubmit, register } = useForm({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(employeeFormSchema),
     defaultValues: {
       id,
       first_name,
@@ -47,24 +59,38 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       joining_date,
       address: "",
       password: "",
+      date_of_birth,
+      total_leaves: String(leaves?.overall_total_leaves),
+      paid_leaves: leaves?.leave_data?.paid_leaves.Total,
+      unpaid_leaves: leaves?.leave_data?.unpaid_leaves.Total,
+      sick_leaves: leaves?.leave_data?.sick_leaves.Total,
     },
   });
-
-  const [deleteEmployee, { data: deleteEmployeeDetails, isLoading }] =
-    useDeleteEmployeeMutation();
-  const [actionsPopupOpen, setActionsPopupOpen] = useState(false);
   const dispatch = useAppDispatch();
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
-  const [updateEmployee, { data: editEmployeeData }] =
+
+  const { data: allCategory } = useGetAllCategoryQuery();
+
+  const [updateEmployee, { data: editEmployeeData, isSuccess: editIsSuccess }] =
     useUpdateEmployeeMutation();
 
+  const [
+    deleteEmployee,
+    {
+      data: deleteEmployeeDetails,
+      isLoading,
+      isSuccess: deleteEmployeeIsSuccess,
+    },
+  ] = useDeleteEmployeeMutation();
+
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [actionsPopupOpen, setActionsPopupOpen] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   const closeOnOutsideClick = () => {
     setActionsPopupOpen(false); // Close the div or take other actions
   };
 
-  const actionPopupRef = useOutsideClick(closeOnOutsideClick);
+  const actionPopupRef = useOutsideClick<HTMLDivElement>(closeOnOutsideClick);
 
   // edit employee fields
   const editEmployeeFormFields = [
@@ -89,19 +115,26 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       required: true,
       value: "",
     },
-    {
-      label: "Line Manager",
-      type: "text",
-      name: "line_manager",
-      required: true,
-      value: line_manager,
-    },
+    // {
+    //   label: "Line Manager",
+    //   type: "text",
+    //   name: "line_manager",
+    //   required: true,
+    //   value: line_manager,
+    // },
     {
       label: "Email",
       type: "email",
       name: "email",
       required: true,
       value: email,
+    },
+    {
+      label: "Employee Id",
+      name: "employee_id",
+      type: "string",
+      required: true,
+      value: employee_id,
     },
     {
       label: "Password",
@@ -118,13 +151,6 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       value: "",
     },
     {
-      label: "Employee Id",
-      name: "employee_id",
-      type: "string",
-      required: true,
-      value: employee_id,
-    },
-    {
       label: "Joining Date",
       name: "joining_date",
       type: "date",
@@ -139,13 +165,55 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       value: phone,
     },
     {
-      label: "Designation",
+      // label: "Designation",
       name: "designation",
-      type: "text",
+      type: "select",
+      options: allCategory?.categories?.map((category: any) => ({
+        label: category.name,
+        value: category.name,
+      })),
       required: true,
       value: designation,
+      labelAnimated: false,
+    },
+    {
+      label: "DOB",
+      name: "date_of_birth",
+      type: "date",
+      required: true,
+      value: date_of_birth,
+    },
+    {
+      label: "Total Leaves",
+      name: "total_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Paid Leaves",
+      name: "paid_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Unpaid Leaves",
+      name: "unpaid_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Sick Leaves",
+      name: "sick_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
     },
   ];
+
+  // console.log(editEmployeeFormFields);
 
   // submit the form for update editEmployee
   const handleFormSubmitEdit = (data: any) => {
@@ -159,6 +227,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       designation: data.designation,
       employee_id: data.employee_id,
       joining_date: data.joining_date,
+      date_of_birth: data.date_of_birth,
       password: data.password,
       address: data.address,
     };
@@ -177,31 +246,38 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   };
 
   // perform delete after confirmation dialog
-  const handleClose = (isConfirm) => {
+  const handleClose = (isConfirm: boolean) => {
     if (isConfirm) {
       setIsOpenDialog(false);
       dispatch(setIsLoading(true));
 
       // call the delete api using deleteEmployee
       deleteEmployee({
-        id,
+        id: user_id,
       });
     } else {
       setIsOpenDialog(false);
     }
   };
 
-  // if edit employee successfully then perfom action
-  if (editEmployeeData) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(editEmployeeData?.message));
-  }
-
   // if delete employee successfully data get then perfom action
-  if (deleteEmployeeDetails) {
-    dispatch(setIsLoading(false));
-    dispatch(setToast(deleteEmployeeDetails?.message));
-  }
+  // if (deleteEmployeeDetails) {
+  //   dispatch(setIsLoading(false));
+  //   dispatch(setToast(deleteEmployeeDetails?.message));
+  // }
+
+  useEffect(() => {
+    if (editEmployeeData?.result && editIsSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(editEmployeeData?.message));
+      setIsEditPopupOpen(false);
+    }
+
+    if (deleteEmployeeDetails?.result && deleteEmployeeIsSuccess) {
+      dispatch(setIsLoading(false));
+      dispatch(setToast(deleteEmployeeDetails?.message));
+    }
+  }, [editIsSuccess, deleteEmployeeIsSuccess]);
 
   return (
     <div className=" employee-card-container">
@@ -226,6 +302,19 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
               onClick={handleDeleteConfirmDialog}
             >
               <RiDeleteBin6Line /> Delete
+            </div>
+
+            <div
+              className="d-flex align-items-center px-2 py-1 text-small font-normal"
+              onClick={handleDeleteConfirmDialog}
+            >
+              <BiShowAlt size={18} />
+              <Link
+                to={`/employee-details/${first_name}/${user_id}`}
+                className="text-none text-black"
+              >
+                View
+              </Link>
             </div>
           </div>
         )}
@@ -256,7 +345,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
         <div className="employee-detail-edit-form py-4">
           <div className="container">
             <div className="d-flex justify-content-between align-items-center">
-              <h2 className="text-large font-bold mt-3">
+              <h2 className="text-large font-bold mt-3 text-blue-primary">
                 Employee Update Form
               </h2>
               <MdOutlineClose
@@ -270,7 +359,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
             </div>
 
             <form action="" onSubmit={handleSubmit(handleFormSubmitEdit)}>
-              <div className="row mt-4">
+              <div className="row">
                 {editEmployeeFormFields.map((item, index) => (
                   <div className="col-md-6 my-2" key={`${item.label}-${index}`}>
                     <InputWithLabel
@@ -280,7 +369,15 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
                       register={register}
                       type={item.type}
                       value={item.value}
+                      options={item.options}
+                      labelAnimated={item.labelAnimated}
                     />
+
+                    {errors[item.name as keyof typeof errors] && (
+                      <p className="text-danger">
+                        {errors[item.name]?.message}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>

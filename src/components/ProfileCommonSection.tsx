@@ -6,6 +6,7 @@ import { EditableForm } from "./EditableForm";
 export const ProfileCommonSection = ({
   title,
   fields,
+  data,
 }: IProfileCommonSection) => {
   const [showEditableForm, setShowEditableForm] = useState(false);
 
@@ -13,9 +14,7 @@ export const ProfileCommonSection = ({
     setShowEditableForm(!showEditableForm);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+  const handleSubmit = (formData: any) => {};
 
   return (
     <div className="profile-common-section mt-3 py-4">
@@ -25,7 +24,7 @@ export const ProfileCommonSection = ({
           className="bg-blue-primary text-xsmall edit-btn"
           onClick={toggleEditableForm}
         >
-          Edit
+          {showEditableForm ? "Cancel" : "Edit"}
         </button>
       </div>
 
@@ -38,16 +37,20 @@ export const ProfileCommonSection = ({
                   <p className="font-weight-light text-xsmall m-0 text-gray-primary">
                     {item?.label}
                   </p>
-                  <p className="text-xsmall font-bold m-0">
-                    {item?.value || "Not Availabe"}
-                  </p>
+                  <p className="text-xsmall font-bold m-0">{item?.value}</p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
           <div>
-            {fields && <EditableForm fields={fields} onSubmit={handleSubmit} />}
+            {fields && (
+              <EditableForm
+                defaultValues={data}
+                fields={fields}
+                onSubmit={handleSubmit}
+              />
+            )}
           </div>
         )}
       </div>

@@ -15,6 +15,16 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: ["category"],
     }),
 
+    getAllCategoryWithPagination: builder.query<any, number>({
+      query: (page) => {
+        return {
+          url: `/api/get/all/category?page=${page}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["category"],
+    }),
+
     // endpoint for create a new category
     postCategory: builder.mutation<any, any>({
       query: (categoryData: any) => {
@@ -59,6 +69,7 @@ export const categoryApi = baseApi.injectEndpoints({
 export const {
   usePostCategoryMutation,
   useGetAllCategoryQuery,
+  useLazyGetAllCategoryWithPaginationQuery,
   useDeleteCategoryMutation,
   useUpdateCategoryMutation,
 } = categoryApi;

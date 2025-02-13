@@ -10,6 +10,16 @@ import Employees from "../pages/Employee/Employees";
 import Category from "../pages/Category/Category";
 import Leave from "../pages/Leave/Leave";
 import NotFound from "../pages/NotFound/NotFound";
+import { EmployeeDetails } from "../pages/Employee/EmployeeDetails";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
+import ChangePassword from "../pages/Auth/ChangePassword";
+import EmployeeBirthday from "../pages/Employee/EmployeeBirthday";
+import EmployeeWorkAniversary from "../pages/Employee/EmployeeWorkAniversary";
+import OverTime from "../pages/OverTime/OverTime";
+import OverTimeManagement from "../pages/OverTime/OverTimeManagement";
+import { Notice } from "../pages/Notice/Notice";
+import UserNotice from "../components/UsersNotice";
+import ScheduleInterview from "../pages/Interview/ScheduleInterview";
 
 const Navigation = () => {
   return (
@@ -17,6 +27,9 @@ const Navigation = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/change-password/:token" element={<ChangePassword />} />
+
         <Route path="/" element={<Navigate to="/dashboard" />} />
 
         {/* Protected Routes  */}
@@ -26,10 +39,26 @@ const Navigation = () => {
           <Route path="employees" element={<Employees />} />
           <Route path="create/category" element={<Category />} />
           <Route path="leave-details" element={<Leave />} />
+          <Route path="employees-birthdays" element={<EmployeeBirthday />} />
+          <Route
+            path="employees-anniversary"
+            element={<EmployeeWorkAniversary />}
+          />
+          <Route path="overtime" element={<OverTimeManagement />} />
+          <Route path="notices" element={<Notice />} />
+          <Route path="schedule-interviews" element={<ScheduleInterview />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>
           <Route path="profile" element={<Profile />} />
+          <Route path="overtime" element={<OverTime />} />
+          <Route path="notices" element={<UserNotice />} />
+
+          <Route
+            path="/employee-details/:employee-name/:id"
+            element={<EmployeeDetails />}
+          />
+
           {/* <Route path="dashboard" element={<Dashboard />}>
             <Route path="dashboard/add-employee" element={<AddEmployee />} />
           </Route> */}

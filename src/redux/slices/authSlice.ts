@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getLocalStorageItem } from "../../utils/getLocalStorageItem";
-import { AUTH_STATUS, AUTH_TOKEN_KEY } from "../../constantsPaths/Constant";
+import {
+  AUTH_STATUS,
+  AUTH_TOKEN_KEY,
+  AUTH_UID,
+} from "../../constantsPaths/Constant";
 
 const initialState = {
   isAuthenticateUser: Boolean(getLocalStorageItem(AUTH_TOKEN_KEY)) || false,
@@ -13,11 +17,17 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setAuthUser: (state, actions) => {
-      const { isAuthenticate, access_token, status } = actions.payload;
+      const { isAuthenticate, access_token, status, user_id } = actions.payload;
       state.isAuthenticateUser = isAuthenticate;
       state.status = status;
       localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(access_token));
       localStorage.setItem(AUTH_STATUS, JSON.stringify(status));
+      localStorage.setItem(AUTH_UID, JSON.stringify(user_id));
+    },
+
+    setAuthStatus: (state, actions) => {
+      const { status } = actions.payload;
+      state.status = status;
     },
 
     logoutAuthUser: (state) => {
@@ -27,4 +37,4 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setAuthUser, logoutAuthUser } = authSlice.actions;
+export const { setAuthUser, logoutAuthUser, setAuthStatus } = authSlice.actions;

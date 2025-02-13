@@ -13,11 +13,11 @@ export const Nav_List = [
       },
       {
         label: "Employee Birthday",
-        href: "",
+        href: "/dashboard/employees-birthdays",
       },
       {
         label: "Employee Work Anniversary",
-        href: "",
+        href: "/dashboard/employees-anniversary",
       },
       {
         label: "Provisional Employee",
@@ -35,11 +35,16 @@ export const Nav_List = [
   },
   {
     label: "OverTime",
-    href: "Leave",
+    href: status === "HR" ? "/dashboard/overtime" : "/overtime",
+    // href: "/overtime",
   },
   {
     label: "Documents",
     href: "Leave",
+  },
+  {
+    label: "Notice",
+    href: "notices",
   },
   {
     label: "Recruitment",
@@ -51,7 +56,7 @@ export const Nav_List = [
       },
       {
         label: "Schedule Interview",
-        href: "",
+        href: "schedule-interviews",
       },
     ],
   },

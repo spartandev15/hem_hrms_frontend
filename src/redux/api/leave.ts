@@ -3,52 +3,62 @@ import { baseApi } from "../../baseApi/baseApi";
 
 export const categoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // endpoint for getting all categories
-    getAllLeaves: builder.query<void, void>({
+    // endpoint for getting all leaves details of users
+    getAllLeaves: builder.query<any, void>({
       query: () => {
         return {
-          url: "/api/get/all/",
+          url: "/api/get/employeesLeaves",
           method: "GET",
         };
       },
       providesTags: ["leaves"],
     }),
 
-    // endpoint for create a new category
-    postLeaves: builder.mutation<void, any>({
-      query: (leavesUserData: any) => {
+    // endpoint for getting all leaves who applied (users only)
+    getAppliedLeaves: builder.query<any, void>({
+      query: () => {
         return {
-          url: "/api/create/leaves",
-          method: "POST",
-          body: leavesUserData,
+          url: "/api/get/leaves",
+          method: "GET",
         };
       },
-      invalidatesTags: ["category"],
+      providesTags: ["leaveStatus"],
     }),
 
-    // // endpoint for update category
-    // updateCategory: builder.mutation<void, void>({
-    //   query: (data) => {
-    //     return {
-    //       url: "/api/update/category",
-    //       method: "POST",
-    //       body: data,
-    //     };
-    //   },
-    //   invalidatesTags: ["category"],
-    // }),
+    // endpoint for getting  leaves status who applied (users only)
+    getAppliedLeavesStatusById: builder.query<any, any>({
+      query: (id) => {
+        return {
+          url: `/api/get/employeeLeaves/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["leaveStatus"],
+    }),
 
-    // // endpoint for delete category
-    // deleteCategory: builder.mutation<void, CategoryDeleteData>({
-    //   query: (data) => {
-    //     return {
-    //       url: `/api/delete/category`,
-    //       method: "POST",
-    //       body: data,
-    //     };
-    //   },
-    //   invalidatesTags: ["category"],
-    // }),
+    // endpoint for post apply leaves,
+    postLeaves: builder.mutation<any, any>({
+      query: (leaveData) => {
+        return {
+          url: "/api/add/leave",
+          method: "POST",
+          body: leaveData,
+        };
+      },
+      invalidatesTags: ["leaveStatus"],
+    }),
+
+    // endpoint for post apply leaves,
+    updateLeavesStatus: builder.mutation<any, any>({
+      query: (leaveData) => {
+        return {
+          url: "/api/change/leave/status",
+          method: "POST",
+          body: leaveData,
+        };
+      },
+      invalidatesTags: ["leaveStatus"],
+    }),
   }),
 });
 
@@ -56,7 +66,8 @@ export const categoryApi = baseApi.injectEndpoints({
 // auto-generated based on the defined endpoints
 export const {
   useGetAllLeavesQuery,
-  //   useGetAllCategoryQuery,
-  //   useDeleteCategoryMutation,
-  //   useUpdateCategoryMutation,
+  usePostLeavesMutation,
+  useGetAppliedLeavesQuery,
+  useGetAppliedLeavesStatusByIdQuery,
+  useUpdateLeavesStatusMutation,
 } = categoryApi;

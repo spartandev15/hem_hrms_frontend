@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import { useAuthSignUpMutation } from "../../redux/api/auth";
-import { SignUpFormData } from "../../types";
-import { useAppDispatch } from "../../hooks/ReduxHook";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
-import { setAuthUser } from "../../redux/slices/authSlice";
+import { SignUpFormData } from "../../types";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -28,7 +26,9 @@ const Signup = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -36,14 +36,13 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       dispatch(setIsLoading(true));
       await authSignUp(formData).unwrap();
       dispatch(setIsLoading(false));
     } catch (err) {
-      console.log("Error: ", err.message);
       dispatch(setIsLoading(false));
     }
   };
@@ -57,7 +56,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="login-container">
+    <div className="login-container px-3">
       <div className="container">
         <div className="row">
           <div className="col-lg-6 contact_form11">
@@ -81,7 +80,7 @@ const Signup = () => {
                   className="text-center signup_pd_inner "
                 >
                   <h3>Signup Form</h3>
-                  <div className="d-flex p-0">
+                  <div className="d-flex p-0 gap-1">
                     <div className="w-50">
                       <div className="form-outline">
                         <input
@@ -102,6 +101,7 @@ const Signup = () => {
                         </label>
                       </div>
                     </div>
+
                     <div className="w-50">
                       <div className="form-outline">
                         <input
@@ -145,7 +145,7 @@ const Signup = () => {
                     </div>
                   </div>
 
-                  <div className="d-flex p-0">
+                  <div className="d-flex p-0 gap-1">
                     <div className="w-50">
                       <div className="form-outline">
                         <input
@@ -208,7 +208,7 @@ const Signup = () => {
                     </div>
                   </div>
 
-                  <div className="d-flex p-0">
+                  <div className="d-flex p-0 gap-1">
                     <div className="w-50">
                       <div className="form-outline">
                         <input

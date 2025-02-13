@@ -1,0 +1,54 @@
+.notice-card {
+  padding: 20px;
+  border: 1px solid var(--bs-border-color);
+  box-shadow: 2px 2px 1px var(--bs-border-color);
+  border-radius: 5px;
+}
+
+.notice-card.even {
+  background-color: #f9fdd57c; /* Light Gray */
+}
+
+.notice-card.odd {
+  background-color: #eee5fa7c; /* White */
+}
+
+.notice-date {
+  font-size: 12px;
+  color: #888;
+}
+
+.notice-title {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.notice-description {
+  margin-top: 10px;
+}
+
+.read-more-btn {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: none;
+  cursor: pointer;
+  text-align: start;
+}
+
+.read-more-btn:hover {
+  text-decoration: underline;
+}
+
+/* .notice-file {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+} */
+
+/* .notice-file:hover {
+  background-color: #0056b3;
+} */
