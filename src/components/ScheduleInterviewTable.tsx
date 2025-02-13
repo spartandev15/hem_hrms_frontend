@@ -11,15 +11,22 @@ import {
 } from "../redux/api/overTime";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
-import { overTimeFormSchema } from "../validations/formValidation";
+import {
+  overTimeFormSchema,
+  scheduleFormSchema,
+} from "../validations/formValidation";
 import InputWithLabel from "./ui/InputWithLabel";
 import { formatDate, formatDateType } from "../utils/formatDate";
 import { Link } from "react-router-dom";
 import { FaRegFilePdf } from "react-icons/fa";
+import { useGetAllCategoryQuery } from "../redux/api/category";
 
 const ScheduleInterviewTable = ({ data, isLoading }: any) => {
   const isStatusExist = data?.some((item: any) => item.status !== null);
   const [screenShotPreviewImage, setScreenShotPreviewImage] = useState("");
+  const { data: allCategory, isLoading: isAllCategoryLoading } =
+    useGetAllCategoryQuery();
+
   const [
     updateOverTime,
     {
@@ -97,6 +104,7 @@ const ScheduleInterviewTable = ({ data, isLoading }: any) => {
               <th>Interviewer Name</th>
               <th>Interview Type</th>
               <th>Resume</th>
+              <th>Actions</th>
 
               {/* <th>Project Name</th>
               <th>Project URL</th>
@@ -118,6 +126,7 @@ const ScheduleInterviewTable = ({ data, isLoading }: any) => {
                 <TableRow
                   key={index}
                   record={record}
+                  categories={allCategory}
                   handleViewScreenshot={handleViewScreenshot}
                   handleEdit={handleEdit}
                   isStatusExist={isStatusExist}
@@ -178,65 +187,80 @@ const ScheduleInterviewTable = ({ data, isLoading }: any) => {
   );
 };
 
-const TableRow = ({
-  record,
-  handleViewScreenshot,
-  handleEdit,
-  isStatusExist,
-  index,
-}: any) => {
+const TableRow = ({ record, handleEdit, categories, index }: any) => {
   const [isEdit, setIsEdit] = useState(false);
 
-  const overTimeFormFields = [
+  const scheduleInterviewFormFields = [
     {
-      label: "Overtime Date",
-      name: "overtime_date",
-      type: "date",
-      required: true,
-      isDisabled: true,
-      value: record.overtime_date,
+      label: "Candidate Name",
+      name: "candidate_name",
+      type: "text",
+      value: record.candidate_name,
     },
     {
-      label: "Working Hours",
-      name: "working_hours",
-      type: "number",
+      label: "Date-Time",
+      name: "interview_date",
+      type: "datetime-local",
       required: true,
-      value: record.working_hours,
+      value: "time",
     },
     {
-      label: "Per Hour Rate",
-      name: "salary_per_hour",
-      type: "number",
+      label: "Position",
+      name: "position",
+      type: "select",
+      options: categories?.categories?.map((category: any) => ({
+        label: category.name,
+        value: category.name,
+      })),
       required: true,
-      value: record.salary_per_hour,
+      value: categories?.categories[0]?.name,
     },
     {
-      label: "Final Balance",
-      name: "final_balance",
-      type: "number",
-      required: true,
-      value: record.final_balance,
+      label: "email",
+      name: "email",
+      type: "email",
+      value: record?.email,
     },
     {
-      label: "Project Name",
-      name: "project_name",
+      label: "Mobile",
+      name: "phone_number",
       type: "text",
       required: true,
-      value: record.project_name,
+      value: record?.phone_number,
     },
     {
-      label: "Project URL",
-      name: "project_url",
-      type: "url",
+      label: "Interview Type",
+      name: "interview_type",
+      type: "select",
+      options: [
+        {
+          label: "Phone",
+          value: "Phone",
+        },
+        {
+          label: "In-person",
+          value: "In-person",
+        },
+        {
+          label: "Virtual",
+          value: "Virtual",
+        },
+      ],
+      value: "default",
+    },
+    {
+      label: "Interviewr Name",
+      name: "interviewer_name",
+      type: "text",
       required: true,
-      value: record.project_url,
+      value: record.interviewer_name,
     },
     {
-      label: "screenshot",
-      name: "screenshot",
+      label: "Resume",
+      name: "resume_file",
       type: "file",
-      required: true,
-      value: record.screenshot || "default", // Initial value can be null for file input
+      accept: "application/pdf",
+      value: "resume",
     },
   ];
 
@@ -244,34 +268,27 @@ const TableRow = ({
     register,
     handleSubmit,
     control,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      overtime_date: record.overtime_date,
-      working_hours: record.working_hours,
-      salary_per_hour: record.salary_per_hour,
-      final_balance: record.final_balance,
-      project_name: record.project_name,
-      project_url: record.project_url,
-      screenshot: record.screenshot,
+      candidate_name: record.candidate_name,
+      interview_date: record.interview_date,
+      position: record.position,
+      email: record.email,
+      phone_number: record.phone_number,
+      interview_type: record.interview_type,
+      interviewer_name: record.interviewer_name,
+      resume_file: record.resume_file,
     },
-    resolver: zodResolver(overTimeFormSchema),
+    resolver: zodResolver(scheduleFormSchema),
   });
-
-  const workingHours = useWatch({ control, name: "working_hours" }); // Default value of 0
-  const salaryPerHour = useWatch({ control, name: "salary_per_hour" }); // Default value of 0
-
-  // Automatically calculate the total balance
-  const totalBalance = workingHours * salaryPerHour;
-  setValue("final_balance", String(totalBalance));
 
   const handleEditForm = async (data: any) => {
     await handleEdit(data);
     setIsEdit(false);
   };
 
-  const screenShotImageName = useWatch({ control, name: "screenshot" });
+  const resume_file = useWatch({ control, name: "resume_file" });
 
   return (
     <>
@@ -286,60 +303,13 @@ const TableRow = ({
         <td>{record.interviewer_name}</td>
         <td>{record.interview_type}</td>
         <td>
-          <Link to={record.resume_file} target="_blank">
+          <a href={record.resume_file} download={"resume.pdf"}>
             <FaRegFilePdf />
-          </Link>
+          </a>
         </td>
-
-        {/* <td>
-          <Link to={record.project_url} className="text-black" target="_blank">
-            {record.project_url}
-          </Link>
-        </td>
-        <td>
-          {record.screenshot ? (
-            <img
-              src={`${record.screenshot}`}
-              alt="Screenshot"
-              className="screenshot-thumbnail"
-              onClick={() => handleViewScreenshot(record.screenshot)}
-            />
-          ) : (
-            "No Screenshot"
-          )}
-        </td> */}
-
-        {/* {isStatusExist && (
-          <td>
-            {record.status ? (
-              <span
-                className="px-2 py-1 rounded-1"
-                style={{
-                  backgroundColor:
-                    record.status === "approved"
-                      ? "#73A617" // green for approved
-                      : record.status === "pending"
-                      ? "#DD982F" // amber for pending
-                      : "#DF3523",
-
-                  color:
-                    record.status === "approved"
-                      ? "#fff" // green for approved
-                      : record.status === "pending"
-                      ? "#fff" // amber for pending
-                      : "#fff",
-                }}
-              >
-                {record.status}
-              </span>
-            ) : (
-              "No Status"
-            )}
-          </td>
-        )} */}
 
         {/* {record.status && <td>{record.status}</td>} */}
-        {/* <td>
+        <td>
           <div
             className="d-flex gap-2 justify-content-center align-items-center"
             style={{
@@ -347,21 +317,24 @@ const TableRow = ({
             }}
           >
             <div>
-              <IoEyeOutline
-                size="20"
-                onClick={() => handleViewScreenshot(record.screenshot)}
-              />
+              <Link
+                to={record.resume_file}
+                className="text-black"
+                target="_blank"
+              >
+                <IoEyeOutline size="18" />
+              </Link>
             </div>
             <div>
               <TiEdit
-                size="20"
+                size="18"
                 onClick={() => {
                   setIsEdit(true);
                 }}
               />
             </div>
           </div>
-        </td> */}
+        </td>
       </tr>
 
       {isEdit && (
@@ -388,7 +361,7 @@ const TableRow = ({
               }}
             >
               <div className="row mt-4">
-                {overTimeFormFields.map((item, index) => (
+                {scheduleInterviewFormFields.map((item, index) => (
                   <div className="col-sm-6 my-2" key={`${item.label}-${index}`}>
                     <InputWithLabel
                       id={`${index}`}
@@ -397,35 +370,15 @@ const TableRow = ({
                       register={register}
                       type={item.type}
                       value={item.value}
-                      disabled={item.isDisabled}
+                      options={item.options}
                     />
 
-                    {item.name === "screenshot" && screenShotImageName && (
+                    {item.name === "resume_file" && resume_file && (
                       <>
-                        {typeof screenShotImageName === "string" ? (
-                          <img
-                            src={screenShotImageName}
-                            style={{
-                              width: "100px",
-                              height: "80px",
-                              objectFit: "cover",
-                            }}
-                            className="mt-2"
-                          />
-                        ) : (
-                          <img
-                            style={{
-                              width: "120px",
-                              height: "120px",
-                              objectFit: "contain",
-                            }}
-                            src={URL.createObjectURL(screenShotImageName[0])}
-                          />
-                        )}
                         <p>
-                          {typeof screenShotImageName === "string"
-                            ? screenShotImageName?.split("/").pop()
-                            : screenShotImageName[0]?.name}
+                          {typeof resume_file === "string"
+                            ? resume_file?.split("/").pop()
+                            : resume_file[0]?.name}
                         </p>
                       </>
                     )}
