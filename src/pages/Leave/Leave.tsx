@@ -14,7 +14,6 @@ import EmployeeLeaves from "./EmployeeLeaves";
 
 const Leave = () => {
   const { handleSubmit, register } = useForm();
-
   const { status } = useAppSelector((state) => state.authUser);
 
   const { data: allLeavesDetailsData, isLoading: isLoadinLeavesDetails } =

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { IoEyeOutline } from "react-icons/io5";
-import { TiEdit } from "react-icons/ti";
+import { TiDelete, TiEdit } from "react-icons/ti";
 import "../assets/styles/ovetimeTable.css";
 import { useAppDispatch } from "../hooks/reduxHook";
 import {
@@ -20,54 +20,70 @@ import { formatDate, formatDateType } from "../utils/formatDate";
 import { Link } from "react-router-dom";
 import { FaRegFilePdf } from "react-icons/fa";
 import { useGetAllCategoryQuery } from "../redux/api/category";
+import {
+  useDeleteInterviewMutation,
+  useUpdateInterviewMutation,
+} from "../redux/api/interview";
+import ConfirmDialog from "./ConfirmDialog";
+import { request } from "http";
 
 const ScheduleInterviewTable = ({ data, isLoading }: any) => {
-  const isStatusExist = data?.some((item: any) => item.status !== null);
-  const [screenShotPreviewImage, setScreenShotPreviewImage] = useState("");
+  const dispatch = useAppDispatch();
   const { data: allCategory, isLoading: isAllCategoryLoading } =
     useGetAllCategoryQuery();
 
   const [
-    updateOverTime,
+    updateInterview,
     {
-      data: updateOverTimeData,
-      isLoading: isUpdateOverTimeLoading,
-      isSuccess: isUpdateOverTimeSuccess,
+      data: updateInterviewData,
+      isLoading: isUpdateInterviewLoading,
+      isSuccess: isUpdateInterviewSuccess,
     },
-  ] = useUpdateOverTimeMutation();
+  ] = useUpdateInterviewMutation();
 
-  const dispatch = useAppDispatch();
+  const [deleteInterview, { data: deleteInterviewData }] =
+    useDeleteInterviewMutation();
 
-  const handleViewScreenshot = (screenshotImtUrl: string) => {
-    setScreenShotPreviewImage(screenshotImtUrl);
-  };
-
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: any, id: string) => {
     dispatch(setIsLoading(true));
+    console.log(id);
     const formData = new FormData();
-    const dateFormat = formatDate(data.overtime_date, "d-m-y").replace(
-      /\//g,
-      "-"
-    );
-    console.log(dateFormat);
-    formData.append("overtime_date", dateFormat);
-    formData.append("working_hours", data.working_hours);
-    formData.append("salary_per_hour", data.salary_per_hour);
-    formData.append("final_balance", data.final_balance);
-    formData.append("project_name", data.project_name);
-    formData.append("project_url", data.project_url);
+    const date = new Date(data.interview_date)
+      .toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .replace(/\//g, "-");
 
-    if (typeof data.screenshot === "string") {
-      formData.append("screenshot", data.screenshot);
+    const time = new Date(data.interview_date).toLocaleTimeString("en-Gb", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    formData.append("candidate_name", data.candidate_name);
+    formData.append("email", data.email);
+    formData.append("phone_number", data.phone_number);
+    formData.append("position", data.position);
+    formData.append("interview_type", data.interview_type);
+    formData.append("interviewer_name", data.interviewer_name);
+    formData.append("interview_date", date);
+    formData.append("interview_time", time);
+    formData.append("id", id);
+
+    if (typeof data.resume_file === "string") {
+      formData.append("resume_file", data.resume_file);
     } else {
-      if (data.screenshot) {
-        const file = data.screenshot[0];
-        formData.append("screenshot", file);
+      if (data.resume_file) {
+        const file = data.resume_file[0];
+        formData.append("resume_file", file);
       }
     }
 
     try {
-      await updateOverTime(formData).unwrap();
+      const response = await updateInterview(formData).unwrap();
+      dispatch(setIsLoading(false));
+      dispatch(setToast(response?.message));
     } catch (err) {
       const error = err as { data: { message: string } };
       if (error) {
@@ -77,12 +93,28 @@ const ScheduleInterviewTable = ({ data, isLoading }: any) => {
     }
   };
 
-  useEffect(() => {
-    if (updateOverTimeData) {
+  const handleDelete = async (id: string) => {
+    dispatch(setIsLoading(true));
+    try {
+      const resposne = await deleteInterview({
+        id,
+      }).unwrap();
       dispatch(setIsLoading(false));
-      dispatch(setToast(updateOverTimeData.message));
+      dispatch(setToast(resposne?.message));
+    } catch (error) {
+      const err = error as { data: { message: string } };
+      dispatch(setIsLoading(false));
+      dispatch(setToast(err?.data?.message));
+      console.error("Error during delete over time:", error);
     }
-  }, [isUpdateOverTimeSuccess]);
+  };
+
+  // useEffect(() => {
+  //   if (updateOverTimeData) {
+  //     dispatch(setIsLoading(false));
+  //     dispatch(setToast(updateOverTimeData.message));
+  //   }
+  // }, [isUpdateOverTimeSuccess]);
 
   return (
     <div>
@@ -117,7 +149,7 @@ const ScheduleInterviewTable = ({ data, isLoading }: any) => {
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={10} className="text-center">
+                <td colSpan={11} className="text-center">
                   Loading...
                 </td>
               </tr>
@@ -127,15 +159,14 @@ const ScheduleInterviewTable = ({ data, isLoading }: any) => {
                   key={index}
                   record={record}
                   categories={allCategory}
-                  handleViewScreenshot={handleViewScreenshot}
                   handleEdit={handleEdit}
-                  isStatusExist={isStatusExist}
+                  handleDelete={handleDelete}
                   index={index}
                 />
               ))
             ) : (
               <tr>
-                <td colSpan={10} className="text-center">
+                <td colSpan={11} className="text-center">
                   No Data
                 </td>
               </tr>
@@ -143,53 +174,19 @@ const ScheduleInterviewTable = ({ data, isLoading }: any) => {
           </tbody>
         </table>
       </div>
-
-      {screenShotPreviewImage && (
-        <div
-          className="position-fixed top-0 end-0 z-3 d-flex flex-column justify-content-center align-items-center"
-          style={{
-            width: "100%",
-            minHeight: "100%",
-            background: "rgba(255, 255, 255, 0.589)",
-          }}
-        >
-          <p
-            className="position-absolute text-bold text-large"
-            style={{
-              cursor: "pointer",
-              top: "4%",
-              right: "2%",
-            }}
-            onClick={() => {
-              setScreenShotPreviewImage("");
-            }}
-          >
-            X
-          </p>
-          <div
-            style={{
-              width: "95%",
-              height: "580px",
-            }}
-          >
-            <img
-              src={`${screenShotPreviewImage}`}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-const TableRow = ({ record, handleEdit, categories, index }: any) => {
+const TableRow = ({
+  record,
+  handleEdit,
+  handleDelete,
+  categories,
+  index,
+}: any) => {
   const [isEdit, setIsEdit] = useState(false);
-
+  const [confirm, setIsConfirm] = useState(false);
   const scheduleInterviewFormFields = [
     {
       label: "Candidate Name",
@@ -213,7 +210,7 @@ const TableRow = ({ record, handleEdit, categories, index }: any) => {
         value: category.name,
       })),
       required: true,
-      value: categories?.categories[0]?.name,
+      value: record.position,
     },
     {
       label: "email",
@@ -264,6 +261,10 @@ const TableRow = ({ record, handleEdit, categories, index }: any) => {
     },
   ];
 
+  const combinedDateTime = `${
+    record.interview_date
+  }T${record.interview_time.slice(0, 5)}`;
+
   const {
     register,
     handleSubmit,
@@ -272,7 +273,7 @@ const TableRow = ({ record, handleEdit, categories, index }: any) => {
   } = useForm({
     defaultValues: {
       candidate_name: record.candidate_name,
-      interview_date: record.interview_date,
+      interview_date: combinedDateTime,
       position: record.position,
       email: record.email,
       phone_number: record.phone_number,
@@ -284,8 +285,16 @@ const TableRow = ({ record, handleEdit, categories, index }: any) => {
   });
 
   const handleEditForm = async (data: any) => {
-    await handleEdit(data);
+    await handleEdit(data, record.id);
     setIsEdit(false);
+  };
+
+  const handleClose = (status: boolean) => {
+    if (status) {
+      handleDelete(record.id);
+      setIsConfirm(false);
+    }
+    setIsConfirm(false);
   };
 
   const resume_file = useWatch({ control, name: "resume_file" });
@@ -325,6 +334,7 @@ const TableRow = ({ record, handleEdit, categories, index }: any) => {
                 <IoEyeOutline size="18" />
               </Link>
             </div>
+
             <div>
               <TiEdit
                 size="18"
@@ -333,6 +343,12 @@ const TableRow = ({ record, handleEdit, categories, index }: any) => {
                 }}
               />
             </div>
+
+            <div>
+              <TiDelete size={"18"} onClick={() => setIsConfirm(true)} />
+            </div>
+
+            <ConfirmDialog isOpen={confirm} onClose={handleClose} />
           </div>
         </td>
       </tr>

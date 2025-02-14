@@ -3,18 +3,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "../hooks/reduxHook";
 import { useGetAllCategoryQuery } from "../redux/api/category";
-import {
-  useGetALlEmailsQuery,
-  usePostNoticeMutation,
-} from "../redux/api/notice";
+import { usePostInterviewMutation } from "../redux/api/interview";
+import { useGetALlEmailsQuery } from "../redux/api/notice";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
-import {
-  noticeFormSchema,
-  scheduleFormSchema,
-} from "../validations/formValidation";
+import { scheduleFormSchema } from "../validations/formValidation";
 import InputWithLabel from "./ui/InputWithLabel";
-import { usePostInterviewMutation } from "../redux/api/interview";
 
 const ScheduleForm = () => {
   const dispatch = useAppDispatch();
@@ -184,8 +178,8 @@ const ScheduleForm = () => {
                 type={item.type}
                 value={item.value}
                 options={item.options}
-                // placeholder={item.placeholder}
                 accept={item.accept}
+                disabledPast={true}
               />
 
               {errors[item.name] && (

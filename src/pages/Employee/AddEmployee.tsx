@@ -102,7 +102,7 @@ const AddEmployee = () => {
       value: "",
     },
     {
-      // label: "Designation",
+      label: "Designation",
       name: "designation",
       type: "select",
       options: allCategory?.categories?.map((category: any) => ({

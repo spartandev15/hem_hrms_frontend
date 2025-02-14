@@ -73,6 +73,9 @@ export interface InputWithLabelProps {
   isLoading?: boolean;
   disabled?: boolean;
   accept?: string;
+  disabledPast?: boolean;
+  disabledFuture?: boolean;
+  rows?: number;
 }
 
 interface EmployeeDetails {

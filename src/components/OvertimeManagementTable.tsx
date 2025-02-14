@@ -164,6 +164,11 @@ const TableRow = (record: any) => {
     formData.append("project_url", record.project_url);
     formData.append("status", status);
     formData.append("user_id", record.user_id);
+    formData.append("screenshot", record.screenshot);
+
+    for (const value of formData.values()) {
+      console.log(value);
+    }
 
     // if (typeof data.screenshot === "string") {
     //   formData.append("screenshot", data.screenshot);

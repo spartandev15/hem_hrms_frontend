@@ -1,6 +1,6 @@
 import React from "react";
-
-const userLogo = "/images/account.png";
+import { HiOutlineUserCircle } from "react-icons/hi2";
+import { FaRegEye } from "react-icons/fa6";
 
 const UserProfileCard = ({ userDetails }: any) => {
   return (
@@ -9,41 +9,40 @@ const UserProfileCard = ({ userDetails }: any) => {
         <div className="row mt-4">
           <div className="col-lg-12">
             <div className="new_section shadow">
-              <div className="">
-                <tbody>
-                  <tr className="border-bottom">
-                    <td>
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div className=" hravatar">
-                          <img src={userLogo} alt="img" className="img-fluid" />
-                        </div>
-                        <div className="me-3 mt-0 mt-sm-1 d-block">
-                          <h6 className="mb-0">
-                            {userDetails?.name} {userDetails?.last_name}
-                          </h6>
-                          {/* <div className="clearfix"></div> */}
-                          <small className="text-muted">
-                            {userDetails?.designation}
-                          </small>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="text-start fs-13">5 years</td>
-                    <td className="text-start fs-13">
-                      <i className="feather feather-map-pin text-muted me-2"></i>
-                      USA
-                    </td>
-                    <td className="text-end">
-                      <a
-                        className="action-btns"
-                        data-bs-toggle="tooltip"
-                        aria-label="Delete"
-                      >
-                        <i className="fa fa-eye text-danger"></i>
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
+              <div className="d-flex gap-3">
+                <div className="">
+                  <div className="d-flex align-items-center gap-1">
+                    <div>
+                      <HiOutlineUserCircle size={35} color="#4B95AE" />
+                    </div>
+
+                    <div className="">
+                      <h2 className="mb-0 text-small">
+                        {userDetails?.name} {userDetails?.last_name}
+                      </h2>
+                      {/* <div className="clearfix"></div> */}
+                      <small className="text-muted">
+                        {userDetails?.designation}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="d-flex gap-2 align-items-center">
+                  <p className="m-0">5 years</p>
+                  <p className="m-0">USA</p>
+
+                  <div
+                    className="border rounded-1 d-flex justify-content-center align-items-center"
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <FaRegEye size={22} color="#DC3545" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

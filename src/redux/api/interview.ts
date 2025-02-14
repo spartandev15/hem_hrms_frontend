@@ -14,7 +14,7 @@ export const interviewApi = baseApi.injectEndpoints({
       providesTags: ["interview"],
     }),
 
-    // endpoint for create notices
+    // endpoint for scheduled interviews
     postInterview: builder.mutation<any, any>({
       query: (interviewData: any) => {
         return {
@@ -26,52 +26,86 @@ export const interviewApi = baseApi.injectEndpoints({
       invalidatesTags: ["interview"],
     }),
 
-    // endpoint for getting all notice of users
-    // getAllNoticesOfUsers: builder.query<any, void>({
-    //   query: () => {
-    //     return {
-    //       url: "/api/get/notices",
-    //       method: "GET",
-    //     };
-    //   },
-    //   // providesTags: ["allOvertime"],
-    // }),
+    // endpoint for update a interview
+    updateInterview: builder.mutation<any, any>({
+      query: (interviewData: any) => {
+        return {
+          url: "/api/update/interview",
+          method: "POST",
+          body: interviewData,
+        };
+      },
+      invalidatesTags: ["interview"],
+    }),
 
-    // // endpoint for create a overtime
-    // postOverTime: builder.mutation<any, any>({
-    //   query: (overTimeData: any) => {
-    //     return {
-    //       url: "/api/add/overtime",
-    //       method: "POST",
-    //       body: overTimeData,
-    //     };
-    //   },
-    //   invalidatesTags: ["overtime"],
-    // }),
+    // endpoint for delete a interview
+    deleteInterview: builder.mutation<any, any>({
+      query: (id: any) => {
+        return {
+          url: "/api/delete/interview",
+          method: "POST",
+          body: id,
+        };
+      },
+      invalidatesTags: ["interview"],
+    }),
 
-    // // endpoint for update a overtime
-    // updateOverTime: builder.mutation<any, any>({
-    //   query: (overTimeData: any) => {
-    //     return {
-    //       url: "/api/update/overtime",
-    //       method: "POST",
-    //       body: overTimeData,
-    //     };
-    //   },
-    //   invalidatesTags: ["overtime"],
-    // }),
+    // endpoint for getting all vacancy
+    getAllVacancy: builder.query<any, void>({
+      query: () => {
+        return {
+          url: "/api/get/vacancies",
+          method: "GET",
+        };
+      },
+      providesTags: ["vacancy"],
+    }),
 
-    // // endpoint for update status a overtime
-    // updateOverTimeStatus: builder.mutation<any, any>({
-    //   query: (overTimeStatusData: any) => {
-    //     return {
-    //       url: "/api/update/overtimeRecordStatus",
-    //       method: "POST",
-    //       body: overTimeStatusData,
-    //     };
-    //   },
-    //   invalidatesTags: ["allOvertime"],
-    // }),
+    getVacancyById: builder.query<any, any>({
+      query: (id) => {
+        return {
+          url: `/api/get/getVacancyById?id=${id.id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["vacancy"],
+    }),
+
+    // endpoint for post vacancies
+    postVacancy: builder.mutation<any, any>({
+      query: (vacancyData: any) => {
+        return {
+          url: "/api/create/vacancy",
+          method: "POST",
+          body: vacancyData,
+        };
+      },
+      invalidatesTags: ["vacancy"],
+    }),
+
+    // endpoint for update a vacancy
+    updateVacancy: builder.mutation<any, any>({
+      query: (vacancywData: any) => {
+        return {
+          url: "/api/update/vacancy",
+          method: "POST",
+          body: vacancywData,
+        };
+      },
+      invalidatesTags: ["vacancy"],
+    }),
+
+    // endpoint for delete vacancy
+    deleteVacancy: builder.mutation<any, any>({
+      query: (id: any) => {
+        return {
+          url: "/api/delete/vacancy",
+          method: "POST",
+          body: id,
+        };
+      },
+      invalidatesTags: ["vacancy"],
+    }),
   }),
 });
 
@@ -80,7 +114,13 @@ export const interviewApi = baseApi.injectEndpoints({
 export const {
   usePostInterviewMutation,
   useGetALlInterviewsQuery,
-  //   useGetALlEmailsQuery,
+  useUpdateInterviewMutation,
+  useDeleteInterviewMutation,
+  usePostVacancyMutation,
+  useGetAllVacancyQuery,
+  useUpdateVacancyMutation,
+  useDeleteVacancyMutation,
+  useLazyGetVacancyByIdQuery,
   //   usePostNoticeMutation,
   //   useGetAllNoticesOfUsersQuery,
   //   useGetAllOverTimeQuery,

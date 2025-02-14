@@ -1,29 +1,27 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
-import { FaPhoneAlt } from "react-icons/fa";
-import { IoIosMail } from "react-icons/io";
+import { useForm } from "react-hook-form";
 import { BiShowAlt } from "react-icons/bi";
-const ProfileImage = "/images/profile.png";
-import { FaPencilAlt } from "react-icons/fa";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { FaPencilAlt, FaPhoneAlt } from "react-icons/fa";
+import { IoIosMail } from "react-icons/io";
 import { MdOutlineClose } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { Link } from "react-router-dom";
+import { useAppDispatch } from "../../hooks/reduxHook";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { EmployeeCardProps } from "../../types";
+import { useGetAllCategoryQuery } from "../../redux/api/category";
 import {
   useDeleteEmployeeMutation,
   useUpdateEmployeeMutation,
 } from "../../redux/api/employee";
-import { useAppDispatch } from "../../hooks/reduxHook";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { EditableForm } from "../EditableForm";
-import InputWithLabel from "../ui/InputWithLabel";
-import { useForm } from "react-hook-form";
-import ConfirmDialog from "../ConfirmDialog";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { EmployeeCardProps } from "../../types";
 import { employeeFormSchema } from "../../validations/formValidation";
-import { Link } from "react-router-dom";
-import { useGetAllCategoryQuery } from "../../redux/api/category";
+import ConfirmDialog from "../ConfirmDialog";
+import InputWithLabel from "../ui/InputWithLabel";
+const ProfileImage = "/images/profile.png";
 
 const EmployeeCard: React.FC<EmployeeCardProps> = ({
   id,

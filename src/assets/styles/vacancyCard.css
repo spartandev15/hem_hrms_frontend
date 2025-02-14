@@ -1,0 +1,4 @@
+.vacancy-card {
+  box-shadow: 2px 2px 8px #cbcfcf9c;
+  border: 1px solid var(--bs-border-color);
+}

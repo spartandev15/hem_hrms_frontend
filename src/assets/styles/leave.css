@@ -1,10 +1,10 @@
 /* General styles for the table container */
 .table-container {
-  margin: 20px;
+  /* margin: 20px;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: #f9f9f9; */
 }
 
 h2 {
@@ -22,15 +22,17 @@ h2 {
 
 .employee-leave-table th,
 .employee-leave-table td {
-  padding: 12px;
-  text-align: left;
+  padding: 8px;
   border: 1px solid #ddd;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .employee-leave-table th {
   background-color: var(--primary-color);
   color: white;
   white-space: nowrap;
+  text-align: center;
 }
 
 .employee-leave-table tr:nth-child(even) {
@@ -41,39 +43,40 @@ h2 {
   background-color: #ddd;
 }
 
-/* .category-wrapper .category-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  overflow: auto;
-  border-radius: 44px;
-  border: 1px solid #d8d4d4;
-} */
-
 .leave-status-table {
   overflow-x: auto;
+  border-collapse: collapse;
+  background-color: red;
 }
 
 .leave-status-table th,
 .leaves-status-table td {
-  padding: 12px;
-  text-align: left;
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 2px;
+  text-align: center;
 }
 
 .leave-status-table th {
-  background-color: #fcfafac0;
-  /* color: var(--white-color); */
-  color: var(--black-color);
-  font-weight: bold;
-  white-space: nowrap;
+  background-color: #f4f4f4;
+  font-size: 14px;
+  border: 1px solid #ddd;
 }
 
 .leave-status-table tr {
-  border-bottom: 1px solid var(--bs-border-color);
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  padding: 0 19px;
 }
 
 .leave-status-table tbody tr:nth-child(odd) {
-  background-color: #f4f4f4;
+  background-color: #f9f9f9;
 }
 
 .leave-status-table tbody tr:hover {

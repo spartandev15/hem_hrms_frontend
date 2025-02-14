@@ -155,3 +155,35 @@ export const scheduleFormSchema = z.object({
   // description: z.string().min(1, "Description is required"),
   // Allow undefined or null
 });
+
+export const vacancyFormSchema = z.object({
+  job_title: z.string().min(1, "Job Title is required"),
+  location: z.string().min(1, "Location is required"),
+  salary_range: z.string().min(1, "salary Range is required"),
+  job_type: z.string().min(1, "Job Type is required"),
+  skills_required: z.string().min(1, "Skills required are required"),
+  job_responsibilities: z.string().min(1, "Job Responsibilities are required"),
+  company_information: z.string().min(1, "Company Information is required"),
+  contact_email: z.string().email("Please provide a valid email address"),
+  experience: z.string().min(1, "Experience is required"),
+  joining_time: z.string().min(1, "joining time is required"),
+  status: z.string().min(1, "status is required"),
+  // phone_number: z
+  //   .string()
+  //   .min(1, "Mobile number is required")
+  //   .regex(/^\d{10}$/, "Mobile number should be 10 digits"),
+});
+
+// {
+//   "job_title": "",
+//   "location": "",
+//   "salary_range": "10-20",
+//   "job_type": "Office",
+//   "skills_required": "",
+//   " job_responsibilities": "",
+//   "company_information": "",
+//   "contact_email": "",
+//   "experience": "1-2",
+//   "joining_time": "Immidiate",
+//   "phone_number": ""
+// }

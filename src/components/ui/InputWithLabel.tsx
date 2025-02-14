@@ -19,8 +19,10 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   isLoading,
   disabled,
   accept,
+  disabledPast,
+  disabledFuture,
+  rows,
 }) => {
-  const today = new Date().toISOString().split("T")[0];
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -38,6 +40,19 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   const handleShowHidePassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const today = new Date();
+
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const todayFormatted = formatDate(today);
 
   useEffect(() => {
     if (value) {
@@ -71,7 +86,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               </option>
             )}
           </select>
-        ) : type === "date" || type === "datetime" ? (
+        ) : type === "date" || type === "datetime-local" ? (
           <div>
             <input
               type={type}
@@ -83,7 +98,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               onFocus={handleFocus}
               onBlur={handleBlur}
               required={required}
-              max={today}
+              min={disabledPast ? todayFormatted : undefined}
+              max={disabledFuture ? todayFormatted : undefined}
               className=" w-100"
               disabled={disabled}
             />
@@ -127,7 +143,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
                     required={required}
                     className="w-100"
                     disabled={disabled}
-                    rows={15}
+                    rows={rows || 8}
                   />
                 ) : (
                   <input

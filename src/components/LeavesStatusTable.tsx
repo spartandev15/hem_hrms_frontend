@@ -11,13 +11,8 @@ const LeavesStatusTable: React.FC<{ allAppliedLeavesData: any }> = ({
   return (
     <div className="container">
       {allAppliedLeavesData && (
-        <div className="">
-          <table
-            className="leave-status-table shadow-sm rounded-2 w-100"
-            style={{
-              whiteSpace: "nowrap", // Prevent wrapping of table cells
-            }}
-          >
+        <div className="overflow-x-auto">
+          <table className="leave-status-table shadow-sm rounded-2 w-100">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -60,7 +55,8 @@ const TableRow = (item: any) => {
     { data: updateLeaveStatusDetailsData, isSuccess: updateLeavesIsSuccess },
   ] = useUpdateLeavesStatusMutation();
 
-  const handleStatusSubmit = (status: string) => {
+  const handleStatusSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const status = event.target.value;
     dispatch(setIsLoading(true));
     updateLeavesStatus({
       id: item.id,
@@ -85,7 +81,7 @@ const TableRow = (item: any) => {
 
       <td onClick={toggleDropdown} style={{ cursor: "pointer" }}>
         <div
-          className="text-capitalize position-relative"
+          className="m-auto"
           style={{
             width: "fit-content",
             backgroundColor:
@@ -94,7 +90,7 @@ const TableRow = (item: any) => {
                 : item.status === "pending"
                 ? "#DD982F" // amber for pending
                 : "#DF3523",
-            padding: "2px 1rem",
+
             borderRadius: "4px",
             color:
               item.status === "approved"
@@ -104,9 +100,29 @@ const TableRow = (item: any) => {
                 : "#fff",
           }}
         >
-          {item.status}
+          <select
+            style={{
+              width: "fit-content",
+              background: "transparent",
+              border: "none",
+              padding: "2px",
+            }}
+            value={item.status}
+            onChange={handleStatusSubmit}
+            className="text-xsmall text-white"
+          >
+            <option value="approved" className="text-black text-xsmall">
+              Approved
+            </option>
+            <option value="rejected" className="text-black text-xsmall">
+              Rejected
+            </option>
+            <option hidden value="pending">
+              pending
+            </option>
+          </select>
 
-          {isDropdownVisible && (
+          {/* {isDropdownVisible && (
             <div
               ref={dropDownRef}
               className="position-absolute bg-white px-4 py-2 border rounded-2"
@@ -131,7 +147,7 @@ const TableRow = (item: any) => {
                 Rejected
               </p>
             </div>
-          )}
+          )} */}
         </div>
       </td>
     </tr>

@@ -20,6 +20,8 @@ import OverTimeManagement from "../pages/OverTime/OverTimeManagement";
 import { Notice } from "../pages/Notice/Notice";
 import UserNotice from "../components/UsersNotice";
 import ScheduleInterview from "../pages/Interview/ScheduleInterview";
+import Vacancy from "../pages/Interview/Vacancy";
+import VacancyDetails from "../pages/Interview/VacancyDetails";
 
 const Navigation = () => {
   return (
@@ -47,6 +49,8 @@ const Navigation = () => {
           <Route path="overtime" element={<OverTimeManagement />} />
           <Route path="notices" element={<Notice />} />
           <Route path="schedule-interviews" element={<ScheduleInterview />} />
+          <Route path="vacancies" element={<Vacancy />} />
+          <Route path="vacancy-details/:id" element={<VacancyDetails />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>

@@ -52,7 +52,7 @@ export const Nav_List = [
     subLinks: [
       {
         label: "Vacancy",
-        href: "",
+        href: "vacancies",
       },
       {
         label: "Schedule Interview",
