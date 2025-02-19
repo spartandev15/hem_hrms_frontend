@@ -6,12 +6,13 @@ import EmployeeCard from "../../components/cards/EmployeeCard";
 import InputWithLabel from "../../components/ui/InputWithLabel";
 import { useGetAllCategoryQuery } from "../../redux/api/category";
 import { useGetEmployeesQuery } from "../../redux/api/employee";
+import { useAppSelector } from "../../hooks/reduxHook";
 
 const Employees = () => {
   const { data: allEmployeData, isLoading } = useGetEmployeesQuery();
-  const { data: allCategory } = useGetAllCategoryQuery();
+  const { items } = useAppSelector((state) => state.dropdown);
 
-  const options = allCategory?.categories?.map((category: any) => ({
+  const options = items?.map((category) => ({
     label: category.name,
     value: category.name,
   }));

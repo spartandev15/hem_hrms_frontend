@@ -1,21 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import { useAppDispatch } from "../hooks/reduxHook";
-import { usePostOverTimeMutation } from "../redux/api/overTime";
+import Select from "react-select";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
+import { usePostNoticeMutation } from "../redux/api/notice";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
-import { formatDate } from "../utils/formatDate";
-import {
-  noticeFormSchema,
-  overTimeFormSchema,
-} from "../validations/formValidation";
+import { noticeFormSchema } from "../validations/formValidation";
 import InputWithLabel from "./ui/InputWithLabel";
-import Select from "react-select";
-import {
-  useGetALlEmailsQuery,
-  usePostNoticeMutation,
-} from "../redux/api/notice";
 
 const NoticeFormFields = [
   {
@@ -51,13 +43,12 @@ const NoticeFormFields = [
 const NoticeForm = () => {
   const dispatch = useAppDispatch();
   const [error, setError] = useState("");
-  const { data: allEmail, isLoading: isAllEmailsLoading } =
-    useGetALlEmailsQuery();
+  const { emailItems } = useAppSelector((state) => state.allEmail);
 
   const [postNotice, { data: postNoticeData, isLoading: isPostNoticeLoading }] =
     usePostNoticeMutation();
 
-  const options = (allEmail?.data || []).map((email: any) => {
+  const options = (emailItems || []).map((email: any) => {
     return { label: email, value: email };
   });
 

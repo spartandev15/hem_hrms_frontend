@@ -76,6 +76,7 @@ export interface InputWithLabelProps {
   disabledPast?: boolean;
   disabledFuture?: boolean;
   rows?: number;
+  multiple?: boolean;
 }
 
 interface EmployeeDetails {

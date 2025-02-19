@@ -43,7 +43,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
     register,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(employeeFormSchema),
+    // resolver: zodResolver(employeeFormSchema),
     defaultValues: {
       id,
       first_name,
@@ -134,20 +134,20 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       required: true,
       value: employee_id,
     },
-    {
-      label: "Password",
-      type: "password",
-      name: "password",
-      required: true,
-      value: "",
-    },
-    {
-      label: "Confirm Password",
-      name: "confirm_Password",
-      type: "password",
-      required: true,
-      value: "",
-    },
+    // {
+    //   label: "Password",
+    //   type: "password",
+    //   name: "password",
+    //   required: true,
+    //   value: "",
+    // },
+    // {
+    //   label: "Confirm Password",
+    //   name: "confirm_Password",
+    //   type: "password",
+    //   required: true,
+    //   value: "",
+    // },
     {
       label: "Joining Date",
       name: "joining_date",

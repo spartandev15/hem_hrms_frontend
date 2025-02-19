@@ -22,6 +22,9 @@ import UserNotice from "../components/UsersNotice";
 import ScheduleInterview from "../pages/Interview/ScheduleInterview";
 import Vacancy from "../pages/Interview/Vacancy";
 import VacancyDetails from "../pages/Interview/VacancyDetails";
+import UserDocuments from "../pages/Documents/UserDocuments";
+import HRDocuments from "../pages/Documents/HRDocuments";
+import DocumentOverview from "../pages/Documents/DocumentOverview";
 
 const Navigation = () => {
   return (
@@ -51,12 +54,15 @@ const Navigation = () => {
           <Route path="schedule-interviews" element={<ScheduleInterview />} />
           <Route path="vacancies" element={<Vacancy />} />
           <Route path="vacancy-details/:id" element={<VacancyDetails />} />
+          <Route path="documents" element={<HRDocuments />} />
+          <Route path="documents/:id" element={<DocumentOverview />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>
           <Route path="profile" element={<Profile />} />
           <Route path="overtime" element={<OverTime />} />
           <Route path="notices" element={<UserNotice />} />
+          <Route path="/documents" element={<UserDocuments />} />
 
           <Route
             path="/employee-details/:employee-name/:id"

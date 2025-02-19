@@ -1,8 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { useForm } from "react-hook-form";
-import { useAppDispatch } from "../hooks/reduxHook";
-import { useGetAllCategoryQuery } from "../redux/api/category";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { usePostInterviewMutation } from "../redux/api/interview";
 import { useGetALlEmailsQuery } from "../redux/api/notice";
 import { setIsLoading } from "../redux/slices/loadingSlice";
@@ -12,14 +10,8 @@ import InputWithLabel from "./ui/InputWithLabel";
 
 const ScheduleForm = () => {
   const dispatch = useAppDispatch();
-  const { data: allCategory, isLoading: isAllCategoryLoading } =
-    useGetAllCategoryQuery();
-  const { data: allEmail, isLoading: isAllEmailsLoading } =
-    useGetALlEmailsQuery();
-  const [
-    postInverview,
-    { data: postInterViewData, isLoading: isPostInteviewLoading },
-  ] = usePostInterviewMutation();
+  const { items } = useAppSelector((state) => state.dropdown);
+  const [postInverview] = usePostInterviewMutation();
 
   // all forms fields
   const scheduleInterviewFormFields = [
@@ -40,12 +32,12 @@ const ScheduleForm = () => {
       label: "Position",
       name: "position",
       type: "select",
-      options: allCategory?.categories?.map((category: any) => ({
+      options: items?.map((category) => ({
         label: category.name,
         value: category.name,
       })),
       required: true,
-      value: allCategory?.categories[0]?.name,
+      value: items[0]?.name,
     },
     {
       label: "email",

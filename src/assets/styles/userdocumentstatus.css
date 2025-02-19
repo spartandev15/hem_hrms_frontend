@@ -1,0 +1,33 @@
+/* Add to your CSS/SCSS file */
+
+.document-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.document-item {
+  max-width: 360px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 0 12px #e4e2e296;
+}
+
+.status-badge {
+  font-weight: bold;
+}
+
+.badge-warning {
+  background-color: #caa614;
+  color: white;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}

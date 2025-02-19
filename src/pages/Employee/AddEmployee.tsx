@@ -1,15 +1,14 @@
-import React, { useEffect } from "react";
-import InputWithLabel from "../../components/ui/InputWithLabel";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import "../../assets/styles/inputWithLabel.css";
+import InputWithLabel from "../../components/ui/InputWithLabel";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
 import { usePostEmployeeMutation } from "../../redux/api/employee";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
-import { useAppDispatch } from "../../hooks/reduxHook";
 import { setToast } from "../../redux/slices/toastSlice";
-import { useGetAllCategoryQuery } from "../../redux/api/category";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { employeeFormSchema } from "../../validations/formValidation";
-import { useNavigate } from "react-router-dom";
 
 const AddEmployee = () => {
   const navigate = useNavigate();
@@ -27,8 +26,7 @@ const AddEmployee = () => {
     { data: EmployeeDetailsData, isSuccess: postEmployeeIsSuccess },
   ] = usePostEmployeeMutation();
 
-  const { data: allCategory, isLoading: isAllCategoryLoading } =
-    useGetAllCategoryQuery();
+  const { items } = useAppSelector((state) => state.dropdown);
 
   const addEmployeeFormFields = [
     {
@@ -105,12 +103,12 @@ const AddEmployee = () => {
       label: "Designation",
       name: "designation",
       type: "select",
-      options: allCategory?.categories?.map((category: any) => ({
+      options: items?.map((category: any) => ({
         label: category.name,
         value: category.name,
       })),
       required: true,
-      value: allCategory?.categories[0]?.name,
+      value: items[0]?.name,
     },
     {
       label: "Total Leaves",
@@ -187,7 +185,6 @@ const AddEmployee = () => {
                     type={item.type}
                     value={item.value}
                     options={item.options}
-                    isLoading={isAllCategoryLoading}
                   />
                   {errors[item.name] && (
                     <p className="text-danger">

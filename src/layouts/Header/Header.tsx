@@ -84,6 +84,12 @@ const Header = () => {
         label: "Notice",
         href: status === "HR" ? "/dashboard/notices" : "/notices",
       };
+    } else if (item.label === "Documents") {
+      return {
+        ...item,
+        label: "Document",
+        href: status === "HR" ? "/dashboard/documents" : "/documents",
+      };
     }
     return item;
   });

@@ -22,6 +22,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   disabledPast,
   disabledFuture,
   rows,
+  multiple,
+  onChange,
 }) => {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -82,7 +84,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               ))
             ) : (
               <option value="" disabled>
-                {isLoading ? "wait..." : "No data"}
+                {isLoading ? "wait..." : "No Options"}
               </option>
             )}
           </select>
@@ -117,6 +119,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
                     fileRef.current = e;
                     register(name!).ref(e);
                   }}
+                  // onChange={onChange}
+                  multiple={multiple}
                 />
                 <button
                   type="button"

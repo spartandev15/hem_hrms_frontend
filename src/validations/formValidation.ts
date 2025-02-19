@@ -174,6 +174,11 @@ export const vacancyFormSchema = z.object({
   //   .regex(/^\d{10}$/, "Mobile number should be 10 digits"),
 });
 
+export const documentsFormSchema = z.object({
+  "10th_dmc": z.any(),
+  "12th_dmc": z.any(),
+});
+
 // {
 //   "job_title": "",
 //   "location": "",
