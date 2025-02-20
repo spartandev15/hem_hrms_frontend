@@ -11,7 +11,7 @@ export const overTimeApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      // providesTags: ["overtime"],
+      providesTags: ["userDocuments"],
     }),
 
     // // endpoint for getting all overtime data
@@ -22,7 +22,7 @@ export const overTimeApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      // providesTags: ["allOvertime"],
+      providesTags: ["allDocuments"],
     }),
 
     getDocumentsById: builder.query<any, string>({
@@ -32,7 +32,7 @@ export const overTimeApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      // providesTags: ["allOvertime"],
+      providesTags: ["documentsById"],
     }),
 
     // endpoint for create a overtime
@@ -44,20 +44,20 @@ export const overTimeApi = baseApi.injectEndpoints({
           body: documentsData,
         };
       },
-      // invalidatesTags: ["overtime"],
+      invalidatesTags: ["userDocuments"],
     }),
 
-    // endpoint for update a overtime
-    // updateOverTime: builder.mutation<any, any>({
-    //   query: (overTimeData: any) => {
-    //     return {
-    //       url: "/api/update/overtime",
-    //       method: "POST",
-    //       body: overTimeData,
-    //     };
-    //   },
-    //   invalidatesTags: ["overtime"],
-    // }),
+    // endpoint for update status document
+    updateDocumentStatus: builder.mutation<any, any>({
+      query: (documentsUpdateData: any) => {
+        return {
+          url: "api/update/documentRecordStatus",
+          method: "POST",
+          body: documentsUpdateData,
+        };
+      },
+      invalidatesTags: ["documentsById"],
+    }),
 
     // // endpoint for update status a overtime
     // updateOverTimeStatus: builder.mutation<any, any>({
@@ -80,6 +80,7 @@ export const {
   useGetDocumentsByIdQuery,
   useGetAllDocumentsQuery,
   usePostDocumentsMutation,
+  useUpdateDocumentStatusMutation,
   //   useGetAllOverTimeQuery,
   //   usePostOverTimeMutation,
   //   useUpdateOverTimeMutation,

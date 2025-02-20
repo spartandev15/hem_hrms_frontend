@@ -70,9 +70,11 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
 
     try {
       const response = await postDocuments(formData).unwrap();
-      console.log(response);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
     <div>
       <div className="document-list row g-2 mt-4">
@@ -136,7 +138,9 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
                         <span
                           className={`badge ${
                             experience?.status === "uploaded"
-                              ? "badge-success"
+                              ? "bg-success"
+                              : experience?.status === "rejected"
+                              ? "bg-danger"
                               : "badge-warning"
                           }`}
                         >
@@ -159,7 +163,7 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
                 </span>
 
                 <div>
-                  {doc?.url ? (
+                  {doc?.status === "uploaded" ? (
                     <Link to={doc.url} target="_blank">
                       <BsFileEarmarkPdf size={40} />
                     </Link>
@@ -176,9 +180,15 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
                             opacity: 0.3,
                           }}
                         />
-                        <span className="bg-warning text-white text-xsmall px-2">
-                          Document not available
-                        </span>
+                        {doc.status === "pending" ? (
+                          <span className="bg-warning text-white text-xsmall px-2">
+                            Document not uploaded
+                          </span>
+                        ) : (
+                          <span className="bg-danger text-white text-xsmall px-2">
+                            Document rejected
+                          </span>
+                        )}
                       </div>
 
                       <form className="mt-4">
@@ -196,18 +206,14 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
                   )}
                 </div>
 
-                <div>
-                  {/* <Link to={doc?.url || "#"} target="_blank">
-                    <BsFileEarmarkPdf size={40} />
-                  </Link> */}
-                </div>
-
                 {doc ? (
                   <div className="status-badge">
                     <span
                       className={`badge ${
                         doc?.status === "uploaded"
-                          ? "badge-success"
+                          ? "bg-success"
+                          : doc?.status === "rejected"
+                          ? "bg-danger"
                           : "badge-warning"
                       }`}
                     >
@@ -216,14 +222,6 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
                   </div>
                 ) : (
                   ""
-                  // <span
-                  //   className="bg-danger text-xsmall text-white px-2 rounded-1"
-                  //   style={{
-                  //     width: "fit-content",
-                  //   }}
-                  // >
-                  //   Not Uploaded
-                  // </span>
                 )}
               </div>
             </div>

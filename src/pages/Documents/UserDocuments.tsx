@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import UserDocumentsForm from "../../components/UserDocumentsForm";
 import UserDocumentStatus from "./UserDocumentStatus";
 import { useGetDocumetsQuery } from "../../redux/api/documents";
+import SpinnerLoader from "../../components/SpinnerLoader";
 
 const UserDocuments = () => {
   const { data, isLoading: isDocumentsLoading } = useGetDocumetsQuery();
@@ -42,8 +43,11 @@ const UserDocuments = () => {
         <h2 className="text-start text-blue-primary m-0 text-large">
           Your Uploaded Documents
         </h2>
+
         {isDocumentsLoading ? (
-          <p>Loading...</p>
+          <div className="mt-3 ms-1 d-flex justify-content-center align-items-center">
+            <SpinnerLoader size={20} />
+          </div>
         ) : (
           <UserDocumentStatus documents={data?.data} />
         )}

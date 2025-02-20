@@ -104,7 +104,7 @@ const DocumentsTable = ({ data, isLoading }: any) => {
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={9} className="text-center">
+                <td colSpan={10} className="text-center">
                   Loading...
                 </td>
               </tr>
@@ -290,7 +290,7 @@ const TableRow = ({
         </td>
         <td>
           <div>
-            {record?.tenth_dmc.status === "uploaded" ? (
+            {record?.twelfth_dmc.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
                 <FaRegFilePdf size={17} color="#5D848B" />
                 <GiConfirmed color="#32AC31" size={17} />
@@ -304,7 +304,7 @@ const TableRow = ({
         </td>
         <td>
           <div>
-            {record?.tenth_dmc.status === "uploaded" ? (
+            {record?.college_degree?.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
                 <FaRegFilePdf size={17} color="#5D848B" />
                 <GiConfirmed color="#32AC31" size={17} />
@@ -318,7 +318,7 @@ const TableRow = ({
         </td>
         <td>
           <div>
-            {record?.tenth_dmc.status === "uploaded" ? (
+            {record?.aadhaar_card?.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
                 <FaRegFilePdf size={17} color="#5D848B" />
                 <GiConfirmed color="#32AC31" size={17} />
@@ -332,7 +332,7 @@ const TableRow = ({
         </td>
         <td>
           <div>
-            {record?.tenth_dmc.status === "uploaded" ? (
+            {record?.pan_card?.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
                 <FaRegFilePdf size={17} color="#5D848B" />
                 <GiConfirmed color="#32AC31" size={17} />

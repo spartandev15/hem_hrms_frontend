@@ -30,7 +30,9 @@ const Login = () => {
         email: data.email,
         password: data.password,
       };
-      await authLogin(formData).unwrap();
+      const response = await authLogin(formData).unwrap();
+
+      console.log(response);
     } catch (error) {
       dispatch(setIsLoading(false));
       console.log(error);
@@ -41,17 +43,18 @@ const Login = () => {
   useEffect(() => {
     if (LoginDetialsData) {
       // destuct access_token from LoginDetialsData
-
       const { access_token, user } = LoginDetialsData;
-      const { status, id } = user;
+      const { status, id, name, last_name, email } = user;
       // payload details send to setAuthReducer
       const payloadData = {
         access_token,
         isAuthenticate: true,
         user_id: id,
         status,
+        name,
+        last_name,
+        email,
       };
-
       // if result true then set authData
       if (LoginDetialsData?.result) {
         // dispatch the setAuthUser action
@@ -59,7 +62,6 @@ const Login = () => {
         // navigate to dashboard page
         navigate("/dashboard");
       }
-
       // set loading false and set toast message
       dispatch(setIsLoading(false));
       dispatch(setToast(LoginDetialsData?.message));

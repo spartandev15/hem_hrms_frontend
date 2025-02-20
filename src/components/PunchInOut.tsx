@@ -10,6 +10,7 @@ import { number } from "zod";
 import { formatDateType, formatElapsedTime } from "../utils/formatDate";
 import { useAppDispatch } from "../hooks/reduxHook";
 import { setIsLoading } from "../redux/slices/loadingSlice";
+import SpinnerLoader from "./SpinnerLoader";
 
 const PunchInOut = () => {
   const [isPunchIn, setPunchIn] = useState(false);
@@ -23,8 +24,14 @@ const PunchInOut = () => {
 
   const { data: punchInOutDataDetals, isLoading: isPunchInOutLoading } =
     usePunchInOutDetailsQuery();
-  const [punchIn, { data: punchInDataDetails, isSuccess: isPunchInSuccess }] =
-    usePunchInMutation();
+  const [
+    punchIn,
+    {
+      data: punchInDataDetails,
+      isSuccess: isPunchInSuccess,
+      isLoading: isPunchinLoading,
+    },
+  ] = usePunchInMutation();
   const [
     punchOut,
     { data: punchOutDataDetails, isSuccess: isPunchOutSuccess },
@@ -131,12 +138,11 @@ const PunchInOut = () => {
       setIsPaused(true);
       setPauseTime(storedPauseTime as number);
     }
+
     return () => {
       stopTimer();
     };
   }, []);
-
-  console.log(punchInOutDataDetals);
 
   useEffect(() => {
     if (punchInDataDetails) {
@@ -150,114 +156,125 @@ const PunchInOut = () => {
   return (
     <div className="shadow sechrcard">
       {isPunchInOutLoading ? (
-        <p>Loading...</p>
+        <div className="d-flex justify-content-center align-items-center h-100">
+          <SpinnerLoader />
+        </div>
       ) : (
-        <div>
+        <div className="h-100">
           <div className="new_section_inner sechrcard-body">
             <h5 className="font-weight-bold">
-              {" "}
               <i className="fas fa-plane new_section_icon"></i>Timesheet
             </h5>
+
             <p className="new_section_t">
-              {/* {formatDateType(currentDate, "short")} */}
+              {/* {formatDateType(new Date().toLocaleDateString(), "short")} */}
             </p>
           </div>
 
-          <div className="punch-info mt-3">
-            <div className="punch-hours position-relative">
-              {punchInOutDataDetals?.data?.timers[0] &&
-              punchInOutDataDetals?.data?.timers[0]?.stopped_at ? (
-                <span>
-                  {punchInOutDataDetals?.data?.timers[0]?.running_duration}
-                  <span
-                    className="position-absolute start-50 "
-                    style={{
-                      transform: "translate(-50%, 0)",
-                      top: "60%",
-                    }}
-                  >
-                    Hrs
+          <div>
+            <div className="punch-info mt-3">
+              <div className="punch-hours position-relative">
+                {punchInOutDataDetals?.data?.timers[0] &&
+                punchInOutDataDetals?.data?.timers[0]?.stopped_at ? (
+                  <span>
+                    {punchInOutDataDetals?.data?.timers[0]?.running_duration}
+                    <span
+                      className="position-absolute start-50 "
+                      style={{
+                        transform: "translate(-50%, 0)",
+                        top: "60%",
+                      }}
+                    >
+                      Hrs
+                    </span>
                   </span>
-                </span>
-              ) : (
-                <span className="timerRef" ref={timerRefDom}>
-                  {lastTime}
-                </span>
-              )}
-            </div>
-          </div>
-          {/* <Timer isPunchIn={isPunchIn} /> */}
-
-          <div className="punch-btn-section mb-0">
-            <div className="d-flex flex-sm-row flex-column gap-1">
-              <button
-                onClick={isPaused ? resumeTimer : pauseTimer}
-                className="btn mybtn punch-btn"
-              >
-                {isPaused ? "Resume" : "Pause"}
-              </button>
-              {punchInOutDataDetals?.data && (
-                <button
-                  type="button"
-                  onClick={PunchOut}
-                  className="btn mybtn punch-btn"
-                  style={{
-                    opacity:
-                      punchInOutDataDetals?.data?.timers[0]?.stopped_at ||
-                      isPunchOut
-                        ? 0.4
-                        : 1,
-                  }}
-                  disabled={
-                    punchInOutDataDetals?.data?.timers[0]?.stopped_at
-                      ? true
-                      : false
-                  }
-                >
-                  Punch Out
-                </button>
-              )}
-            </div>
-
-            <button
-              type="button"
-              onClick={PunchIn}
-              className="btn mybtn punch-btn"
-              style={{
-                opacity: punchInOutDataDetals?.data || isPunchIn ? 0.4 : 1,
-              }}
-              disabled={punchInOutDataDetals?.data ? true : false}
-            >
-              Punch In
-            </button>
-          </div>
-
-          <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-1 d-flex justify-content-between">
-            <div className="punch-det text-start">
-              <h6 className="text-xsmall">Punch In at</h6>
-              <div className="text-xsmall">
-                {/* <p>{formatDateType(currentDate, "long")}</p> /{" "} */}
-                <span>
-                  {punchInOutDataDetals?.data?.timers[0]?.started_at &&
-                    new Date(
-                      punchInOutDataDetals?.data?.timers[0]?.started_at
-                    ).toLocaleTimeString()}
-                </span>
+                ) : (
+                  <span className="timerRef" ref={timerRefDom}>
+                    {lastTime}
+                  </span>
+                )}
               </div>
             </div>
 
-            {punchInOutDataDetals?.data?.timers[0]?.stopped_at && (
-              <div className="punch-det text-start">
-                <h6 className="text-xsmall">Punch Out at</h6>
-                <div className="puch_t">
-                  {/* <p>{formatDateType(currentDate, "long")}</p>{" "} */}
-                  <span>
-                    {punchInOutDataDetals?.data?.timers[0]?.stopped_at &&
-                      new Date(
-                        punchInOutDataDetals?.data?.timers[0]?.stopped_at
-                      ).toLocaleTimeString()}
-                  </span>
-                </div>
+            <div className="punch-btn-section mb-0">
+              <div className="d-flex flex-sm-row flex-column gap-1">
+                {punchInOutDataDetals?.data &&
+                  !punchInOutDataDetals?.data?.timers[0]?.stopped_at && (
+                    <button
+                      onClick={isPaused ? resumeTimer : pauseTimer}
+                      className="btn mybtn punch-btn"
+                    >
+                      {isPaused ? "Resume" : "Pause"}
+                    </button>
+                  )}
+
+                {punchInOutDataDetals?.data && (
+                  <button
+                    type="button"
+                    onClick={PunchOut}
+                    className="btn mybtn punch-btn"
+                    style={{
+                      opacity:
+                        punchInOutDataDetals?.data?.timers[0]?.stopped_at ||
+                        isPunchOut
+                          ? 0.4
+                          : 1,
+                    }}
+                    disabled={
+                      punchInOutDataDetals?.data?.timers[0]?.stopped_at
+                        ? true
+                        : false
+                    }
+                  >
+                    Punch Out
+                  </button>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={PunchIn}
+                className="btn mybtn punch-btn"
+                style={{
+                  opacity: punchInOutDataDetals?.data || isPunchIn ? 0.4 : 1,
+                }}
+                disabled={punchInOutDataDetals?.data ? true : false}
+              >
+                Punch In
+              </button>
+            </div>
+
+            {punchInOutDataDetals?.data && (
+              <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-1 d-flex justify-content-between">
+                {punchInOutDataDetals?.data?.timers[0]?.started_at && (
+                  <div className="punch-det text-start">
+                    <h6 className="text-xsmall">Punch In at</h6>
+                    <div className="text-xsmall">
+                      {/* <p>{formatDateType(currentDate, "long")}</p> /{" "} */}
+                      <span>
+                        {punchInOutDataDetals?.data?.timers[0]?.started_at &&
+                          new Date(
+                            punchInOutDataDetals?.data?.timers[0]?.started_at
+                          ).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {punchInOutDataDetals?.data?.timers[0]?.stopped_at && (
+                  <div className="punch-det text-start">
+                    <h6 className="text-xsmall">Punch Out at</h6>
+                    <div className="puch_t">
+                      {/* <p>{formatDateType(currentDate, "long")}</p>{" "} */}
+                      <span>
+                        {punchInOutDataDetals?.data?.timers[0]?.stopped_at &&
+                          new Date(
+                            punchInOutDataDetals?.data?.timers[0]?.stopped_at
+                          ).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

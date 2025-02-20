@@ -15,6 +15,9 @@ export const baseApi = createApi({
     "allOvertime",
     "interview",
     "vacancy",
+    "allDocuments",
+    "documentsById",
+    "userDocuments",
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_KEY_BASE_URL,

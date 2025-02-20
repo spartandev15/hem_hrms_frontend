@@ -4,6 +4,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { useAppDispatch } from "../hooks/reduxHook";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import { usePostDocumentsMutation } from "../redux/api/documents";
+import { setToast } from "../redux/slices/toastSlice";
 
 const UserDocumentsForm = () => {
   const dispatch = useAppDispatch();
@@ -99,9 +100,7 @@ const UserDocumentsForm = () => {
 
   // handler for submit the form
   const handleFormSubmit = async (data: any) => {
-    let previous_experience = [];
-    let previous_salary_slip = [];
-
+    dispatch(setIsLoading(true));
     const formData = new FormData();
     formData.append("tenth_dmc", data["tenth_dmc"][0]);
     formData.append("twelfth_dmc", data["twelfth_dmc"][0]);
@@ -131,15 +130,15 @@ const UserDocumentsForm = () => {
 
     try {
       const response = await postDocuments(formData).unwrap();
-      console.log(response);
-      //   dispatch(setIsLoading(false));
-      //   dispatch(setToast(response?.message));
+      dispatch(setIsLoading(false));
+      dispatch(setToast(response?.message));
     } catch (err) {
+      dispatch(setIsLoading(false));
       const error = err as { data: { error: string } };
-      //   if (error) {
-      //     dispatch(setIsLoading(false));
-      //     dispatch(setToast(error?.data?.error));
-      //   }
+      if (error) {
+        dispatch(setIsLoading(false));
+        dispatch(setToast(error?.data?.error));
+      }
       console.error("Error during post over time:", err);
     }
   };

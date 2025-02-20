@@ -32,7 +32,7 @@ const Header = () => {
   const [authLogout, { data: logoutDetails, isSuccess: logoutIsSuccess }] =
     useAuthLogoutMutation();
 
-  const { status } = useAppSelector((state) => state.authUser);
+  const { status, email, name } = useAppSelector((state) => state.authUser);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [showProfileDropDown, setShowProfileDropDown] = useState(false);
   const [isOpenNavMenu, setIsOpenNavMenu] = useState(false);
@@ -124,8 +124,9 @@ const Header = () => {
                   key={`${index}-${link.label}`}
                 >
                   <>
-                    {link.label === "Employee" &&
-                    status !== "HR" ? null : link.subLinks ? (
+                    {(link.label === "Employee" && status !== "HR") ||
+                    (link.label === "Recruitment" &&
+                      status !== "HR") ? null : link.subLinks ? (
                       <div
                         className="d-flex"
                         onClick={() => toggleIndex(index)}
@@ -215,16 +216,21 @@ const Header = () => {
             </div>
 
             {showProfileDropDown && (
-              <div className="drop-down-menu">
+              <div
+                className="drop-down-menu "
+                style={{
+                  minWidth: "160px",
+                  width: "fit-content",
+                }}
+              >
                 <div className="text-wrap">
-                  <h2 className="text-small m-0">
-                    {userData?.user?.name as string}
-                  </h2>
+                  <h2 className="text-small m-0">{name as string}</h2>
+
                   <Link
                     to={""}
                     className="text-gray text-xxsmall px-2 text-center text-none"
                   >
-                    {userData?.user?.email as string}
+                    {email as string}
                   </Link>
                 </div>
 
@@ -331,7 +337,7 @@ const MobileNav = ({
             {/* Show sublinks if this parent link is active and has sublinks */}
             {link.subLinks && subLinksVisible === index && (
               <ul className="sublinks-list">
-                {link.subLinks.map((subLink, subIndex) => (
+                {link.subLinks.map((subLink: any, subIndex: number) => (
                   <li
                     key={subIndex}
                     className="m-0 py-1"
