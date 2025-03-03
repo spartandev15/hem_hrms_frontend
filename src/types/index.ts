@@ -25,33 +25,42 @@ export interface GetProfileResponseApi {
 }
 
 interface IField {
-  label: string;
-  name?: string;
-  type?: string;
-  value?: string;
+  title?: string;
+  items: {
+    label: string;
+    name?: string;
+    type?: string;
+    value?: string;
+  }[];
 }
 
 export interface IProfileCommonSection {
-  title: string;
   fields: IField[];
   data?: any;
 }
 
 export interface ProfileCardProps {
-  id?: number;
-  name?: string;
-  last_name?: string;
-  designation?: string;
-  phone?: number;
-  email?: string;
-  profile_photo?: string;
-  line_manager?: string;
-  joining_date?: string;
-  employeeprofile?: string;
+  data: {
+    id?: number;
+    name?: string;
+    last_name?: string;
+    designation?: string;
+    phone?: number;
+    email?: string;
+    profile_photo?: string;
+    line_manager?: string;
+    joining_date?: string;
+    employeeprofile?: string;
+  };
 }
 
 export interface EditableFormProps {
-  fields: IField[];
+  fields: {
+    label: string;
+    name?: string;
+    type?: string;
+    value?: string;
+  }[];
   onSubmit: (values: any) => void;
   defaultValues?: any;
   // validationSchema: Yup.ObjectSchema; // Pass validation schema as a prop

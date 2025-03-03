@@ -278,7 +278,9 @@ const TableRow = ({
           <div>
             {record?.tenth_dmc.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
-                <FaRegFilePdf size={17} color="#5D848B" />
+                <Link to={record.tenth_dmc.url} target="_blank">
+                  <FaRegFilePdf size={17} color="#5D848B" />
+                </Link>
                 <GiConfirmed color="#32AC31" size={17} />
               </div>
             ) : (
@@ -292,7 +294,9 @@ const TableRow = ({
           <div>
             {record?.twelfth_dmc.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
-                <FaRegFilePdf size={17} color="#5D848B" />
+                <Link to={record.twelfth_dmc.url} target="_blank">
+                  <FaRegFilePdf size={17} color="#5D848B" />
+                </Link>
                 <GiConfirmed color="#32AC31" size={17} />
               </div>
             ) : (
@@ -306,7 +310,9 @@ const TableRow = ({
           <div>
             {record?.college_degree?.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
-                <FaRegFilePdf size={17} color="#5D848B" />
+                <Link to={record?.college_degree?.url} target="_blank">
+                  <FaRegFilePdf size={17} color="#5D848B" />
+                </Link>
                 <GiConfirmed color="#32AC31" size={17} />
               </div>
             ) : (
@@ -320,7 +326,9 @@ const TableRow = ({
           <div>
             {record?.aadhaar_card?.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
-                <FaRegFilePdf size={17} color="#5D848B" />
+                <Link to={record?.aadhaar_card?.url} target="_blank">
+                  <FaRegFilePdf size={17} color="#5D848B" />
+                </Link>
                 <GiConfirmed color="#32AC31" size={17} />
               </div>
             ) : (
@@ -334,7 +342,9 @@ const TableRow = ({
           <div>
             {record?.pan_card?.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
-                <FaRegFilePdf size={17} color="#5D848B" />
+                <Link to={record?.pan_card?.url} target="_blank">
+                  <FaRegFilePdf size={17} color="#5D848B" />
+                </Link>
                 <GiConfirmed color="#32AC31" size={17} />
               </div>
             ) : (
@@ -348,30 +358,23 @@ const TableRow = ({
           <div>
             {record?.previous_experience?.length > 0 ? (
               <div className="d-flex gap-2 justify-content-center">
-                {record?.previous_experience?.map((item: any) => (
-                  <div className="d-flex gap-1">
-                    <FaRegFilePdf size={17} color="#5D848B" />
-                    {item.status === "uploaded" ? (
-                      <GiConfirmed color="#32AC31" size={17} />
-                    ) : (
-                      <IoMdCloseCircle color="#C20000" size={17} />
-                    )}
-                  </div>
-                ))}
+                {Array.isArray(record?.previous_experience) &&
+                  record?.previous_experience?.map((item: any) => (
+                    <div className="d-flex align-items-center gap-1">
+                      <Link to={item?.url} target="_blank">
+                        <FaRegFilePdf size={17} color="#5D848B" />
+                      </Link>
+                      {item.status === "uploaded" ? (
+                        <GiConfirmed color="#32AC31" size={17} />
+                      ) : (
+                        <IoMdCloseCircle color="#C20000" size={17} />
+                      )}
+                    </div>
+                  ))}
               </div>
             ) : (
               <div>no</div>
             )}
-            {/* {record?.tenth_dmc.status === "uploaded" ? (
-              <div className="d-flex gap-1 align-items-center justify-content-center">
-                <FaRegFilePdf size={17} color="#5D848B" />
-                <GiConfirmed color="#32AC31" size={17} />
-              </div>
-            ) : (
-              <div>
-                <IoMdCloseCircle color="#C20000" size={17} />
-              </div>
-            )} */}
           </div>
         </td>
         <td>
@@ -380,7 +383,9 @@ const TableRow = ({
               <div className="d-flex gap-2 justify-content-center">
                 {record?.previous_experience?.map((item: any) => (
                   <div className="d-flex gap-1">
-                    <FaRegFilePdf size={17} color="#5D848B" />
+                    <Link to={item?.url} target="_blank">
+                      <FaRegFilePdf size={17} color="#5D848B" />
+                    </Link>
                     {item.status === "uploaded" ? (
                       <GiConfirmed color="#32AC31" size={17} />
                     ) : (

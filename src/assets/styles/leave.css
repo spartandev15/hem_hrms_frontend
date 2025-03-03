@@ -73,6 +73,7 @@ h2 {
   text-align: center;
   white-space: nowrap;
   padding: 0 19px;
+  /* background-color: red; */
 }
 
 .leave-status-table tbody tr:nth-child(odd) {

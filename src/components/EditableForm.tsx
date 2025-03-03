@@ -14,6 +14,8 @@ export const EditableForm = ({
     },
   });
 
+  console.log(fields);
+
   // const handleChange = (index: number, value: string) => {
   //   const updatedFields = [...formFields];
   //   updatedFields[index].value = value;
@@ -31,7 +33,7 @@ export const EditableForm = ({
   };
 
   return (
-    <div className="mt-3">
+    <div className="">
       <form onSubmit={handleSubmit(formSubmit)}>
         <div className="row g-2">
           {updateFields.map((item, index) => (
@@ -57,6 +59,7 @@ export const EditableForm = ({
                   label={item.label}
                   register={register}
                   value={item.value}
+                  disabled={item.disabled}
                 />
               )}
             </div>
@@ -67,7 +70,7 @@ export const EditableForm = ({
           <button className="edit-btn" type="submit">
             Save
           </button>
-          <button className="opacity-75 edit-btn">cancel</button>
+          {/* <button className="opacity-75 edit-btn">cancel</button> */}
         </div>
       </form>
     </div>

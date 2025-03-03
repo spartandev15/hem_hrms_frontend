@@ -93,7 +93,7 @@ const VacancyCard: React.FC<VacancyCardProps> = ({
               }}
             >
               <div
-                className="d-flex align-items-center gap-1"
+                className="d-flex align-items-center gap-1 action-btn"
                 style={{
                   cursor: "pointer",
                   fontSize: "16px",
@@ -119,7 +119,7 @@ const VacancyCard: React.FC<VacancyCardProps> = ({
               </div>
 
               <div
-                className="d-flex align-items-center gap-1 mt-1"
+                className="d-flex align-items-center gap-1 mt-1 action-btn"
                 style={{
                   cursor: "pointer",
                   fontSize: "16px",

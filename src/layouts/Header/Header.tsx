@@ -78,11 +78,11 @@ const Header = () => {
         label: "Overtime",
         href: status === "HR" ? "/dashboard/overtime" : "/overtime",
       };
-    } else if (item.label === "Notice") {
+    } else if (item.label === "Announcements") {
       return {
         ...item,
-        label: "Notice",
-        href: status === "HR" ? "/dashboard/notices" : "/notices",
+        label: "Announcements",
+        href: status === "HR" ? "/dashboard/announcements" : "/notices",
       };
     } else if (item.label === "Documents") {
       return {
@@ -90,6 +90,10 @@ const Header = () => {
         label: "Document",
         href: status === "HR" ? "/dashboard/documents" : "/documents",
       };
+      // } else if (item.label === "Leave") {
+      //   if (status === "HR") {
+      //     return null;
+      //   }
     }
     return item;
   });
@@ -118,54 +122,56 @@ const Header = () => {
           {/* navigation Links  */}
           <div className="nav-bar-container">
             <ul className="nav-bar" ref={navLinkRef}>
-              {Nav_Lists.map((link, index) => (
-                <li
-                  className="position-relative nav-list p-0"
-                  key={`${index}-${link.label}`}
-                >
-                  <>
-                    {(link.label === "Employee" && status !== "HR") ||
-                    (link.label === "Recruitment" &&
-                      status !== "HR") ? null : link.subLinks ? (
-                      <div
-                        className="d-flex"
-                        onClick={() => toggleIndex(index)}
-                      >
-                        {link.label}{" "}
+              {Nav_Lists.map((link, index) =>
+                link.label === "Leave" && status === "HR" ? null : (
+                  <li
+                    className="position-relative nav-list p-0"
+                    key={`${index}-${link?.label}`}
+                  >
+                    <>
+                      {(link?.label === "Employee" && status !== "HR") ||
+                      (link?.label === "Recruitment" &&
+                        status !== "HR") ? null : link?.subLinks ? (
                         <div
-                          style={{
-                            marginTop: "-2px",
-                          }}
+                          className="d-flex"
+                          onClick={() => toggleIndex(index)}
                         >
-                          <FaCaretDown size={12} />
+                          {link?.label}{" "}
+                          <div
+                            style={{
+                              marginTop: "-2px",
+                            }}
+                          >
+                            <FaCaretDown size={12} />
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <Link
-                        onClick={() => setActiveIndex(-1)}
-                        to={link.href}
-                        className=""
-                      >
-                        {link.label}{" "}
-                      </Link>
-                    )}
-                  </>
-
-                  {link.subLinks && activeIndex == index && (
-                    <div className="nav-sublinks position-absolute">
-                      {link.subLinks.map((subLink) => (
+                      ) : (
                         <Link
                           onClick={() => setActiveIndex(-1)}
-                          to={subLink.href}
-                          className="sub-links-nav-list"
+                          to={link?.href}
+                          className=""
                         >
-                          {subLink.label}
+                          {link?.label}{" "}
                         </Link>
-                      ))}
-                    </div>
-                  )}
-                </li>
-              ))}
+                      )}
+                    </>
+
+                    {link?.subLinks && activeIndex == index && (
+                      <div className="nav-sublinks position-absolute">
+                        {link.subLinks.map((subLink) => (
+                          <Link
+                            onClick={() => setActiveIndex(-1)}
+                            to={subLink?.href}
+                            className="sub-links-nav-list"
+                          >
+                            {subLink?.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </li>
+                )
+              )}
             </ul>
           </div>
 
@@ -293,7 +299,7 @@ const MobileNav = ({
     >
       <ul className="mobile-nav-list mt-3">
         {navLists.map((link: any, index: number) => (
-          <li key={index}>
+          <li key={index} className="text-large">
             <div
               onClick={() => {
                 if (link.subLinks) {
@@ -302,25 +308,25 @@ const MobileNav = ({
               }}
               className="nav-item-toggle d-flex align-items-center nav-links"
             >
-              {link.subLinks ? (
+              {link?.subLinks ? (
                 <div>
-                  {link.label === "Employee" && status != "HR"
+                  {link?.label === "Employee" && status != "HR"
                     ? null
-                    : link.label}
+                    : link?.label}
                 </div>
               ) : (
                 <Link
-                  to={link.href}
+                  to={link?.href}
                   className="text-black"
                   onClick={() => toggleMobileNav(false)}
                 >
-                  {link.label}
+                  {link?.label}
                 </Link>
               )}
 
-              {link.label === "Employee" && status != "HR"
+              {link?.label === "Employee" && status != "HR"
                 ? null
-                : link.subLinks && (
+                : link?.subLinks && (
                     <FaCaretDown
                       size={12}
                       style={{
@@ -335,7 +341,7 @@ const MobileNav = ({
             </div>
 
             {/* Show sublinks if this parent link is active and has sublinks */}
-            {link.subLinks && subLinksVisible === index && (
+            {link?.subLinks && subLinksVisible === index && (
               <ul className="sublinks-list">
                 {link.subLinks.map((subLink: any, subIndex: number) => (
                   <li

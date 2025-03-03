@@ -42,6 +42,22 @@ export const employeeFormSchema = z
     paid_leaves: z.string().min(1, "Paid leaves is required"),
 
     unpaid_leaves: z.string().min(1, "Unpaid leaves is required"),
+    basic_salary: z.string().min(1, "Basic Salary is required"),
+    house_rent: z.string().min(1, "House rent is required"),
+    medical_allowance: z.string().min(1, "Medical Allowance is required"),
+    tax: z.string().min(1, "Tax is required"),
+    leave_deduction: z.string().min(1, "Leave Deduction is required"),
+    pf: z.string().min(1, "Unpaid leaves is required"),
+    employee_state: z.string().min(1, "Employee State is required"),
+    insurance: z.string().min(1, "Insurance is required"),
+    extra_working: z.string().min(1, "Extra Working is required"),
+    gross_total: z.string().min(1, "Gross Total is required"),
+    final_total: z.string().min(1, "Final Total is required"),
+    gross_salary: z.string().min(1, "Gross Salary is required"),
+    bank_name: z.string().min(1, "Bank Name is required"),
+    bank_ifsc: z.string().min(1, "IFSC Code is required"),
+    account_number: z.string().min(1, "Account number is required"),
+    account_holder_name: z.string().min(1, "Account Holder Name is required"),
   })
   .refine((data) => data.password === data.confirm_Password, {
     message: "Passwords don't match",
@@ -131,7 +147,7 @@ export const noticeFormSchema = z.object({
     )
     .nonempty("Email is required"), // Ensure at least one email is selected
 
-  description: z.string().min(1, "Description is required"),
+  // description: z.string().min(1, "Description is required"),
   screenshot: z
     .any() // Allow either File or FileList
     .optional(), // Allow undefined or null
@@ -151,6 +167,18 @@ export const scheduleFormSchema = z.object({
   resume_file: z.any().refine((file) => file.length > 0, {
     message: "resume is required",
   }),
+
+  // interviewer_email: z.string().min(1, "interviewer email is required"),
+  interviewer_email: z
+    .array(
+      z.object({
+        label: z.string().min(1, "Label is required"),
+        value: z.string().min(1, "Value is required"),
+      })
+    )
+    .refine((emails) => emails && emails.length > 0, {
+      message: "At least one interviewer email is required", // Ensure the array is not empty
+    }),
   // Ensure at least one email is selected
   // description: z.string().min(1, "Description is required"),
   // Allow undefined or null

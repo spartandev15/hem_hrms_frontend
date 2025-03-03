@@ -18,8 +18,11 @@ import {
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 import { MdOutlineSkipPrevious } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 import ReactPaginate from "react-paginate";
+import { FaPlus, FaRegEdit } from "react-icons/fa";
+import SpinnerLoader from "../../components/SpinnerLoader";
 
 const categorySchema = z.object({
   category: z
@@ -119,16 +122,22 @@ const Category = () => {
   return (
     <div>
       <div className="container category-wrapper py-3">
-        <div className="d-flex justify-content-between align-items-center">
-          <h2 className="mt-2">Add Category</h2>
+        <div className="d-flex justify-content-end align-items-center">
+          {/* <h2 className="mt-2">Add Category</h2> */}
           <button
-            className="btn w-auto px-4"
+            className="btn w-auto px-3 text-xsmall"
             onClick={() => setCreateShowFrom(!showCreateForm)}
             style={{
               opacity: showCreateForm ? "0.4" : "1",
             }}
           >
-            {showCreateForm ? " Cancel" : " Create"}
+            {showCreateForm ? (
+              <div>Cancel</div>
+            ) : (
+              <div>
+                <FaPlus /> Create
+              </div>
+            )}
           </button>
         </div>
 
@@ -162,10 +171,14 @@ const Category = () => {
         )}
 
         <div>
-          <div className="container mt-4">
-            <h1 className="mb-4 text-start text-medium">Categories Lists</h1>
+          <div className="mt-4">
+            <h1 className="mb-4 text-start text-medium text-blue-primary ">
+              Categories
+            </h1>
             {isGetAllCategoryWithPaginationLoading ? (
-              <p>Loading....</p>
+              <div className="d-flex justify-content-center align-items-center">
+                <SpinnerLoader />
+              </div>
             ) : allCategory && allCategory?.categories?.length > 0 ? (
               <div>
                 <div className="px-2">
@@ -180,8 +193,8 @@ const Category = () => {
                         >
                           #
                         </th>
-                        <th className="text-medium px-3">Category</th>
-                        <th className="text-medium text-center actions-column">
+                        <th className="text-small px-3">Categories</th>
+                        <th className="text-small text-center actions-column">
                           Actions
                         </th>
                       </tr>
@@ -221,7 +234,12 @@ const Category = () => {
           </div>
         </div>
 
-        <ConfirmDialog isOpen={confirmPopup} onClose={handleCloseDialog} />
+        <ConfirmDialog
+          message="Are you sure you want to delete this item?"
+          header="Confirm Deletion"
+          isOpen={confirmPopup}
+          onClose={handleCloseDialog}
+        />
       </div>
     </div>
   );
@@ -296,25 +314,31 @@ const TableRow = ({ name, id, onClick, index }: any) => {
       </td>
 
       <td className="d-flex gap-2  justify-content-center align-items-center">
-        <CiEdit
-          size={20}
-          color="#417090"
-          className=""
-          style={{
-            cursor: "pointer",
-          }}
-          onClick={() => handleEditClick(id, name)}
-        />
+        <div className="action-btn-container d-flex justify-content-center align-items-center">
+          <FaRegEdit
+            title="Edit"
+            size={16}
+            color="#417090"
+            className=""
+            style={{
+              cursor: "pointer",
+            }}
+            onClick={() => handleEditClick(id, name)}
+          />
+        </div>
 
-        <MdOutlineDelete
-          size={20}
-          color="#D11A2A"
-          className=""
-          style={{
-            cursor: "pointer",
-          }}
-          onClick={() => onClick(id)}
-        />
+        <div className="action-btn-container d-flex justify-content-center align-items-center">
+          <RiDeleteBin6Line
+            title="Delete"
+            size={14}
+            color="#D11A2A"
+            className=""
+            style={{
+              cursor: "pointer",
+            }}
+            onClick={() => onClick(id)}
+          />
+        </div>
       </td>
     </tr>
   );

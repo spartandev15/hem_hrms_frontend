@@ -7,6 +7,7 @@ import InputWithLabel from "../../components/ui/InputWithLabel";
 import { useGetAllCategoryQuery } from "../../redux/api/category";
 import { useGetEmployeesQuery } from "../../redux/api/employee";
 import { useAppSelector } from "../../hooks/reduxHook";
+import SpinnerLoader from "../../components/SpinnerLoader";
 
 const Employees = () => {
   const { data: allEmployeData, isLoading } = useGetEmployeesQuery();
@@ -25,7 +26,7 @@ const Employees = () => {
 
   return (
     <div className="container py-4">
-      <h2 className="text-blue-primary text-start text-large">All Employees</h2>
+      <h2 className="text-blue-primary text-start text-large">Employees</h2>
 
       <div>
         <form onSubmit={handleSubmit(handleSearchSubmit)}>
@@ -71,14 +72,14 @@ const Employees = () => {
       <div className="row g-4 mt-2">
         {allEmployeData?.employee?.length > 0 ? (
           allEmployeData?.employee?.map((item: any, index: number) => (
-            <div className="col-md-4 " key={index}>
+            <div className="col-md-4 col-lg-3 " key={index}>
               <EmployeeCard {...item} />
             </div>
           ))
         ) : isLoading ? (
-          "Loading......"
+          <SpinnerLoader />
         ) : (
-          <h2>No data</h2>
+          <h2 className="text-start">data not found!</h2>
         )}
       </div>
     </div>

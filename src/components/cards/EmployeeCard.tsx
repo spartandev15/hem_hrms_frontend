@@ -295,6 +295,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
             >
               <FaPencilAlt /> Edit
             </div>
+
             <div
               className="d-flex align-items-center px-2 py-1 action-btn text-small font-normal"
               onClick={handleDeleteConfirmDialog}
@@ -303,13 +304,13 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
             </div>
 
             <div
-              className="d-flex align-items-center px-2 py-1 text-small font-normal"
+              className="d-flex align-items-center px-2 py-1 text-small font-normal action-btn"
               onClick={handleDeleteConfirmDialog}
             >
               <BiShowAlt size={18} />
               <Link
                 to={`/employee-details/${first_name}/${user_id}`}
-                className="text-none text-black"
+                className="text-none"
               >
                 View
               </Link>
@@ -335,7 +336,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
           <IoIosMail size={13} /> {email}
         </p>
         <hr />
-        <p className="common-para m-0">{line_manager}</p>
+        {/* <p className="common-para m-0">{line_manager}</p> */}
       </div>
 
       {/* reder edit employee form */}
@@ -389,7 +390,12 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       )}
 
       {/* render dialoag box for confirmation  */}
-      <ConfirmDialog isOpen={isOpenDialog} onClose={handleClose} />
+      <ConfirmDialog
+        message="Are you sure you want to delete this item?"
+        header="Confirm Deletion"
+        isOpen={isOpenDialog}
+        onClose={handleClose}
+      />
     </div>
   );
 };

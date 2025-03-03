@@ -14,6 +14,7 @@ import { useGetAllCategoryQuery } from "../redux/api/category";
 import InputWithLabel from "./ui/InputWithLabel";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import ConfirmDialog from "./ConfirmDialog";
+import SpinnerLoader from "./SpinnerLoader";
 
 const VacancyList = () => {
   const dispatch = useAppDispatch();
@@ -85,7 +86,9 @@ const VacancyList = () => {
     <div>
       <h2 className="text-start text-blue-primary text-large">Vacancies</h2>
       {isLoading ? (
-        <div>Loading...</div>
+        <div className="d-flex justify-content-center">
+          <SpinnerLoader />
+        </div>
       ) : (
         <div className="vacancy-list row g-4">
           {vacanciesData?.data?.length > 0 ? (
@@ -141,7 +144,12 @@ const VacancyList = () => {
         </div>
       )}
 
-      <ConfirmDialog isOpen={isConfrim} onClose={handleClose} />
+      <ConfirmDialog
+        message="Are you sure you want to delete this item?"
+        header="Confirm Deletion"
+        isOpen={isConfrim}
+        onClose={handleClose}
+      />
     </div>
   );
 };

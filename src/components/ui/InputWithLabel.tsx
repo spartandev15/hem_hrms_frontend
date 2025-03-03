@@ -29,6 +29,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   const fileRef = useRef<HTMLInputElement | null>(null);
+
   const handleFocus = () => {
     setFocused(true);
   };
@@ -45,16 +46,19 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
 
   const today = new Date();
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date, type: string) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    if (type === "date") return `${year}-${month}-${day}`;
+    else if (type === "datetime-local")
+      `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
-  const todayFormatted = formatDate(today);
+  const todayFormatted = formatDate(today, type);
+  // console.log(todayFormatted);
 
   useEffect(() => {
     if (value) {

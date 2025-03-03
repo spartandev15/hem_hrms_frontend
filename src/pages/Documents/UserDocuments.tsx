@@ -1,8 +1,8 @@
-import React, { useState } from "react";
 import UserDocumentsForm from "../../components/UserDocumentsForm";
 import UserDocumentStatus from "./UserDocumentStatus";
 import { useGetDocumetsQuery } from "../../redux/api/documents";
 import SpinnerLoader from "../../components/SpinnerLoader";
+import "../../assets/styles/inputWithLabel.css";
 
 const UserDocuments = () => {
   const { data, isLoading: isDocumentsLoading } = useGetDocumetsQuery();

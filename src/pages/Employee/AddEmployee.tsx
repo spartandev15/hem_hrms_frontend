@@ -74,7 +74,7 @@ const AddEmployee = () => {
     {
       label: "Employee Id",
       name: "employee_id",
-      type: "string",
+      type: "text",
       required: true,
       value: "",
     },
@@ -138,20 +138,133 @@ const AddEmployee = () => {
       required: true,
       value: "",
     },
+    {
+      label: "Basic Salary",
+      name: "basic_salary",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "House Rent",
+      name: "house_rent",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Medical Allowance",
+      name: "medical_allowance",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Tax",
+      name: "tax",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Leave Deduction",
+      name: "leave_deduction",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "PF",
+      name: "pf",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Employee State",
+      name: "employee_state",
+      type: "text",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Insaurance",
+      name: "insurance",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Extra Working",
+      name: "extra_working",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Gross Total",
+      name: "gross_total",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Gross Salary",
+      name: "gross_salary",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Final",
+      name: "final_total",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Bank Name",
+      name: "bank_name",
+      type: "text",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Bank IFSC",
+      name: "bank_ifsc",
+      type: "text",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Account Number",
+      name: "account_number",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Account Holder Name",
+      name: "account_holder_name",
+      type: "text",
+      required: true,
+      value: "",
+    },
   ];
 
   const handleFormSubmit = (data: any) => {
-    // const leavesFormData = {};
+    console.log(data);
+    const leavesFormData = {};
     dispatch(setIsLoading(true));
     postEmployee(data);
-    reset();
+    // reset();
   };
 
   useEffect(() => {
     if (EmployeeDetailsData?.result && postEmployeeIsSuccess) {
       dispatch(setIsLoading(false));
       dispatch(setToast(EmployeeDetailsData?.message));
-      navigate("/dashboard/employees");
+      // navigate("/dashboard/employees");
     } else {
       if (EmployeeDetailsData?.message) {
         dispatch(setIsLoading(false));

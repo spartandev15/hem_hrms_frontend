@@ -30,18 +30,19 @@ const LeavesStatus = ({
         <div className="overflow-scroll mt-3">
           <table className="table table-bordered table-striped">
             <thead>
-              <tr>
+              <tr className="text-center">
                 <th>#</th>
                 <th>Employee Name</th>
                 <th>Leave Type</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Reason</th>
-                <th>Status</th>
                 <th>Designation</th>
-                <th>Email</th>
+                <th>Reason</th>
+                {/* <th>Email</th> */}
+                <th>Status</th>
               </tr>
             </thead>
+
             <tbody>
               {isLoading ? (
                 <tr>
@@ -67,6 +68,8 @@ const LeavesStatus = ({
                     >
                       {leave.reason}
                     </td>
+
+                    <td>{leave.employee_detail.designation}</td>
                     <td>
                       <span
                         style={{
@@ -89,8 +92,7 @@ const LeavesStatus = ({
                         {leave.status}
                       </span>
                     </td>
-                    <td>{leave.employee_detail.designation}</td>
-                    <td>{leave.employee_detail.email}</td>
+                    {/* <td>{leave.employee_detail.email}</td> */}
                   </tr>
                 ))
               ) : (
@@ -107,7 +109,7 @@ const LeavesStatus = ({
         {leavesStatus?.length > 0 && (
           <div className="btn mt-4 d-flex justify-content-center">
             <Link
-              to="/"
+              to="/dashboard/leave-details"
               className="text-white"
               style={{
                 textDecoration: "none",

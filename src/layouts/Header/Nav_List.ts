@@ -11,21 +11,29 @@ export const Nav_List = [
         label: "All Employee",
         href: "/dashboard/employees",
       },
+
+      {
+        label: "Leave",
+        href: "/dashboard/leave-details",
+      },
+
+      // {
+      //   label: "Provisional Employee",
+      //   href: "",
+      // },
+      {
+        label: "Category",
+        href: "/dashboard/create/category",
+      },
+
       {
         label: "Employee Birthday",
         href: "/dashboard/employees-birthdays",
       },
+
       {
         label: "Employee Work Anniversary",
         href: "/dashboard/employees-anniversary",
-      },
-      {
-        label: "Provisional Employee",
-        href: "",
-      },
-      {
-        label: "Category",
-        href: "/dashboard/create/category",
       },
     ],
   },
@@ -43,8 +51,8 @@ export const Nav_List = [
     href: "Leave",
   },
   {
-    label: "Notice",
-    href: "notices",
+    label: "Announcements",
+    href: "announcements",
   },
   {
     label: "Recruitment",

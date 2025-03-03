@@ -14,6 +14,16 @@ export const noticeApi = baseApi.injectEndpoints({
       //   providesTags: ["overtime"],
     }),
 
+    getAllNotices: builder.query<any, void>({
+      query: () => {
+        return {
+          url: "/api/get/allnotices",
+          method: "GET",
+        };
+      },
+      providesTags: ["notices"],
+    }),
+
     // endpoint for create notices
     postNotice: builder.mutation<any, any>({
       query: (noticeData: any) => {
@@ -23,7 +33,7 @@ export const noticeApi = baseApi.injectEndpoints({
           body: noticeData,
         };
       },
-      // invalidatesTags: ["overtime"],
+      invalidatesTags: ["notices"],
     }),
 
     // endpoint for getting all notice of users
@@ -36,6 +46,8 @@ export const noticeApi = baseApi.injectEndpoints({
       },
       // providesTags: ["allOvertime"],
     }),
+
+    // endpoint for getting all notice of users
 
     // // endpoint for create a overtime
     // postOverTime: builder.mutation<any, any>({
@@ -81,6 +93,7 @@ export const {
   useGetALlEmailsQuery,
   usePostNoticeMutation,
   useGetAllNoticesOfUsersQuery,
+  useGetAllNoticesQuery,
   //   useGetAllOverTimeQuery,
   //   usePostOverTimeMutation,
   //   useUpdateOverTimeMutation,

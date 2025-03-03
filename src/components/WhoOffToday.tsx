@@ -11,7 +11,7 @@ export const WhoOffToday = ({ todayOff, isLoading }: any) => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <div className="sechrcard-body">
+        <div className="sechrcard-body h-100">
           <div className="d-flex justify-content-between align-items-center">
             <h5 className="font-weight-bold">Who's off today</h5>
             <span className="badge-sec">
@@ -71,17 +71,19 @@ export const WhoOffToday = ({ todayOff, isLoading }: any) => {
               </div>
             ))
           ) : (
-            <p>No Data</p>
+            <div className="d-flex justify-content-center align-items-center h-100">
+              <p>No One Off Today</p>
+            </div>
           )}
 
           {/* load more button  */}
-          {todayOff.length > 0 && (
+          {/* {todayOff.length > 0 && (
             <div className="mt-4 text-center">
-              <button type="button" className="hrloadbtn rounded">
+              <button type="button" className="rounded btn">
                 Load More
               </button>
             </div>
-          )}
+          )} */}
         </div>
       )}
     </div>

@@ -7,11 +7,14 @@ import {
   useGetAppliedLeavesQuery,
   useGetAppliedLeavesStatusByIdQuery,
 } from "../../redux/api/leave";
+import { capitalizeFirstLetter } from "../../utils/capitalizedFirstLetter";
+import SpinnerLoader from "../../components/SpinnerLoader";
 
 const EmployeeLeaves = () => {
-  const { data: employeeLeavesDetails } = useGetEmployeeDetailsByIdQuery(
-    getLocalStorageItem(AUTH_UID)
-  );
+  const { data: employeeLeavesDetails, isLoading: isLeavesLoading } =
+    useGetEmployeeDetailsByIdQuery(getLocalStorageItem(AUTH_UID));
+
+  console.log(employeeLeavesDetails);
 
   const { data: userLeavesStatus, isLoading: userLeaveStatusIsLoading } =
     useGetAppliedLeavesStatusByIdQuery(getLocalStorageItem(AUTH_UID));
@@ -24,115 +27,123 @@ const EmployeeLeaves = () => {
     <div>
       <div className="row">
         <div className="col-md-6">
-          <div className="card shadow-sm mb-4">
+          <div className="card shadow-sm mb-4 h-100">
             <div className="card-header bg-blue-primary text-white">
               <h5 className="m-0">Leaves Details</h5>
             </div>
 
-            <div className="card-body">
-              <div className="d-flex flex-column align-items-start">
-                <h6 className="text-center mb-3">
-                  <strong>User Name: </strong>
-                  {employeeLeavesDetails?.EmployeeDetails?.name}{" "}
-                  {employeeLeavesDetails?.EmployeeDetails?.last_name}
-                </h6>
+            {isLeavesLoading ? (
+              <div className="d-flex justify-content-center align-items-center h-100">
+                <SpinnerLoader />
+              </div>
+            ) : (
+              <div className="card-body">
+                <div className="d-flex flex-column align-items-start">
+                  <h6 className="text-center mb-3">
+                    <strong>User Name: </strong>
+                    {employeeLeavesDetails?.EmployeeDetails?.name}{" "}
+                    {employeeLeavesDetails?.EmployeeDetails?.last_name}
+                  </h6>
 
-                {/* <p className="text-center">
+                  {/* <p className="text-center">
                   <strong>Employee ID:</strong>{" "}
                   {employeeLeavesDetails?.user?.employee_id}
                 </p> */}
 
-                <p className="text-center">
-                  <strong>Email:</strong>{" "}
-                  {employeeLeavesDetails?.EmployeeDetails?.email}
-                </p>
+                  <p className="text-center">
+                    <strong>Email:</strong>{" "}
+                    {employeeLeavesDetails?.EmployeeDetails?.email}
+                  </p>
 
-                <p className="text-center">
-                  <strong>Designation:</strong>{" "}
-                  {employeeLeavesDetails?.EmployeeDetails?.designation}
-                </p>
+                  <p className="text-center">
+                    <strong>Designation:</strong>{" "}
+                    {employeeLeavesDetails?.EmployeeDetails?.designation}
+                  </p>
 
-                {/* <p className="text-center">
+                  {/* <p className="text-center">
                   <strong>Line Manager:</strong>{" "}
                   {employeeLeavesDetails?.EmployeeDetails?.line_manager}
                 </p> */}
+                </div>
+
+                <ul className="list-group">
+                  {/* Paid Leaves */}
+                  <li className="list-group-item">
+                    <strong>Paid Leaves:</strong>
+                    <div className="d-flex gap-3">
+                      <span className="mr-3">
+                        Total: <strong>{leaveData?.paid_leaves.Total}</strong>
+                      </span>
+                      <span className="mr-3">
+                        Taken: <strong>{leaveData?.paid_leaves.Taken}</strong>
+                      </span>
+                      <span>
+                        Pending:{" "}
+                        <strong>{leaveData?.paid_leaves.Pending}</strong>
+                      </span>
+                    </div>
+                  </li>
+
+                  {/* Sick Leaves */}
+                  <li className="list-group-item">
+                    <strong>Sick Leaves:</strong>
+                    <div className="d-flex gap-3">
+                      <span className="mr-3">
+                        Total: <strong>{leaveData?.sick_leaves.Total}</strong>
+                      </span>
+                      <span className="mr-3">
+                        Taken: <strong>{leaveData?.sick_leaves.Taken}</strong>
+                      </span>
+                      <span>
+                        Pending:{" "}
+                        <strong>{leaveData?.sick_leaves.Pending}</strong>
+                      </span>
+                    </div>
+                  </li>
+
+                  {/* Unpaid Leaves */}
+                  <li className="list-group-item">
+                    <strong>Unpaid Leaves:</strong>
+                    <div className="d-flex gap-3">
+                      <span className="mr-3">
+                        Total: <strong>{leaveData?.unpaid_leaves.Total}</strong>
+                      </span>
+                      <span className="mr-3">
+                        Taken: <strong>{leaveData?.unpaid_leaves.Taken}</strong>
+                      </span>
+                      <span>
+                        Pending:{" "}
+                        <strong>{leaveData?.unpaid_leaves.Pending}</strong>
+                      </span>
+                    </div>
+                  </li>
+
+                  {/* Overall Total Leaves */}
+                  <li className="list-group-item">
+                    <strong>Overall Total Leaves: </strong>
+                    <span>
+                      <strong>{leaves?.overall_total_leaves}</strong>
+                    </span>
+                  </li>
+
+                  {/* Total Pending Leaves */}
+                  <li className="list-group-item">
+                    <strong>Total Pending Leaves: </strong>
+                    <span>
+                      <strong>{leaves?.pending}</strong>
+                    </span>
+                  </li>
+
+                  {/* Total Taken Leaves */}
+                  <li className="list-group-item">
+                    <strong>Total Taken Leaves: </strong>
+                    <span>
+                      <strong>{leaves?.taken}</strong>
+                    </span>
+                  </li>
+                </ul>
               </div>
-
-              <ul className="list-group">
-                {/* Paid Leaves */}
-                <li className="list-group-item">
-                  <strong>Paid Leaves:</strong>
-                  <div className="d-flex gap-3">
-                    <span className="mr-3">
-                      Total: <strong>{leaveData?.paid_leaves.Total}</strong>
-                    </span>
-                    <span className="mr-3">
-                      Taken: <strong>{leaveData?.paid_leaves.Taken}</strong>
-                    </span>
-                    <span>
-                      Pending: <strong>{leaveData?.paid_leaves.Pending}</strong>
-                    </span>
-                  </div>
-                </li>
-
-                {/* Sick Leaves */}
-                <li className="list-group-item">
-                  <strong>Sick Leaves:</strong>
-                  <div className="d-flex gap-3">
-                    <span className="mr-3">
-                      Total: <strong>{leaveData?.sick_leaves.Total}</strong>
-                    </span>
-                    <span className="mr-3">
-                      Taken: <strong>{leaveData?.sick_leaves.Taken}</strong>
-                    </span>
-                    <span>
-                      Pending: <strong>{leaveData?.sick_leaves.Pending}</strong>
-                    </span>
-                  </div>
-                </li>
-
-                {/* Unpaid Leaves */}
-                <li className="list-group-item">
-                  <strong>Unpaid Leaves:</strong>
-                  <div className="d-flex gap-3">
-                    <span className="mr-3">
-                      Total: <strong>{leaveData?.unpaid_leaves.Total}</strong>
-                    </span>
-                    <span className="mr-3">
-                      Taken: <strong>{leaveData?.unpaid_leaves.Taken}</strong>
-                    </span>
-                    <span>
-                      Pending:{" "}
-                      <strong>{leaveData?.unpaid_leaves.Pending}</strong>
-                    </span>
-                  </div>
-                </li>
-
-                {/* Overall Total Leaves */}
-                <li className="list-group-item">
-                  <strong>Overall Total Leaves: </strong>
-                  <span>
-                    <strong>{leaves?.overall_total_leaves}</strong>
-                  </span>
-                </li>
-
-                {/* Total Taken Leaves */}
-                <li className="list-group-item">
-                  <strong>Total Taken Leaves: </strong>
-                  <span>
-                    <strong>{leaves?.taken}</strong>
-                  </span>
-                </li>
-
-                {/* Total Pending Leaves */}
-                <li className="list-group-item">
-                  <strong>Total Pending Leaves: </strong>
-                  <span>
-                    <strong>{leaves?.pending}</strong>
-                  </span>
-                </li>
-              </ul>
-            </div>
+            )}
           </div>
         </div>
 
@@ -146,7 +157,7 @@ const EmployeeLeaves = () => {
         <div className="table-responsive">
           <table className="table table-striped table-bordered">
             <thead>
-              <tr>
+              <tr className="text-center">
                 <th>Leave Type</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -159,13 +170,20 @@ const EmployeeLeaves = () => {
             <tbody>
               {leaveDataArray && leaveDataArray.length > 0 ? (
                 leaveDataArray.map((leaveData: any) => (
-                  <tr key={leaveData.id}>
-                    <td>{leaveData.leave_type}</td>
+                  <tr key={leaveData.id} className="text-center">
+                    <td>{capitalizeFirstLetter(leaveData.leave_type, "_")}</td>
                     <td>
                       {new Date(leaveData.start_date).toLocaleDateString()}
                     </td>
                     <td>{new Date(leaveData.end_date).toLocaleDateString()}</td>
-                    <td>{leaveData.reason}</td>
+                    <td
+                      style={{
+                        width: "320px",
+                        whiteSpace: "wrap",
+                      }}
+                    >
+                      {leaveData.reason}
+                    </td>
                     <td>
                       <span
                         className={`badge ${

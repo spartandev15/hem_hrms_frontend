@@ -17,7 +17,7 @@ const UserProfileCard = ({ userDetails }: any) => {
                     </div>
 
                     <div className="">
-                      <h2 className="mb-0 text-small">
+                      <h2 className="mb-0 text-small text-start">
                         {userDetails?.name} {userDetails?.last_name}
                       </h2>
                       {/* <div className="clearfix"></div> */}

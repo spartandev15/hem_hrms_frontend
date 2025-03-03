@@ -57,7 +57,7 @@ const Dashboard = () => {
           </section>
 
           <section>
-            <div className="row">
+            <div className="row g-2">
               {status === "HR" ? (
                 <div className="col-xl-7 col-lg-6">
                   <UpcommingEvetns
@@ -124,7 +124,12 @@ const Dashboard = () => {
                 </div>
               )}
 
-              <div className="col-xl-5 col-lg-6">
+              <div
+                className="col-xl-5 col-lg-6"
+                style={{
+                  height: "fit-content",
+                }}
+              >
                 <PunchInOut />
               </div>
             </div>
@@ -132,7 +137,7 @@ const Dashboard = () => {
 
           <section>
             <div className="container">
-              <div className="row mt-4">
+              <div className="row mt-4 g-3">
                 {status == "HR" && (
                   <div className="col-lg-5">
                     <WhoOffToday
@@ -162,7 +167,7 @@ const Dashboard = () => {
 
           <section>
             <div className="container mt-4 mb-4">
-              <div className="row">
+              <div className="row g-3">
                 {status == "HR" && (
                   <div className="col-lg-4">
                     <div className="sechrcard shadow">

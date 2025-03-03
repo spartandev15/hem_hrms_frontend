@@ -4,6 +4,16 @@ import { EmployeeDeleteData } from "../../types";
 
 export const employeeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getEmployees: builder.query<any, void>({
+      query: () => {
+        return {
+          url: "/api/get/all/employee",
+          method: "GET",
+        };
+      },
+      providesTags: ["allEmployess"],
+    }),
+
     // endpoint for create a new employee
     postEmployee: builder.mutation<any, any>({
       query: (employeeData: any) => {
@@ -13,7 +23,7 @@ export const employeeApi = baseApi.injectEndpoints({
           body: employeeData,
         };
       },
-      invalidatesTags: ["employess"],
+      invalidatesTags: ["allEmployess"],
     }),
 
     // endpoint for getting all employess
@@ -24,17 +34,7 @@ export const employeeApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["employess"],
-    }),
-
-    getEmployees: builder.query<any, void>({
-      query: () => {
-        return {
-          url: "/api/get/all/employee",
-          method: "GET",
-        };
-      },
-      providesTags: ["allEmployess"],
+      // providesTags: ["employess"],
     }),
 
     // endpoint for update employess
@@ -58,7 +58,7 @@ export const employeeApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["employess"],
+      invalidatesTags: ["allEmployess"],
     }),
 
     // endpoint for get employee Birthdays

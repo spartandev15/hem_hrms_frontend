@@ -1,11 +1,11 @@
 import React from "react";
 import { useGetAllNoticesOfUsersQuery } from "../redux/api/notice";
 import NoticeCard from "./cards/NoticeCard";
+import SpinnerLoader from "./SpinnerLoader";
 
 const UserNotice = () => {
   const { data: allNotices, isLoading: isALlNoticesLoading } =
     useGetAllNoticesOfUsersQuery();
-  console.log(allNotices);
 
   return (
     <div className="container py-3">
@@ -23,7 +23,9 @@ const UserNotice = () => {
           </h2>
 
           {isALlNoticesLoading ? (
-            <p>Loading...</p>
+            <div className="mt-2">
+              <SpinnerLoader />
+            </div>
           ) : allNotices?.data?.length > 0 ? (
             allNotices?.data?.map((notice: any, index: number) => (
               <div key={index}>

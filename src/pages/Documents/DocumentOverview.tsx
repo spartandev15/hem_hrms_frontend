@@ -7,6 +7,8 @@ import { Link, useParams } from "react-router-dom";
 import "../../assets/styles/documentOverview.css";
 import { useAppDispatch } from "../../hooks/reduxHook";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
+import { MdOutlineNotInterested } from "react-icons/md";
+import SpinnerLoader from "../../components/SpinnerLoader";
 
 const DocumentOverview = () => {
   const params = useParams();
@@ -86,22 +88,27 @@ const DocumentOverview = () => {
   //   },
   // ];
 
-  const handleStatusChange = async (docName: string, newStatus: string) => {
+  const handleStatusChange = async (
+    docName: string,
+    newStatus: string,
+    url: string
+  ) => {
     try {
       dispatch(setIsLoading(true));
-      const response = await updateDocumentStatus({
-        user_id: docDetails?.data?.user?.id,
-        document_field: docName,
-        status: newStatus,
-      });
 
+      const formData = new FormData();
+      formData.append("user_id", docDetails?.data?.user?.id);
+      formData.append("status", newStatus);
+      formData.append("document_field", docName);
+      if (url) {
+        formData.append("document_url", url);
+      }
+      const response = await updateDocumentStatus(formData);
       console.log(response);
-      dispatch(setIsLoading(false));
-
-      handleSaveChanges();
     } catch (error) {
-      dispatch(setIsLoading(false));
       console.log(error);
+    } finally {
+      dispatch(setIsLoading(false));
     }
   };
 
@@ -147,14 +154,22 @@ const DocumentOverview = () => {
     }
   }, [docDetails]);
 
+  // if (!docDetails) {
+  //   return (
+  //     <div className="container py-4">
+  //       <h2 className="text-large">No data available</h2>
+  //     </div>
+  //   ); // Return early if docDetails is not available yet.
+  // }
   return (
     <>
       {isDocDetailsLoading ? (
         <div className="container py-4">
-          {" "}
-          <p>Loading...</p>
+          <div className="d-flex justify-content-center align-items-center">
+            <SpinnerLoader />
+          </div>
         </div>
-      ) : (
+      ) : docDetails ? (
         <div className="container py-4">
           {/* User Information */}
           <div className="user-info">
@@ -184,7 +199,6 @@ const DocumentOverview = () => {
               {Object.keys(filterDocument).length > 0 ? (
                 Object.keys(filterDocument).map((docKey) => {
                   const document = filterDocument[docKey];
-
                   // Check if document is an array (like previous_experience, previous_salary_slip)
                   if (Array.isArray(document)) {
                     return document.map((item, index) => (
@@ -216,7 +230,11 @@ const DocumentOverview = () => {
                             <select
                               value={item.status}
                               onChange={(e) =>
-                                handleStatusChange(docKey, e.target.value)
+                                handleStatusChange(
+                                  docKey,
+                                  e.target.value,
+                                  item.url
+                                )
                               }
                             >
                               <option value="rejected">Rejected</option>
@@ -261,6 +279,13 @@ const DocumentOverview = () => {
                           </span>
                         </p>
 
+                        {document.status === "pending" && (
+                          <div className="d-flex gap-1">
+                            <MdOutlineNotInterested size={22} color="red" />
+                            <p>Document not uploaded yet!</p>
+                          </div>
+                        )}
+
                         {/* Status Change Dropdown */}
                         {document.status !== "pending" && (
                           <select
@@ -301,6 +326,10 @@ const DocumentOverview = () => {
     Save Changes
   </button> */}
           </div>
+        </div>
+      ) : (
+        <div className="container py-4">
+          <p className="text-large ms-2">Data not found</p>
         </div>
       )}
     </>

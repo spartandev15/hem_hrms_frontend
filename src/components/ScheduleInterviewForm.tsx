@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { usePostInterviewMutation } from "../redux/api/interview";
 import { useGetALlEmailsQuery } from "../redux/api/notice";
@@ -7,11 +7,28 @@ import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
 import { scheduleFormSchema } from "../validations/formValidation";
 import InputWithLabel from "./ui/InputWithLabel";
+import Select from "react-select";
+import { useEffect, useState } from "react";
 
 const ScheduleForm = () => {
   const dispatch = useAppDispatch();
-  const { items } = useAppSelector((state) => state.dropdown);
+  const [error, setError] = useState("");
+
   const [postInverview] = usePostInterviewMutation();
+  const { items } = useAppSelector((state) => state.dropdown);
+  const { emailItems } = useAppSelector((state) => state.allEmail);
+
+  const options = (emailItems || []).map((email: any) => {
+    return { label: email, value: email };
+  });
+
+  const customOptions = [
+    {
+      label: "Select All",
+      value: "all",
+    },
+    ...options, // Add the actual options below the "Select All"
+  ];
 
   // all forms fields
   const scheduleInterviewFormFields = [
@@ -80,6 +97,10 @@ const ScheduleForm = () => {
       value: "",
     },
     {
+      label: "Interviewr Email",
+      name: "interviewer_email",
+    },
+    {
       label: "Resume",
       name: "resume_file",
       type: "file",
@@ -92,7 +113,9 @@ const ScheduleForm = () => {
   const {
     handleSubmit,
     register,
-
+    control,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(scheduleFormSchema),
@@ -101,6 +124,10 @@ const ScheduleForm = () => {
   // handler for submit the form
   const handleFormSubmit = async (data: any) => {
     dispatch(setIsLoading(true));
+    const interviewer_emails = data?.interviewer_email?.map(
+      (email: any) => email.value
+    );
+
     const date = new Date(data.interview_date)
       .toLocaleDateString("en-GB", {
         year: "numeric",
@@ -123,6 +150,7 @@ const ScheduleForm = () => {
     formData.append("interviewer_name", data.interviewer_name);
     formData.append("interview_date", date);
     formData.append("interview_time", time);
+    formData.append("interviewer_email", interviewer_emails.toString());
 
     if (data.resume_file.length !== 0) {
       const file = data.resume_file[0];
@@ -141,8 +169,21 @@ const ScheduleForm = () => {
       }
       console.error("Error during post over time:", err);
     }
-    // reset();
+    reset();
   };
+
+  const selectedOptionss =
+    useWatch({ control, name: "interviewer_email" }) || [];
+
+  useEffect(() => {
+    if (selectedOptionss.some((option: any) => option.value === "all")) {
+      // If "Select All" is selected, select all other options
+      setValue(
+        "interviewer_email",
+        customOptions.filter((option) => option.value !== "all")
+      );
+    }
+  }, [selectedOptionss]);
 
   return (
     <div>
@@ -155,32 +196,63 @@ const ScheduleForm = () => {
         className="border p-3 rounded shadow-sm mt-2"
       >
         <div className="row mt-4">
-          {scheduleInterviewFormFields.map((item, index) => (
-            <div
-              className={`${
-                item.type === "textarea" ? "col-12" : "col-md-6"
-              } my-2`}
-              key={`${item.label}-${index}`}
-            >
-              <InputWithLabel
-                id={`${index}`}
-                label={item.label}
-                name={item.name}
-                register={register}
-                type={item.type}
-                value={item.value}
-                options={item.options}
-                accept={item.accept}
-                disabledPast={true}
-              />
+          {scheduleInterviewFormFields.map((item, index) =>
+            item.name === "interviewer_email" ? (
+              <div className="col-md-6 my-2">
+                <Controller
+                  name={item.name} // Field name
+                  control={control} // Pass control to Controller
+                  render={({ field }) => (
+                    <Select
+                      {...field} // Spread the field object to pass necessary props
+                      options={customOptions}
+                      placeholder="Interviewer Email"
+                      isMulti
+                      styles={{
+                        control: (provided: any) => ({
+                          ...provided,
+                          border: "2px solid #DEE2E6", // Remove the border
+                          boxShadow: "none", // Remove box shadow (if any)
+                          // Optionally, set other styles, like padding or background
+                        }),
+                      }}
+                    />
+                  )}
+                />
 
-              {errors[item.name] && (
-                <p className="text-danger">
-                  {errors[item.name]?.message as string}
-                </p>
-              )}
+                {/* {error && <p className="text-danger">{error}</p>} */}
+                {errors[item.name] && (
+                  <p className="text-danger">
+                    {errors[item.name]?.message as string}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div
+                className={`${
+                  item.type === "textarea" ? "col-12" : "col-md-6"
+                } my-2`}
+                key={`${item.label}-${index}`}
+              >
+                <InputWithLabel
+                  id={`${index}`}
+                  label={item.label}
+                  name={item.name}
+                  register={register}
+                  type={item.type}
+                  value={item.value}
+                  options={item.options}
+                  accept={item.accept}
+                  disabledPast={true}
+                />
 
-              {/* {item.type === "file" && screenShotPreview && (
+                {errors[item.name] && (
+                  <p className="text-danger">
+                    {errors[item.name]?.message as string}
+                  </p>
+                )}
+
+                {/* {item.type === "file" && screenShotPreview && (
                 <div
                   className="image-preview-container mt-2"
                   style={{
@@ -194,8 +266,9 @@ const ScheduleForm = () => {
                   />
                 </div>
               )} */}
-            </div>
-          ))}
+              </div>
+            )
+          )}
         </div>
 
         <div className="d-flex justify-content-center mt-2">

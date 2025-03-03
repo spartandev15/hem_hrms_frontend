@@ -21,11 +21,15 @@ const NoticeCard = ({
 
   const createdAt = new Date(date).toLocaleDateString("en-Us");
 
+  console.log(description.length);
+
   // Function to truncate the description and add "Read More" functionality
   const truncatedDescription =
-    description.length > 800 && !isExpanded
-      ? `${description.slice(0, 400)}...`
+    description.length > 200 && !isExpanded
+      ? `${description.slice(0, 150)}...`
       : description;
+
+  console.log(truncatedDescription);
 
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
@@ -38,8 +42,10 @@ const NoticeCard = ({
       <div className="notice-date">Date: {createdAt}</div>
       <div className="notice-title mt-2">{title}</div>
 
-      <div className="notice-description">{truncatedDescription}</div>
-      {description.length > 800 && (
+      <div dangerouslySetInnerHTML={{ __html: truncatedDescription }} />
+
+      {/* <div className="notice-description">{truncatedDescription}</div> */}
+      {description && description.length > 200 && (
         <div
           style={{
             display: "flex",

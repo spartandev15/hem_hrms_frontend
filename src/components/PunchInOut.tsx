@@ -160,7 +160,7 @@ const PunchInOut = () => {
           <SpinnerLoader />
         </div>
       ) : (
-        <div className="h-100">
+        <div className="">
           <div className="new_section_inner sechrcard-body">
             <h5 className="font-weight-bold">
               <i className="fas fa-plane new_section_icon"></i>Timesheet
@@ -234,7 +234,7 @@ const PunchInOut = () => {
               <button
                 type="button"
                 onClick={PunchIn}
-                className="btn mybtn punch-btn"
+                className="btn mybtn punch-btn mt-2"
                 style={{
                   opacity: punchInOutDataDetals?.data || isPunchIn ? 0.4 : 1,
                 }}
@@ -245,7 +245,7 @@ const PunchInOut = () => {
             </div>
 
             {punchInOutDataDetals?.data && (
-              <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-1 d-flex justify-content-between">
+              <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-3 d-flex justify-content-between">
                 {punchInOutDataDetals?.data?.timers[0]?.started_at && (
                   <div className="punch-det text-start">
                     <h6 className="text-xsmall">Punch In at</h6>

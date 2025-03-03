@@ -27,15 +27,12 @@
 }
 
 .documents-cards {
-  /* display: flex;
+  display: flex;
   flex-wrap: wrap;
-  gap: 1rem; */
-  /* display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
-  gap: 20px; */
 }
 
 .document-card {
+  min-height: 200px;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;

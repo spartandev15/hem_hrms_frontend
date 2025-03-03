@@ -42,7 +42,7 @@ input[type="number"] {
 }
 
 .text-xsmall {
-  font-size: 0.875rem;
+  font-size: 0.825rem;
 }
 
 .text-small {
@@ -105,6 +105,7 @@ input[type="number"] {
 }
 /* common btn class for buttons  */
 .btn {
+  width: 100%;
   background-color: var(--primary-color);
   color: var(--white-color);
 }
@@ -112,6 +113,15 @@ input[type="number"] {
 .btn:hover {
   background-color: var(--primary-color) !important;
   color: var(--white-color);
+}
+
+.action-btn-container {
+  width: 20px;
+  height: 25px;
+  border: 1px solid var(--primary-color);
+  border-radius: 2px;
+  padding: 2px;
+  box-shadow: 0 0 0px #575656;
 }
 
 .react-paginate {
@@ -171,6 +181,7 @@ input[type="number"] {
 .table-wrap {
   position: relative;
 }
+
 .table > thead {
   vertical-align: bottom;
   color: #000;

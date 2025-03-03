@@ -8,6 +8,9 @@ import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
 import { noticeFormSchema } from "../validations/formValidation";
 import InputWithLabel from "./ui/InputWithLabel";
+import { FaPlus } from "react-icons/fa";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const NoticeFormFields = [
   {
@@ -41,7 +44,9 @@ const NoticeFormFields = [
 ];
 
 const NoticeForm = () => {
+  const [value, setValues] = useState("");
   const dispatch = useAppDispatch();
+  const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState("");
   const { emailItems } = useAppSelector((state) => state.allEmail);
 
@@ -77,7 +82,7 @@ const NoticeForm = () => {
     const emails = data?.email?.map((email: any) => email.value);
     formData.append("title", data.title);
     formData.append("email", emails.toString());
-    formData.append("description", data.description);
+    formData.append("description", value);
 
     if (data.screenshot.length !== 0) {
       const file = data.screenshot[0];
@@ -86,7 +91,7 @@ const NoticeForm = () => {
 
     try {
       const response = await postNotice(formData).unwrap();
-      console.log(response);
+
       dispatch(setIsLoading(false));
       dispatch(setToast(response?.message));
     } catch (err) {
@@ -123,89 +128,118 @@ const NoticeForm = () => {
 
   return (
     <div>
-      <h2 className="text-start text-small text-blue-primary m-0">
-        Notice Form
-      </h2>
+      <div className="d-flex justify-content-end align-items-center">
+        {/* <h2 className="text-start text-small text-blue-primary m-0">
+          Notice Form
+        </h2> */}
 
-      <form
-        onSubmit={handleSubmit(handleFormSubmit)}
-        className="border p-3 rounded shadow-sm mt-2"
-      >
-        <div className="row mt-4">
-          {NoticeFormFields.map((item, index) => (
-            <div
-              className={`${
-                item.type === "textarea" ? "col-12" : "col-sm-6"
-              } my-2`}
-              key={`${item.label}-${index}`}
-            >
-              {item.type === "email" ? (
-                <div>
+        <button
+          className="btn text-xsmall"
+          style={{
+            width: "fit-content",
+          }}
+          onClick={() => setShowForm(!showForm)}
+        >
+          <FaPlus /> Create
+        </button>
+      </div>
+
+      {showForm && (
+        <form
+          onSubmit={handleSubmit(handleFormSubmit)}
+          className="border p-3 rounded shadow-sm mt-2"
+        >
+          <div className="row mt-4">
+            {NoticeFormFields.map((item, index) => (
+              <div
+                className={`${
+                  item.type === "textarea" ? "col-12" : "col-sm-6"
+                } my-2`}
+                key={`${item.label}-${index}`}
+              >
+                {item.type === "email" ? (
                   <div>
-                    <Controller
-                      name={item.name} // Field name
-                      control={control} // Pass control to Controller
-                      render={({ field }) => (
-                        <Select
-                          {...field} // Spread the field object to pass necessary props
-                          options={customOptions}
-                          placeholder="Emails"
-                          isMulti
-                          styles={{
-                            control: (provided: any) => ({
-                              ...provided,
-                              border: "2px solid #DEE2E6", // Remove the border
-                              boxShadow: "none", // Remove box shadow (if any)
-                              // Optionally, set other styles, like padding or background
-                            }),
-                          }}
-                        />
-                      )}
-                    />
+                    <div>
+                      <Controller
+                        name={item.name} // Field name
+                        control={control} // Pass control to Controller
+                        render={({ field }) => (
+                          <Select
+                            {...field} // Spread the field object to pass necessary props
+                            options={customOptions}
+                            placeholder="Emails"
+                            isMulti
+                            styles={{
+                              control: (provided: any) => ({
+                                ...provided,
+                                border: "2px solid #DEE2E6", // Remove the border
+                                boxShadow: "none", // Remove box shadow (if any)
+                                // Optionally, set other styles, like padding or background
+                              }),
+                            }}
+                          />
+                        )}
+                      />
 
-                    {error && <p className="text-danger">{error}</p>}
+                      {error && <p className="text-danger">{error}</p>}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <InputWithLabel
-                  id={`${index}`}
-                  label={item.label}
-                  name={item.name}
-                  register={register}
-                  type={item.type}
-                  value={item.value}
-                  placeholder={item.placeholder}
-                />
-              )}
-
-              {errors[item.name] && (
-                <p className="text-danger">
-                  {errors[item.name]?.message as string}
-                </p>
-              )}
-
-              {item.type === "file" && screenShotPreview && (
-                <div
-                  className="image-preview-container mt-2"
-                  style={{
-                    maxWidth: "340px",
-                  }}
-                >
-                  <img
-                    src={`${URL.createObjectURL(screenShotPreview[0])}`}
-                    alt="Screenshot Preview"
-                    className="w-100 h-100 object-fit-cover"
+                ) : item.type === "textarea" ? (
+                  <div
+                    style={{
+                      height: "380px",
+                    }}
+                  >
+                    <ReactQuill
+                      theme="snow"
+                      value={value}
+                      style={{
+                        height: "85%",
+                      }}
+                      onChange={(content) => setValues(content)}
+                    />
+                  </div>
+                ) : (
+                  <InputWithLabel
+                    id={`${index}`}
+                    label={item.label}
+                    name={item.name}
+                    register={register}
+                    type={item.type}
+                    value={item.value}
+                    placeholder={item.placeholder}
                   />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                )}
 
-        <div className="d-flex justify-content-center mt-2">
-          <button className="btn py-2">Submit</button>
-        </div>
-      </form>
+                {errors[item.name] && (
+                  <p className="text-danger">
+                    {errors[item.name]?.message as string}
+                  </p>
+                )}
+
+                {item.type === "file" && screenShotPreview && (
+                  <div
+                    className="image-preview-container mt-2"
+                    style={{
+                      maxWidth: "340px",
+                    }}
+                  >
+                    <img
+                      src={`${URL.createObjectURL(screenShotPreview[0])}`}
+                      alt="Screenshot Preview"
+                      className="w-100 h-100 object-fit-cover"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="d-flex justify-content-center mt-2">
+            <button className="btn py-2">Submit</button>
+          </div>
+        </form>
+      )}
     </div>
   );
 };

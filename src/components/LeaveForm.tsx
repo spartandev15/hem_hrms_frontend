@@ -38,9 +38,26 @@ const LeaveApplicationForm: React.FC = () => {
   });
 
   // Handle form submission
-  const onSubmit = (data: LeaveFormData) => {
+  const onSubmit = async (datas: LeaveFormData) => {
     dispatch(setIsLoading(true));
-    postLeave(data);
+    try {
+      const response: any = await postLeave(datas);
+
+      if (response?.error) {
+        dispatch(setToast(response?.error?.data?.error));
+        return;
+      }
+
+      dispatch(setToast(response?.data?.message));
+    } catch (err) {
+      console.log(err);
+      const error = err as { data: { error: string } };
+
+      console.log(error);
+      dispatch(setToast(error.data.error));
+    } finally {
+      dispatch(setIsLoading(false));
+    }
   };
 
   useEffect(() => {
@@ -63,12 +80,18 @@ const LeaveApplicationForm: React.FC = () => {
             <label htmlFor="startDate" className="form-label font-bold">
               Start Date
             </label>
-            <input
+            <InputWithLabel
+              type="date"
+              name="start_date"
+              register={register}
+              disabledPast={true}
+            />
+            {/* <input
               type="date"
               id="start_date"
               className="form-control"
               {...register("start_date")}
-            />
+            /> */}
             {errors.start_date && (
               <p className="text-danger">{errors.start_date.message}</p>
             )}
@@ -79,12 +102,19 @@ const LeaveApplicationForm: React.FC = () => {
             <label htmlFor="endDate" className="form-label font-bold">
               End Date
             </label>
-            <input
+
+            <InputWithLabel
+              type="date"
+              name="end_date"
+              register={register}
+              disabledPast={true}
+            />
+            {/* <input
               type="date"
               id="end_date"
               className="form-control"
               {...register("end_date")}
-            />
+            /> */}
             {errors.end_date && (
               <p className="text-danger">{errors.end_date.message}</p>
             )}
@@ -103,8 +133,12 @@ const LeaveApplicationForm: React.FC = () => {
               labelAnimated={false}
               serachIcon={false}
               options={[
-                { value: "sick_leave", label: "Sick Leave" },
-                { value: "paid_leave", label: "Paid Leave" },
+                { value: "sick_leaves", label: "Sick Leave" },
+                { value: "paid_leaves", label: "Paid Leave" },
+                { value: "unpaid_leaves", label: "Unpaid Leave" },
+                { value: "casual_leave", label: "Casual Leave" },
+                { value: "short_leave", label: "Short Leave" },
+                { value: "half_day_leave", label: "Half Day" },
               ]}
             />
             {errors.leave_type && (
@@ -114,6 +148,12 @@ const LeaveApplicationForm: React.FC = () => {
 
           <div className="col-md-6">
             <label htmlFor="" className="form-label font-bold">
+              File
+            </label>
+
+            <InputWithLabel register={register} type="file" name="file" />
+
+            {/* <label htmlFor="" className="form-label font-bold">
               Upload Documents
             </label>
 
@@ -125,7 +165,7 @@ const LeaveApplicationForm: React.FC = () => {
             >
               Upload
             </div>
-            <input type="file" hidden />
+            <input type="file" hidden /> */}
           </div>
 
           {/* Reason */}

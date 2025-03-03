@@ -8,13 +8,7 @@ import { ProfileCardProps } from "../../types";
 
 const profilePhoto = "/images/profile.png";
 
-const ProfileCard = ({
-  name,
-  last_name,
-  email,
-  phone,
-  line_manager,
-}: ProfileCardProps) => {
+const ProfileCard = ({ data }: ProfileCardProps) => {
   const { data: userData, isLoading } = useGetProfileQuery();
   const [previewImage, setPreviewImage] = useState(null);
   const profilePicRef = useRef<HTMLInputElement | null>(null);
@@ -70,7 +64,7 @@ const ProfileCard = ({
           onChange={changeProfilePicture}
         />
         <h2 className="font-weight-bold text-large profile-heading">
-          {name} {last_name}
+          {data?.name} {data?.last_name}
           {/* {userData?.user?.last_name as string}  */}
         </h2>
 
@@ -79,20 +73,20 @@ const ProfileCard = ({
             to={"/"}
             className="d-flex align-items-center gap-1 text-gray-primary text-xsmall"
           >
-            <FaPhoneAlt size={14} /> {phone || "Not Available"}
+            <FaPhoneAlt size={14} /> {data?.phone || "Not Available"}
           </Link>
           <Link
             to={"/"}
             className="d-flex align-items-center gap-1 text-gray-primary text-xsmall"
           >
-            <IoIosMail size={16} /> {email}
+            <IoIosMail size={16} /> {data?.email}
           </Link>
         </div>
 
         <div className="text-blue-primary profile-detials">
-          <h2 className="text-small m-0">Department</h2>
-          <h2 className="text-small m-0">{line_manager}</h2>
-          <p className="text-muted text-xsmall">{name}</p>
+          {/* <h2 className="text-small m-0">Department</h2> */}
+          {/* <h2 className="text-small m-0">{data?.line_manager}</h2>
+          <p className="text-muted text-xsmall">{data?.name}</p> */}
         </div>
       </div>
     </div>

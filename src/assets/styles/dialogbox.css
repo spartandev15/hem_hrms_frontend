@@ -4,30 +4,40 @@
   left: 0;
   right: 0;
   bottom: 0;
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 999;
+  align-items: center; */
+  padding: 0 1rem;
+  z-index: 999999;
   min-height: 100vh;
 }
 
 .dialog {
-  background-color: #e2e6e7;
+  max-width: 400px;
+  margin: 0.4rem auto;
+  background-color: #fff;
   padding: 25px;
   border-radius: 5px;
-  box-shadow: 0 8 2px var(--bs-border-color);
+  border: 1px solid #134e753a;
+  box-shadow: 0px 0 0px #f1f1f1de;
+  animation: topDown 0.3s ease-in-out;
 }
 
 button {
-  width: 100%;
   border: none;
   cursor: pointer;
   border-radius: 5px;
 }
 
-button.cancel {
-}
-
 button:hover {
   opacity: 0.8;
+}
+
+@keyframes topDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
 }

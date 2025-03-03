@@ -12,9 +12,6 @@
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   box-shadow: 0 0 12px #e4e2e296;
 }
 

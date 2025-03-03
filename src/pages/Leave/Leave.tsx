@@ -11,6 +11,8 @@ import {
 } from "../../redux/api/leave";
 import { formatDate } from "../../utils/formatDate";
 import EmployeeLeaves from "./EmployeeLeaves";
+import useScrollToTop from "../../hooks/useScrollToTop";
+import SpinnerLoader from "../../components/SpinnerLoader";
 
 const Leave = () => {
   const { handleSubmit, register } = useForm();
@@ -25,12 +27,15 @@ const Leave = () => {
     console.log("Search", values);
   };
 
+  // custom hooks for scroll to top
+  useScrollToTop();
+
   return (
     <div className="container py-4">
       {/* <h1 className="text-medium">Leave Manager</h1> */}
 
       {status === "HR" && (
-        <div>
+        <div className="d-flex flex-column gap-4">
           {allAppliedLeavesDetailsData &&
             Object.keys(allAppliedLeavesDetailsData?.data).length > 0 && (
               <div className="mt-4 d-flex flex-column gap-4 border rounded-2 p-3">
@@ -58,10 +63,12 @@ const Leave = () => {
             )}
 
           {isLoadinLeavesDetails ? (
-            <p>Loading...</p>
+            <div className="d-flex justify-content-center align-items-center">
+              <SpinnerLoader />
+            </div>
           ) : allLeavesDetailsData &&
             allLeavesDetailsData?.leaves?.length > 0 ? (
-            <div className="mt-5 border p-3 rounded-2">
+            <div className="border p-3 rounded-2">
               <div>
                 <h2 className="text-start text-medium underline">
                   Employees Leaves Details
