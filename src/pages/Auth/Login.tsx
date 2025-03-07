@@ -32,8 +32,6 @@ const Login = () => {
         password: data.password,
       };
       const response = await authLogin(formData).unwrap();
-
-      console.log(response);
     } catch (error) {
       dispatch(setIsLoading(false));
       console.log(error);
@@ -44,6 +42,8 @@ const Login = () => {
   useEffect(() => {
     if (LoginDetialsData) {
       // destuct access_token from LoginDetialsData
+
+      console.log(LoginDetialsData);
       const { access_token, user } = LoginDetialsData;
       const { status, id, name, last_name, email } = user;
       // payload details send to setAuthReducer

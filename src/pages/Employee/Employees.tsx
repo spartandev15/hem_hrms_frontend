@@ -1,34 +1,27 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import "../../assets/styles/dialogbox.css";
-import "../../assets/styles/employee.css";
-import EmployeeCard from "../../components/cards/EmployeeCard";
-import InputWithLabel from "../../components/ui/InputWithLabel";
-import { useGetAllCategoryQuery } from "../../redux/api/category";
-import { useGetEmployeesQuery } from "../../redux/api/employee";
+import { useState } from "react";
 import { useAppSelector } from "../../hooks/reduxHook";
-import SpinnerLoader from "../../components/SpinnerLoader";
+import { useGetEmployeesQuery } from "../../redux/api/employee";
+import EmployeeList from "./EmployeeList";
 
 const Employees = () => {
-  const { data: allEmployeData, isLoading } = useGetEmployeesQuery();
+  const [query, setQuery] = useState("");
   const { items } = useAppSelector((state) => state.dropdown);
+  const { data: allEmployeData, isLoading } = useGetEmployeesQuery(query);
 
   const options = items?.map((category) => ({
     label: category.name,
     value: category.name,
   }));
 
-  const { register, handleSubmit } = useForm();
-
-  const handleSearchSubmit = (values: any) => {
-    console.log("Search", values);
+  const handleSearchSubmit = (query: any) => {
+    setQuery(query);
   };
 
   return (
     <div className="container py-4">
       <h2 className="text-blue-primary text-start text-large">Employees</h2>
 
-      <div>
+      {/* <div>
         <form onSubmit={handleSubmit(handleSearchSubmit)}>
           <div className="row p-2">
             <div className="col-sm-3">
@@ -67,10 +60,15 @@ const Employees = () => {
             </div>
           </div>
         </form>
-      </div>
+      </div> */}
 
-      <div className="row g-4 mt-2">
-        {allEmployeData?.employee?.length > 0 ? (
+      <div className="mt-2">
+        <EmployeeList
+          data={allEmployeData?.employee}
+          isLoading={isLoading}
+          handleQuery={handleSearchSubmit}
+        />
+        {/* {allEmployeData?.employee?.length > 0 ? (
           allEmployeData?.employee?.map((item: any, index: number) => (
             <div className="col-md-4 col-lg-3 " key={index}>
               <EmployeeCard {...item} />
@@ -80,7 +78,7 @@ const Employees = () => {
           <SpinnerLoader />
         ) : (
           <h2 className="text-start">data not found!</h2>
-        )}
+        )} */}
       </div>
     </div>
   );

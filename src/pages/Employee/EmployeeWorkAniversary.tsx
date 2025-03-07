@@ -17,7 +17,7 @@ const EmployeeWorkAniversary = () => {
       <div className="overflow-auto">
         <table className="table table-bordered table-striped">
           <thead>
-            <tr>
+            <tr className="text-center">
               <th>#</th>
               <th>Name</th>
               <th>Position</th>
@@ -30,7 +30,7 @@ const EmployeeWorkAniversary = () => {
             {employeesAnniversaryData?.EmployeeDetails?.length > 0 ? (
               employeesAnniversaryData?.EmployeeDetails?.map(
                 (employee: any, index: number) => (
-                  <tr key={index}>
+                  <tr className="text-center" key={index}>
                     <td>{index + 1}</td>
                     <td>{employee.employee_name}</td>
                     <td>{employee.designation}</td>

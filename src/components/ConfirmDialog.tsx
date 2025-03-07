@@ -28,7 +28,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
           <div className="d-flex justify-content-end gap-2">
             <button
-              className="px-4 py-1 bg-primary text-white"
+              className="px-4 py-1 bg-blue-primary text-white"
               onClick={() => onClose(true)}
             >
               Yes

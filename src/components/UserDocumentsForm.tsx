@@ -172,8 +172,6 @@ const UserDocumentsForm = () => {
       }
     });
 
-    console.log("aaya");
-
     setFilePreviews(newFilePreviews);
   }, [fileValues]);
 

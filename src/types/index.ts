@@ -31,6 +31,7 @@ interface IField {
     name?: string;
     type?: string;
     value?: string;
+    disabled?: boolean;
   }[];
 }
 
@@ -41,7 +42,7 @@ export interface IProfileCommonSection {
 
 export interface ProfileCardProps {
   data: {
-    id?: number;
+    id?: string;
     name?: string;
     last_name?: string;
     designation?: string;
@@ -52,6 +53,7 @@ export interface ProfileCardProps {
     joining_date?: string;
     employeeprofile?: string;
   };
+  onProfileChange?: (profile: File, id: string) => void;
 }
 
 export interface EditableFormProps {
@@ -60,6 +62,7 @@ export interface EditableFormProps {
     name?: string;
     type?: string;
     value?: string;
+    disabled?: boolean;
   }[];
   onSubmit: (values: any) => void;
   defaultValues?: any;
@@ -123,6 +126,28 @@ interface EmployeeDetails {
       };
     };
     overall_total_leaves: string;
+  };
+  salary_data: {
+    account_holder_name: string;
+    account_number: string;
+    bank_ifsc: string;
+    bank_name: string;
+    basic_salary: string;
+    created_at: string;
+    employee_name: string;
+    employee_state: string;
+    extra_working: string;
+    final_total: string;
+    gross_salary: string;
+    gross_total: string;
+    house_rent: string;
+    id: number;
+    insurance: string;
+    leave_deduction: string;
+    medical_allowance: string;
+    pf: string;
+    tax: string;
+    updated_at: string;
   };
 }
 

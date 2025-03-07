@@ -1,9 +1,10 @@
 import React, { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import "../assets/styles/inputWithLabel.css";
-import "../assets/styles/ovetimeTable.css";
 import "../assets/styles/dialogbox.css";
+import "../assets/styles/employee.css";
+import "../assets/styles/inputWithLabel.css";
 import "../assets/styles/leave.css";
+import "../assets/styles/ovetimeTable.css";
 
 // const Login = lazy(() => import("../pages/Auth/Login"));
 // const Signup = lazy(() => import("../pages/Auth/SingUp"));
@@ -42,14 +43,13 @@ const DocumentOverview = lazy(
   () => import("../pages/Documents/DocumentOverview")
 );
 
-import ProtectedRoute from "../routes/ProtectedRoute";
 import Dashboard from "../pages/Dashboard/Dashboard";
-import SpinnerLoader from "../components/SpinnerLoader";
+import ProtectedRoute from "../routes/ProtectedRoute";
 
+import ChangePassword from "../pages/Auth/ChangePassword";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/SingUp";
-import ForgotPassword from "../pages/Auth/ForgotPassword";
-import ChangePassword from "../pages/Auth/ChangePassword";
 // import Profile from "../pages/Profile/Profile";
 // import AddEmployee from "../pages/Employee/AddEmployee";
 // import Employees from "../pages/Employee/Employees";
@@ -113,8 +113,17 @@ const Navigation = () => {
               </Suspense>
             }
           />
+
           <Route
             path="employees"
+            element={
+              <Suspense fallback={""}>
+                <AddEmployee />
+              </Suspense>
+            }
+          />
+          <Route
+            path="all/employees"
             element={
               <Suspense fallback={""}>
                 <Employees />

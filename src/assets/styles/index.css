@@ -116,12 +116,23 @@ input[type="number"] {
 }
 
 .action-btn-container {
+  color: #434569;
   width: 20px;
   height: 25px;
-  border: 1px solid var(--primary-color);
+  /* border: 1px solid #57ac6b; */
+  border: 1px solid #526677;
+
   border-radius: 2px;
   padding: 2px;
   box-shadow: 0 0 0px #575656;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-btn-container:hover {
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .react-paginate {

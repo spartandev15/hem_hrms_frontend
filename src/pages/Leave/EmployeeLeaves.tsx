@@ -14,8 +14,6 @@ const EmployeeLeaves = () => {
   const { data: employeeLeavesDetails, isLoading: isLeavesLoading } =
     useGetEmployeeDetailsByIdQuery(getLocalStorageItem(AUTH_UID));
 
-  console.log(employeeLeavesDetails);
-
   const { data: userLeavesStatus, isLoading: userLeaveStatusIsLoading } =
     useGetAppliedLeavesStatusByIdQuery(getLocalStorageItem(AUTH_UID));
 

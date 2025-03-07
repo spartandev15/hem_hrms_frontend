@@ -37,6 +37,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   leaves,
   user_id,
   date_of_birth,
+  salary_data,
 }) => {
   const {
     handleSubmit,
@@ -62,6 +63,22 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       paid_leaves: leaves?.leave_data?.paid_leaves.Total,
       unpaid_leaves: leaves?.leave_data?.unpaid_leaves.Total,
       sick_leaves: leaves?.leave_data?.sick_leaves.Total,
+      basic_salary: salary_data?.basic_salary,
+      house_rent: salary_data?.house_rent,
+      medical_allowance: salary_data?.medical_allowance,
+      tax: salary_data?.tax,
+      leave_deduction: salary_data?.leave_deduction,
+      pf: salary_data?.pf,
+      employee_state: salary_data?.employee_state,
+      insurance: salary_data?.insurance,
+      extra_working: salary_data?.extra_working,
+      gross_total: salary_data?.gross_total,
+      final_total: salary_data?.final_total,
+      gross_salary: salary_data?.gross_salary,
+      bank_name: salary_data?.bank_name,
+      bank_ifsc: salary_data?.bank_ifsc,
+      account_number: salary_data?.account_number,
+      account_holder_name: salary_data?.account_holder_name,
     },
   });
   const dispatch = useAppDispatch();
@@ -209,6 +226,118 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       required: true,
       value: "hem",
     },
+    {
+      label: "Basic Salary",
+      name: "basic_salary",
+      type: "number",
+      required: true,
+      value: salary_data?.basic_salary,
+    },
+    {
+      label: "House Rent",
+      name: "house_rent",
+      type: "number",
+      required: true,
+      value: salary_data?.house_rent,
+    },
+    {
+      label: "Medical Allowance",
+      name: "medical_allowance",
+      type: "number",
+      required: true,
+      value: salary_data?.medical_allowance,
+    },
+    {
+      label: "Tax",
+      name: "tax",
+      type: "number",
+      required: true,
+      value: salary_data?.tax,
+    },
+    {
+      label: "Leave Deduction",
+      name: "leave_deduction",
+      type: "number",
+      required: true,
+      value: salary_data?.leave_deduction,
+    },
+    {
+      label: "PF",
+      name: "pf",
+      type: "number",
+      required: true,
+      value: salary_data?.pf,
+    },
+    {
+      label: "Employee State",
+      name: "employee_state",
+      type: "text",
+      required: true,
+      value: salary_data?.employee_state,
+    },
+    {
+      label: "Insaurance",
+      name: "insurance",
+      type: "number",
+      required: true,
+      value: salary_data?.insurance,
+    },
+    {
+      label: "Extra Working",
+      name: "extra_working",
+      type: "number",
+      required: true,
+      value: salary_data?.extra_working,
+    },
+    {
+      label: "Gross Total",
+      name: "gross_total",
+      type: "number",
+      required: true,
+      value: salary_data?.gross_total,
+    },
+    {
+      label: "Gross Salary",
+      name: "gross_salary",
+      type: "number",
+      required: true,
+      value: salary_data?.gross_salary,
+    },
+    {
+      label: "Final",
+      name: "final_total",
+      type: "number",
+      required: true,
+      value: salary_data?.final_total,
+    },
+    {
+      label: "Bank Name",
+      name: "bank_name",
+      type: "text",
+      required: true,
+      value: salary_data?.bank_name,
+    },
+    {
+      label: "Bank IFSC",
+      name: "bank_ifsc",
+      type: "text",
+      required: true,
+      value: salary_data?.bank_ifsc,
+    },
+    {
+      label: "Account Number",
+      name: "account_number",
+      type: "number",
+      required: true,
+      value: salary_data?.account_number,
+    },
+    {
+      label: "Account Holder Name",
+      name: "account_holder_name",
+      type: "text",
+      required: true,
+      value: salary_data?.account_holder_name,
+    },
   ];
 
   // console.log(editEmployeeFormFields);
@@ -228,13 +357,35 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
       date_of_birth: data.date_of_birth,
       password: data.password,
       address: data.address,
+      total_leaves: data.total_leaves,
+      paid_leaves: data.paid_leaves,
+      unpaid_leaves: data.unpaid_leaves,
+      sick_leaves: data.sick_leaves,
+      basic_salary: data.basic_salary,
+      house_rent: data.house_rent,
+      medical_allowance: data.medical_allowance,
+      tax: data.tax,
+      leave_deduction: data.leave_deduction,
+      pf: data.pf,
+      employee_state: data.employee_state,
+      insurance: data.insurance,
+      extra_working: data.extra_working,
+      gross_total: data.gross_total,
+      gross_salary: data.gross_salary,
+      final_total: data.final_total,
+      bank_name: data.bank_name,
+      bank_ifsc: data.bank_ifsc,
+      account_number: data.account_number,
+      account_holder_name: data.account_holder_name,
     };
-    try {
-      dispatch(setIsLoading(true));
-      updateEmployee(editFormData);
-    } catch (error) {
-      console.log(error);
-    }
+
+    // console.log(editFormData);
+    // try {
+    //   dispatch(setIsLoading(true));
+    //   updateEmployee(editFormData);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   // open the dialog for confirmation
@@ -303,10 +454,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
               <RiDeleteBin6Line /> Delete
             </div>
 
-            <div
-              className="d-flex align-items-center px-2 py-1 text-small font-normal action-btn"
-              onClick={handleDeleteConfirmDialog}
-            >
+            <div className="d-flex align-items-center px-2 py-1 text-small font-normal action-btn">
               <BiShowAlt size={18} />
               <Link
                 to={`/employee-details/${first_name}/${user_id}`}

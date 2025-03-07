@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { CiLogout } from "react-icons/ci";
 import { FaCaretDown } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdMenu } from "react-icons/md";
-import { CiLogout } from "react-icons/ci";
 import { PiUserCircleCheckThin } from "react-icons/pi";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -14,20 +14,18 @@ import { useAuthLogoutMutation } from "../../redux/api/auth";
 import { useGetProfileQuery } from "../../redux/api/profile";
 import { Nav_List } from "./Nav_List";
 
-import logo from "../../assets/images/orpect1.png";
 import user from "../../assets/images/account.png";
+import logo from "../../assets/images/orpect1.png";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
-import {
-  logoutAuthUser,
-  setAuthStatus,
-  setAuthUser,
-} from "../../redux/slices/authSlice";
+import { logoutAuthUser } from "../../redux/slices/authSlice";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
+import { baseApi } from "../../baseApi/baseApi";
 
 const Header = () => {
   const dispatch = useAppDispatch();
-  const [profile_data, setProfile_data] = useState("");
   const { data: userData, isLoading } = useGetProfileQuery();
+
+  console.log(userData);
 
   const [authLogout, { data: logoutDetails, isSuccess: logoutIsSuccess }] =
     useAuthLogoutMutation();
@@ -44,7 +42,7 @@ const Header = () => {
     try {
       dispatch(setIsLoading(true));
       setShowProfileDropDown(false);
-      authLogout();
+      await authLogout();
     } catch (err) {
       console.log(err);
     }
@@ -103,6 +101,7 @@ const Header = () => {
       dispatch(logoutAuthUser());
       dispatch(setIsLoading(false));
       navigate("/sign-in");
+      dispatch(baseApi.util.resetApiState());
     }
   }, [logoutDetails]);
 
@@ -122,8 +121,14 @@ const Header = () => {
           {/* navigation Links  */}
           <div className="nav-bar-container">
             <ul className="nav-bar" ref={navLinkRef}>
-              {Nav_Lists.map((link, index) =>
-                link.label === "Leave" && status === "HR" ? null : (
+              {Nav_Lists.map((link, index) => {
+                if (link.name === "Employees" && status === "HR") return null;
+                else if (link.label === "Leave" && status === "owner")
+                  return null;
+
+                return (link.label === "Leave" && status === "HR") ||
+                  (link.name === "Employees" &&
+                    status === "employee") ? null : (
                   <li
                     className="position-relative nav-list p-0"
                     key={`${index}-${link?.label}`}
@@ -170,8 +175,8 @@ const Header = () => {
                       </div>
                     )}
                   </li>
-                )
-              )}
+                );
+              })}
             </ul>
           </div>
 
@@ -207,11 +212,19 @@ const Header = () => {
               }}
             >
               <img
-                src={profile_data ? profile_data : user}
-                className="droplogin"
+                src={
+                  userData?.user?.user_details?.profile_photo
+                    ? userData?.user?.user_details?.profile_photo
+                    : user
+                }
+                className="object-fit-cover"
                 alt="user"
                 height={35}
                 width={35}
+                style={{
+                  borderRadius: "100%",
+                  border: "2px solid #BE8E37",
+                }}
               />
               <IoIosArrowDown
                 size={18}

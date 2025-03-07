@@ -4,26 +4,17 @@ import { EmployeeDeleteData } from "../../types";
 
 export const employeeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getEmployees: builder.query<any, void>({
-      query: () => {
+    getEmployees: builder.query<any, any>({
+      query: (query) => {
+        const baseUrl = `/api/get/all/employee`;
+        const url = query ? `${baseUrl}?search_query=${query}` : baseUrl;
+
         return {
-          url: "/api/get/all/employee",
+          url,
           method: "GET",
         };
       },
       providesTags: ["allEmployess"],
-    }),
-
-    // endpoint for create a new employee
-    postEmployee: builder.mutation<any, any>({
-      query: (employeeData: any) => {
-        return {
-          url: "/api/create/employee",
-          method: "POST",
-          body: employeeData,
-        };
-      },
-      invalidatesTags: ["allEmployess"],
     }),
 
     // endpoint for getting all employess
@@ -34,31 +25,7 @@ export const employeeApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      // providesTags: ["employess"],
-    }),
-
-    // endpoint for update employess
-    updateEmployee: builder.mutation<any, any>({
-      query: (data) => {
-        return {
-          url: "/api/update/employee",
-          method: "POST",
-          body: data,
-        };
-      },
-      invalidatesTags: ["allEmployess"],
-    }),
-
-    // endpoint for delete employee
-    deleteEmployee: builder.mutation<any, EmployeeDeleteData>({
-      query: (data) => {
-        return {
-          url: `/api/delete/employee`,
-          method: "POST",
-          body: data,
-        };
-      },
-      invalidatesTags: ["allEmployess"],
+      providesTags: ["employessById"],
     }),
 
     // endpoint for get employee Birthdays
@@ -80,14 +47,50 @@ export const employeeApi = baseApi.injectEndpoints({
         };
       },
     }),
+
+    // endpoint for create a new employee
+    postEmployee: builder.mutation<any, any>({
+      query: (employeeData: any) => {
+        return {
+          url: "/api/create/employee",
+          method: "POST",
+          body: employeeData,
+        };
+      },
+      invalidatesTags: ["allEmployess"],
+    }),
+
+    // endpoint for update employess
+    updateEmployee: builder.mutation<any, any>({
+      query: (data) => {
+        return {
+          url: "/api/update/employee",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["allEmployess", "employessById"],
+    }),
+
+    // endpoint for delete employee
+    deleteEmployee: builder.mutation<any, EmployeeDeleteData>({
+      query: (data) => {
+        return {
+          url: `/api/delete/employee`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["allEmployess"],
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-  usePostEmployeeMutation,
   useGetEmployeesQuery,
+  usePostEmployeeMutation,
   useDeleteEmployeeMutation,
   useUpdateEmployeeMutation,
   useGetEmployeesBirthdayQuery,

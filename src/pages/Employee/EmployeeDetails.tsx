@@ -3,16 +3,39 @@ import ProfileCard from "../../components/cards/ProfileCard";
 import "../../assets/styles/profile.css";
 import TabContainer, { Tabs } from "../../components/Tabs";
 import GeneralTabContent from "../../components/GeneralTabContent";
-import { useGetEmployeeDetailsByIdQuery } from "../../redux/api/employee";
+import {
+  useGetEmployeeDetailsByIdQuery,
+  useUpdateEmployeeMutation,
+} from "../../redux/api/employee";
 import { useParams } from "react-router-dom";
 import SpinnerLoader from "../../components/SpinnerLoader";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
+import { setIsLoading } from "../../redux/slices/loadingSlice";
+import { setToast } from "../../redux/slices/toastSlice";
 
 export const EmployeeDetails = () => {
   const params = useParams();
+  const dispatch = useAppDispatch();
   const { data: userDetails, isLoading: userDetailsIsLoading } =
     useGetEmployeeDetailsByIdQuery(params.id);
+  const { status } = useAppSelector((state) => state.authUser);
 
-  console.log(userDetails);
+  const [updateEmployee] = useUpdateEmployeeMutation();
+
+  const handleProfileChange = async (profile: File, id: string) => {
+    dispatch(setIsLoading(true));
+    try {
+      const formData = new FormData();
+      formData.append("profile_photo", profile);
+      formData.append("id", id);
+      const response = await updateEmployee(formData);
+      dispatch(setToast(response?.data?.message));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      dispatch(setIsLoading(false));
+    }
+  };
 
   // const TabsData = [
   //   {
@@ -40,13 +63,25 @@ export const EmployeeDetails = () => {
           <SpinnerLoader />
         </div>
       ) : userDetails?.result ? (
-        <div className="row py-3">
+        <div className="row py-3 g-2">
           <div className="col-lg-3 profile-wrapper">
-            <ProfileCard data={userDetails?.user?.user_details} />
+            <div
+              className="position-sticky"
+              style={{
+                top: "0.5%",
+              }}
+            >
+              <ProfileCard
+                data={userDetails?.user?.user_details}
+                onProfileChange={handleProfileChange}
+              />
+            </div>
           </div>
 
           <div className="col-lg-9 col-md-9 col-sm-12 pb-4 overflow-x-auto">
             <GeneralTabContent
+              role={status}
+              isEdit={status === "HR" || status === "owner" ? true : false}
               data={{
                 ...userDetails?.user,
               }}

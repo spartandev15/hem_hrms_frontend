@@ -27,7 +27,6 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
 }) => {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const handleFocus = () => {

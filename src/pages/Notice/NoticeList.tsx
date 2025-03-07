@@ -12,8 +12,6 @@ const NoticeList = () => {
   const { data: allNotices, isLoading: isAllNoticesLoading } =
     useGetAllNoticesQuery();
 
-  console.log(allNotices);
-
   return (
     <div className="notice-list">
       <h2 className="text-start text-large text-blue-primary">Notices</h2>
@@ -37,7 +35,7 @@ const NoticeList = () => {
               </div>
             ))
           ) : (
-            <p>No Notices Found!</p>
+            <p>notices not found!</p>
           )}
         </div>
       )}

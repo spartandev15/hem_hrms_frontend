@@ -1,88 +1,58 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../../assets/styles/profile.css";
 const user = "/images/profile.png";
 
+import { useLocation } from "react-router-dom";
 import ProfileCard from "../../components/cards/ProfileCard";
 import GeneralTabContent from "../../components/GeneralTabContent";
-import TabContainer, { Tabs } from "../../components/Tabs";
-import { useGetProfileQuery } from "../../redux/api/profile";
 import SpinnerLoader from "../../components/SpinnerLoader";
-import { EditableForm } from "../../components/EditableForm";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+} from "../../redux/api/profile";
+import { setIsLoading } from "../../redux/slices/loadingSlice";
+import { setToast } from "../../redux/slices/toastSlice";
 
 const Profile = () => {
+  const { pathname } = useLocation();
   const {
     data: userData,
     isLoading,
     isSuccess: userDataIsSuccess,
   } = useGetProfileQuery();
 
-  // console.log(userData);
-  // const [profileImageFile, setprofileImageFile] = useState();
-  // const [activeTab, setActiveTab] = useState("");
-  // const navigate = useNavigate();
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-  const oldData = JSON.parse(localStorage.getItem("user")!);
+  const [updateProfile] = useUpdateProfileMutation();
+  const { status } = useAppSelector((state) => state.authUser);
 
-  const [data, setData] = useState({
-    fullname: oldData?.name || "",
-    email: oldData?.email || "",
-    employee_id: oldData?.emp_id || "",
-    date_of_joining: oldData?.joining_date || "",
-    tax_number: oldData?.tax_number || "",
-    date_of_birth: oldData?.dob || "",
-    phone_number: oldData?.phone_number || "",
-    position: oldData?.job_title || "",
-    address: oldData?.address || "",
-    profile_photo: oldData?.profile_photo || "",
-  });
+  // const oldData = JSON.parse(localStorage.getItem("user")!);
+  // const [data, setData] = useState({
+  //   fullname: oldData?.name || "",
+  //   email: oldData?.email || "",
+  //   employee_id: oldData?.emp_id || "",
+  //   date_of_joining: oldData?.joining_date || "",
+  //   tax_number: oldData?.tax_number || "",
+  //   date_of_birth: oldData?.dob || "",
+  //   phone_number: oldData?.phone_number || "",
+  //   position: oldData?.job_title || "",
+  //   address: oldData?.address || "",
+  //   profile_photo: oldData?.profile_photo || "",
+  // });
 
-  // const onSave = async (e) => {
-  //   e.preventDefault();
-  //   const postData = {
-  //     name: data.fullname,
-  //     email: data.email,
-  //     emp_id: data.employee_id,
-  //     joining_date: data.date_of_joining,
-  //     tax_number: data.tax_number,
-  //     dob: data.date_of_birth,
-  //     phone: data.phone_number,
-  //     job_title: data.position,
-  //     profile_photo: data.profile_photo,
-  //     address: data.address,
-  //   };
-  // };
-
-  // const handleInput = (e) => {
-  //   const name = e.target.name;
-  //   const Value = e.target.value;
-  //   setData({ ...data, [name]: Value });
-  // };
-
-  // const profileUpload = async (e) => {
-  //   // dispatch(isLoader(true))
-  // };
-
-  // const TabsData = [
-  //   {
-  //     label: "general",
-  //     content: <GeneralTabContent data={userData?.user} />,
-  //   },
-  //   // {
-  //   //   label: "job",
-  //   //   content: <GeneralTabContent />,
-  //   // },
-  //   // {
-  //   //   label: "qualification",
-  //   //   content: <GeneralTabContent />,
-  //   // },
-  //   // {
-  //   //   label: "salary",
-  //   //   content: <GeneralTabContent />,
-  //   // },
-  // ];
-
-  // show or hide the loading based on data fully load or not
+  const handleProfileChange = async (profile: File, id: string) => {
+    try {
+      dispatch(setIsLoading(true));
+      const formData = new FormData();
+      formData.append("profile_photo", profile);
+      const response = await updateProfile(formData);
+      dispatch(setToast(response?.data?.message));
+    } catch (error) {
+    } finally {
+      dispatch(setIsLoading(false));
+    }
+  };
 
   return (
     <div className="profile-wrapper container">
@@ -107,12 +77,28 @@ const Profile = () => {
           <section>
             <div>
               <div className="row">
-                <div className="col-lg-3 col-md-3 col-sm-12 pd-4">
-                  {<ProfileCard data={userData?.user?.user_details!} />}
+                <div className="col-lg-3 col-md-3 col-sm-12 pd-4 position-sticky top-0">
+                  <div
+                    className="position-sticky"
+                    style={{
+                      top: "0.5%",
+                    }}
+                  >
+                    {
+                      <ProfileCard
+                        data={userData?.user?.user_details!}
+                        onProfileChange={handleProfileChange}
+                      />
+                    }
+                  </div>
                 </div>
 
                 <div className="col-lg-9 col-md-9 col-sm-12 pb-4">
                   <GeneralTabContent
+                    role={status}
+                    isEdit={
+                      status === "HR" || status === "owner" ? true : false
+                    }
                     data={{
                       ...userData?.user,
                     }}

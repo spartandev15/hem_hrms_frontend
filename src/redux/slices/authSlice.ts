@@ -30,15 +30,20 @@ export const authSlice = createSlice({
         last_name,
         email,
       } = actions.payload;
+      console.log(name, last_name);
+
       state.isAuthenticateUser = isAuthenticate;
       state.status = status;
-      state.name = name + " " + last_name;
+      state.name = name + " " + (last_name || "");
       state.email = email;
       localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(access_token));
       localStorage.setItem(AUTH_STATUS, JSON.stringify(status));
       localStorage.setItem(AUTH_UID, JSON.stringify(user_id));
       localStorage.setItem(AUTH_EMAIL, JSON.stringify(email));
-      localStorage.setItem(AUTH__USER, JSON.stringify(name + " " + last_name));
+      localStorage.setItem(
+        AUTH__USER,
+        JSON.stringify(name + " " + (last_name || ""))
+      );
     },
 
     setAuthStatus: (state, actions) => {

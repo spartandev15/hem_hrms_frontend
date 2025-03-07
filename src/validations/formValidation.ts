@@ -18,6 +18,11 @@ export const employeeFormSchema = z
       .min(1, "Designation is required") // Make sure the select has a value selected
       .default("defaultDesignation"), // Ensure a default value
 
+    role: z
+      .string()
+      .min(1, "role is required") // Make sure the select has a value selected
+      .optional(),
+
     email: z.string().min(1, "Email is required").email("Invalid email format"),
 
     employee_id: z.string().min(1, "Employee ID is required"),
@@ -25,7 +30,7 @@ export const employeeFormSchema = z
     first_name: z.string().min(1, "First name is required"),
 
     joining_date: z.string().min(1, "Joining date is required"),
-    date_of_birth: z.string().min(1, "Joining date is required"),
+    date_of_birth: z.string().min(1, "dob is required"),
     last_name: z.string().min(1, "Last name is required"),
 
     // line_manager: z.string().min(1, "Line manager is required"),
@@ -58,6 +63,7 @@ export const employeeFormSchema = z
     bank_ifsc: z.string().min(1, "IFSC Code is required"),
     account_number: z.string().min(1, "Account number is required"),
     account_holder_name: z.string().min(1, "Account Holder Name is required"),
+    profile_photo: z.any().optional(),
   })
   .refine((data) => data.password === data.confirm_Password, {
     message: "Passwords don't match",

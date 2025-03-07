@@ -318,7 +318,7 @@ const TableRow = ({ name, id, onClick, index }: any) => {
           <FaRegEdit
             title="Edit"
             size={16}
-            color="#417090"
+            // color="#417090"
             className=""
             style={{
               cursor: "pointer",
@@ -331,7 +331,7 @@ const TableRow = ({ name, id, onClick, index }: any) => {
           <RiDeleteBin6Line
             title="Delete"
             size={14}
-            color="#D11A2A"
+            // color="#D11A2A"
             className=""
             style={{
               cursor: "pointer",

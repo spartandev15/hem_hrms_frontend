@@ -9,24 +9,8 @@ export const EditableForm = ({
   defaultValues,
 }: EditableFormProps) => {
   const { handleSubmit, register } = useForm({
-    defaultValues: {
-      ...defaultValues,
-    },
+    defaultValues,
   });
-
-  console.log(fields);
-
-  // const handleChange = (index: number, value: string) => {
-  //   const updatedFields = [...formFields];
-  //   updatedFields[index].value = value;
-  //   setFormFields(updatedFields);
-  // };
-
-  const updateFields = fields.map((item) =>
-    item.label === "Address"
-      ? { ...item, isFullWidth: true }
-      : { ...item, isFullWidth: false }
-  );
 
   const formSubmit = (data: any) => {
     onSubmit(data);
@@ -36,13 +20,8 @@ export const EditableForm = ({
     <div className="">
       <form onSubmit={handleSubmit(formSubmit)}>
         <div className="row g-2">
-          {updateFields.map((item, index) => (
-            <div
-              className={`form-outline ${
-                item.isFullWidth ? "col-12 w-full" : "col-6 w-50"
-              }  `}
-              key={index}
-            >
+          {fields.map((item, index) => (
+            <div className={`form-outline ${"col-6 w-50"}  `} key={index}>
               {item.type === "textarea" ? (
                 <InputWithLabel
                   // id="password"
@@ -59,7 +38,7 @@ export const EditableForm = ({
                   label={item.label}
                   register={register}
                   value={item.value}
-                  disabled={item.disabled}
+                  disabled={item?.disabled}
                 />
               )}
             </div>

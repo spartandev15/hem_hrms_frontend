@@ -1,24 +1,42 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import "../../assets/styles/inputWithLabel.css";
 import InputWithLabel from "../../components/ui/InputWithLabel";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
-import { usePostEmployeeMutation } from "../../redux/api/employee";
+import {
+  useGetEmployeesQuery,
+  usePostEmployeeMutation,
+} from "../../redux/api/employee";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 import { employeeFormSchema } from "../../validations/formValidation";
+import { FaPlus } from "react-icons/fa";
+import EmployeeList from "./EmployeeList";
+import { URL } from "url";
 
 const AddEmployee = () => {
+  const [query, setQuery] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
+  const { status } = useAppSelector((state) => state.authUser);
+  const [isOpen, setIsOpen] = useState(status === "owner" ? false : true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const { data: allEmployeData, isLoading } = useGetEmployeesQuery(query);
+
   const {
     handleSubmit,
     register,
+    control,
     reset,
     formState: { errors },
   } = useForm({
+    defaultValues: {
+      role: "HR",
+      profile_photo: "",
+    },
     resolver: zodResolver(employeeFormSchema),
   });
   const [
@@ -43,13 +61,7 @@ const AddEmployee = () => {
       required: true,
       value: "",
     },
-    // {
-    //   label: "Line Manager",
-    //   type: "text",
-    //   name: "line_manager",
-    //   required: true,
-    //   value: "",
-    // },
+
     {
       label: "Email",
       type: "email",
@@ -250,15 +262,52 @@ const AddEmployee = () => {
       required: true,
       value: "",
     },
+    {
+      label: "Role",
+      name: "role",
+      options: [
+        {
+          label: "HR",
+          value: "HR",
+        },
+        {
+          label: "Employee",
+          value: "employee",
+        },
+      ],
+      type: "select",
+      value: "role",
+    },
+    {
+      label: "Upload Profile Image",
+      name: "profile_photo",
+      type: "file",
+      value: "image",
+      accept: "image/*",
+    },
   ];
 
   const handleFormSubmit = (data: any) => {
     console.log(data);
-    const leavesFormData = {};
+    const formData = new FormData();
+    if (data.profile_photo.length > 0) {
+      formData.append("profile_photo", data.profile_photo[0]);
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (key !== "profile_photo") formData.append(key, String(value));
+    });
+
     dispatch(setIsLoading(true));
-    postEmployee(data);
+    postEmployee(formData);
     // reset();
   };
+
+  const handleSearchSubmit = (query: any) => {
+    setQuery(query);
+  };
+
+  const formFields = useWatch({ control });
 
   useEffect(() => {
     if (EmployeeDetailsData?.result && postEmployeeIsSuccess) {
@@ -273,45 +322,107 @@ const AddEmployee = () => {
     }
   }, [postEmployeeIsSuccess]);
 
+  useEffect(() => {
+    if (formFields?.profile_photo) {
+      const file = formFields?.profile_photo[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          setPreviewImage(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }, [formFields?.profile_photo]);
+
   return (
     <div>
       <div className="mt-4 container pb-4">
-        <div className="col-lg-10 m-auto">
-          <div>
-            <h2 className="text-blue-primary text-start text-large ">
-              New Employee Enrollment
+        <div className="m-auto">
+          <div className="d-flex justify-content-between align-items-center">
+            <h2 className="text-blue-primary text-start text-large m-0">
+              Employee Records
             </h2>
+
+            {status === "owner" && (
+              <button
+                className="btn d-flex align-items-center gap-2"
+                onClick={() => setIsOpen(!isOpen)}
+                style={{
+                  width: "fit-content",
+                }}
+              >
+                <FaPlus />
+                Enroll New Employee
+              </button>
+            )}
           </div>
 
-          <form
-            onSubmit={handleSubmit(handleFormSubmit)}
-            className="border p-3 rounded shadow-sm"
-          >
-            <div className="row mt-4">
-              {addEmployeeFormFields.map((item, index) => (
-                <div className="col-sm-6 my-2" key={`${item.label}-${index}`}>
-                  <InputWithLabel
-                    id={`${index}`}
-                    label={item.label}
-                    name={item.name}
-                    register={register}
-                    type={item.type}
-                    value={item.value}
-                    options={item.options}
-                  />
-                  {errors[item.name] && (
-                    <p className="text-danger">
-                      {errors[item.name]?.message as string}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
+          {isOpen && (
+            <form
+              onSubmit={handleSubmit(handleFormSubmit)}
+              className="border p-3 rounded shadow-sm mt-3"
+            >
+              <div className="row mt-4">
+                {addEmployeeFormFields.map((item, index) => {
+                  if (item.label === "Role" && status === "HR") return null;
+                  return (
+                    <div
+                      className="col-sm-6 my-2"
+                      key={`${item.label}-${index}`}
+                    >
+                      <InputWithLabel
+                        id={`${index}`}
+                        label={item.label}
+                        name={item.name}
+                        register={register}
+                        type={item.type}
+                        value={item.value}
+                        options={item.options}
+                        accept={item.accept}
+                      />
+                      {errors[item.name as keyof typeof errors] && (
+                        <p className="text-danger">
+                          {errors[item.name as keyof typeof errors]?.message}
+                        </p>
+                      )}
 
-            <div className="d-flex justify-content-center mt-2">
-              <button className="btn py-2">Submit</button>
+                      {item.name === "profile_photo" && previewImage && (
+                        <div>
+                          {previewImage && (
+                            <img
+                              src={previewImage}
+                              className="object-fit-contain"
+                              style={{
+                                width: "100px",
+                                height: "100px",
+                              }}
+                            />
+
+                            // <span>helo</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="d-flex justify-content-center mt-2">
+                <button className="btn py-2">Submit</button>
+              </div>
+            </form>
+          )}
+
+          {status === "owner" && (
+            <div className="mt-4">
+              <EmployeeList
+                data={allEmployeData?.employee}
+                isLoading={isLoading}
+                handleQuery={handleSearchSubmit}
+              />
             </div>
-          </form>
+          )}
         </div>
       </div>
     </div>

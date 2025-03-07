@@ -5,8 +5,10 @@ import { AUTH_TOKEN_KEY } from "../constantsPaths/Constant";
 export const baseApi = createApi({
   reducerPath: "baseApi",
   tagTypes: [
+    "profile",
     "category",
     "employess",
+    "employessById",
     "leaves",
     "leaveStatus",
     "punchInOut",

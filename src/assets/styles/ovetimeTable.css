@@ -27,8 +27,13 @@
   font-weight: 400;
 }
 
-.overtime-table tr:nth-child(even) {
+.overtime-table tr:nth-child(odd) {
   background-color: #f9f9f9;
+}
+
+.overtime-table tr:nth-child(even):hover {
+  background-color: #e2e1f7;
+  transition: all 0.2s linear;
 }
 
 .screenshot-thumbnail {

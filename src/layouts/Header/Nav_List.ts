@@ -1,7 +1,7 @@
 export const Nav_List = [
   {
     label: "Employee",
-    href: "Leave",
+    name: "Employee",
     subLinks: [
       {
         label: "Add Employee",
@@ -9,14 +9,12 @@ export const Nav_List = [
       },
       {
         label: "All Employee",
-        href: "/dashboard/employees",
+        href: "/dashboard/all/employees",
       },
-
       {
         label: "Leave",
         href: "/dashboard/leave-details",
       },
-
       // {
       //   label: "Provisional Employee",
       //   href: "",
@@ -38,25 +36,35 @@ export const Nav_List = [
     ],
   },
   {
+    label: "Employees",
+    name: "Employees",
+    href: "/dashboard/employees",
+  },
+  {
     label: "Leave",
+    name: "Leave",
     href: "/dashboard/leave-details",
   },
   {
     label: "OverTime",
+    name: "OverTime",
     href: status === "HR" ? "/dashboard/overtime" : "/overtime",
     // href: "/overtime",
   },
   {
     label: "Documents",
     href: "Leave",
+    name: "Documents",
   },
   {
     label: "Announcements",
     href: "announcements",
+    name: "Announcements",
   },
   {
     label: "Recruitment",
     href: "/dashboard/employee",
+    name: "Recruitment",
     subLinks: [
       {
         label: "Vacancy",
