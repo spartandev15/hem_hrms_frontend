@@ -78,6 +78,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             required={required}
             className="input-animation w-100"
             defaultValue={value || ""}
+            disabled={disabled}
           >
             {options && options.length > 0 ? (
               options?.map((option: any, index: number) => (

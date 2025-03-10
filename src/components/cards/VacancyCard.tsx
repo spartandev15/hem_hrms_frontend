@@ -85,7 +85,7 @@ const VacancyCard: React.FC<VacancyCardProps> = ({
         <div className="position-relative">
           {isOpen && (
             <div
-              className="position-absolute rounded p-2"
+              className="position-absolute rounded p-2 border shadow-sm"
               style={{
                 right: "2%",
                 top: "20%",

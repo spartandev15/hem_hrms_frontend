@@ -180,9 +180,7 @@ const TableRow = ({
   isStatusExist,
   index,
 }: any) => {
-  console.log(record);
   const [isEdit, setIsEdit] = useState(false);
-
   const overTimeFormFields = [
     {
       label: "Overtime Date",

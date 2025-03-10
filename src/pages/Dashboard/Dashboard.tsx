@@ -20,8 +20,6 @@ const Dashboard = () => {
     isLoading: isDashboardDataDetailsLoading,
   } = useGetDashboardDetailsQuery();
 
-  console.log(dashboardDataDetails);
-
   useEffect(() => {
     getTimer();
   }, []);

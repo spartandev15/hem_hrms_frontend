@@ -43,7 +43,7 @@ export const Nav_List = [
   {
     label: "Leave",
     name: "Leave",
-    href: "/dashboard/leave-details",
+    href: "/leaves-details",
   },
   {
     label: "OverTime",
@@ -63,16 +63,15 @@ export const Nav_List = [
   },
   {
     label: "Recruitment",
-    href: "/dashboard/employee",
     name: "Recruitment",
     subLinks: [
-      {
-        label: "Vacancy",
-        href: "vacancies",
-      },
+      // {
+      //   label: "Vacancy",
+      //   href: "/dashboard/vacancies",
+      // },
       {
         label: "Schedule Interview",
-        href: "schedule-interviews",
+        href: "/dashboard/schedule-interviews",
       },
     ],
   },

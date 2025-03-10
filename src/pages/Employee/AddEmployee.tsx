@@ -288,7 +288,6 @@ const AddEmployee = () => {
   ];
 
   const handleFormSubmit = (data: any) => {
-    console.log(data);
     const formData = new FormData();
     if (data.profile_photo.length > 0) {
       formData.append("profile_photo", data.profile_photo[0]);
@@ -300,7 +299,7 @@ const AddEmployee = () => {
 
     dispatch(setIsLoading(true));
     postEmployee(formData);
-    // reset();
+    reset();
   };
 
   const handleSearchSubmit = (query: any) => {
@@ -313,7 +312,8 @@ const AddEmployee = () => {
     if (EmployeeDetailsData?.result && postEmployeeIsSuccess) {
       dispatch(setIsLoading(false));
       dispatch(setToast(EmployeeDetailsData?.message));
-      // navigate("/dashboard/employees");
+      navigate("/dashboard/all/employees");
+      setIsLoading(false);
     } else {
       if (EmployeeDetailsData?.message) {
         dispatch(setIsLoading(false));
@@ -352,8 +352,14 @@ const AddEmployee = () => {
                   width: "fit-content",
                 }}
               >
-                <FaPlus />
-                Enroll New Employee
+                {isOpen ? (
+                  <div>Cancel</div>
+                ) : (
+                  <div className="d-flex align-items-center gap-1">
+                    <FaPlus />
+                    Enroll New Employee
+                  </div>
+                )}
               </button>
             )}
           </div>

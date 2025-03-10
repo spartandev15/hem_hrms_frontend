@@ -15,7 +15,6 @@ import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 
 const Profile = () => {
-  const { pathname } = useLocation();
   const {
     data: userData,
     isLoading,

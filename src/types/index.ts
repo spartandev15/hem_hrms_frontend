@@ -63,6 +63,10 @@ export interface EditableFormProps {
     type?: string;
     value?: string;
     disabled?: boolean;
+    options?: {
+      label: string;
+      name: string;
+    }[];
   }[];
   onSubmit: (values: any) => void;
   defaultValues?: any;

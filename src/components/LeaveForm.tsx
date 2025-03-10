@@ -3,10 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputWithLabel from "../components/ui/InputWithLabel"; // Assuming InputWithLabel is your custom component
-import {
-  useGetAppliedLeavesQuery,
-  usePostLeavesMutation,
-} from "../redux/api/leave";
+import { usePostLeavesMutation } from "../redux/api/leave";
 import { useAppDispatch } from "../hooks/reduxHook";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
@@ -50,10 +47,7 @@ const LeaveApplicationForm: React.FC = () => {
 
       dispatch(setToast(response?.data?.message));
     } catch (err) {
-      console.log(err);
       const error = err as { data: { error: string } };
-
-      console.log(error);
       dispatch(setToast(error.data.error));
     } finally {
       dispatch(setIsLoading(false));

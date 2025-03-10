@@ -45,14 +45,14 @@ const Login = () => {
 
       console.log(LoginDetialsData);
       const { access_token, user } = LoginDetialsData;
-      const { status, id, name, last_name, email } = user;
+      const { status, id, first_name, last_name, email } = user;
       // payload details send to setAuthReducer
       const payloadData = {
         access_token,
         isAuthenticate: true,
         user_id: id,
         status,
-        name,
+        name: first_name,
         last_name,
         email,
       };

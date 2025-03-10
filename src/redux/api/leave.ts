@@ -1,9 +1,9 @@
 import { baseApi } from "../../baseApi/baseApi";
 // Define a service using a base URL and expected endpoints
 
-export const categoryApi = baseApi.injectEndpoints({
+export const leavesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // endpoint for getting all leaves details of users
+    // endpoint for getting all leaves details of users ( hr's end )
     getAllLeaves: builder.query<any, void>({
       query: () => {
         return {
@@ -14,7 +14,7 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: ["leaves"],
     }),
 
-    // endpoint for getting all leaves who applied (users only)
+    // endpoint for getting all leaves status of user who applied (hr's end)
     getAppliedLeaves: builder.query<any, void>({
       query: () => {
         return {
@@ -25,7 +25,7 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: ["leaveStatus"],
     }),
 
-    // endpoint for getting  leaves status who applied (users only)
+    // endpoint for getting all leaves status who applied (users only)
     getAppliedLeavesStatusById: builder.query<any, any>({
       query: (id) => {
         return {
@@ -36,7 +36,7 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: ["leaveStatus"],
     }),
 
-    // endpoint for post apply leaves,
+    // endpoint for post apply leaves user's end (employee),
     postLeaves: builder.mutation<any, any>({
       query: (leaveData) => {
         return {
@@ -48,7 +48,7 @@ export const categoryApi = baseApi.injectEndpoints({
       invalidatesTags: ["leaveStatus"],
     }),
 
-    // endpoint for post apply leaves,
+    // endpoint for update leaves hr's end,
     updateLeavesStatus: builder.mutation<any, any>({
       query: (leaveData) => {
         return {
@@ -70,4 +70,4 @@ export const {
   useGetAppliedLeavesQuery,
   useGetAppliedLeavesStatusByIdQuery,
   useUpdateLeavesStatusMutation,
-} = categoryApi;
+} = leavesApi;

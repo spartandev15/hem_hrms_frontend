@@ -9,8 +9,8 @@ import { capitalizeFirstLetter } from "../utils/capitalizedFirstLetter";
 const LeavesStatusTable: React.FC<{ allAppliedLeavesData: any }> = ({
   allAppliedLeavesData,
 }) => {
+  console.log(allAppliedLeavesData);
   const [allSelected, setAllSelected] = useState<number[]>([]);
-
   const handleSelectAll = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       const ids = allAppliedLeavesData.map((item: any) => item.id);
@@ -21,8 +21,6 @@ const LeavesStatusTable: React.FC<{ allAppliedLeavesData: any }> = ({
     }
   };
 
-  console.log(allSelected);
-
   return (
     <div className="container">
       {allAppliedLeavesData && (
@@ -30,13 +28,13 @@ const LeavesStatusTable: React.FC<{ allAppliedLeavesData: any }> = ({
           <table className="leave-status-table shadow-sm rounded-2 w-100">
             <thead>
               <tr>
-                <th>
+                {/* <th>
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
                     checked={allSelected.length === allAppliedLeavesData.length}
                   />
-                </th>
+                </th> */}
                 <th scope="col">#</th>
                 <th scope="col">Username</th>
                 <th scope="col">Leave Type</th>
@@ -48,7 +46,7 @@ const LeavesStatusTable: React.FC<{ allAppliedLeavesData: any }> = ({
             </thead>
 
             <tbody>
-              {allAppliedLeavesData.map((item: any, itemIndex: number) => (
+              {allAppliedLeavesData?.map((item: any, itemIndex: number) => (
                 <TableRow
                   {...item}
                   itemIndex={itemIndex}
@@ -124,16 +122,16 @@ const TableRow = (item: any) => {
 
   return (
     <tr key={item.id || item.itemIndex}>
-      <td>
+      {/* <td>
         <input
           type="checkbox"
           checked={allSelected?.includes(item.id)}
           onChange={handleSingleSelect}
           value={item.id}
         />
-      </td>
+      </td> */}
       <th>{item.itemIndex + 1}</th>
-      <td>{item?.employee_detail?.name}</td>
+      <td>{`${item?.employee?.first_name} ${item?.employee?.last_name}`}</td>
       <td>{capitalizeFirstLetter(item?.leave_type, "_")}</td>
       <td>{item?.start_date}</td>
       <td>{item?.end_date}</td>

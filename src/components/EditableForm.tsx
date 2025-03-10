@@ -30,6 +30,8 @@ export const EditableForm = ({
                   name={item.name}
                   value={item.value}
                   register={register}
+                  options={item.options}
+                  disabled={item?.disabled}
                 />
               ) : (
                 <InputWithLabel
@@ -39,6 +41,7 @@ export const EditableForm = ({
                   register={register}
                   value={item.value}
                   disabled={item?.disabled}
+                  options={item.options}
                 />
               )}
             </div>

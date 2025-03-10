@@ -46,7 +46,6 @@ const ScheduleInterviewTable = ({ data, isLoading }: any) => {
 
   const handleEdit = async (data: any, id: string) => {
     dispatch(setIsLoading(true));
-    console.log(id);
     const formData = new FormData();
     const date = new Date(data.interview_date)
       .toLocaleDateString("en-GB", {

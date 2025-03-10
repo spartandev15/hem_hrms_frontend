@@ -1,14 +1,10 @@
-import React from "react";
 import LeaveApplicationForm from "../../components/LeaveForm";
-import { useGetEmployeeDetailsByIdQuery } from "../../redux/api/employee";
-import { getLocalStorageItem } from "../../utils/getLocalStorageItem";
-import { AUTH_UID } from "../../constantsPaths/Constant";
-import {
-  useGetAppliedLeavesQuery,
-  useGetAppliedLeavesStatusByIdQuery,
-} from "../../redux/api/leave";
-import { capitalizeFirstLetter } from "../../utils/capitalizedFirstLetter";
 import SpinnerLoader from "../../components/SpinnerLoader";
+import { AUTH_UID } from "../../constantsPaths/Constant";
+import { useGetEmployeeDetailsByIdQuery } from "../../redux/api/employee";
+import { useGetAppliedLeavesStatusByIdQuery } from "../../redux/api/leave";
+import { capitalizeFirstLetter } from "../../utils/capitalizedFirstLetter";
+import { getLocalStorageItem } from "../../utils/getLocalStorageItem";
 
 const EmployeeLeaves = () => {
   const { data: employeeLeavesDetails, isLoading: isLeavesLoading } =
@@ -18,11 +14,11 @@ const EmployeeLeaves = () => {
     useGetAppliedLeavesStatusByIdQuery(getLocalStorageItem(AUTH_UID));
 
   const leaveDataArray = userLeavesStatus?.user?.leaves;
-  const leaves = employeeLeavesDetails?.EmployeeDetails?.leaves;
+  const leaves = employeeLeavesDetails?.user?.leaves_data;
   const leaveData = leaves?.leave_data;
 
   return (
-    <div>
+    <div className="container py-4">
       <div className="row">
         <div className="col-md-6">
           <div className="card shadow-sm mb-4 h-100">
@@ -39,23 +35,18 @@ const EmployeeLeaves = () => {
                 <div className="d-flex flex-column align-items-start">
                   <h6 className="text-center mb-3">
                     <strong>User Name: </strong>
-                    {employeeLeavesDetails?.EmployeeDetails?.name}{" "}
-                    {employeeLeavesDetails?.EmployeeDetails?.last_name}
+                    {employeeLeavesDetails?.user?.user_details?.first_name}{" "}
+                    {employeeLeavesDetails?.user?.user_details?.last_name}
                   </h6>
-
-                  {/* <p className="text-center">
-                  <strong>Employee ID:</strong>{" "}
-                  {employeeLeavesDetails?.user?.employee_id}
-                </p> */}
 
                   <p className="text-center">
                     <strong>Email:</strong>{" "}
-                    {employeeLeavesDetails?.EmployeeDetails?.email}
+                    {employeeLeavesDetails?.user?.user_details?.email}
                   </p>
 
                   <p className="text-center">
                     <strong>Designation:</strong>{" "}
-                    {employeeLeavesDetails?.EmployeeDetails?.designation}
+                    {employeeLeavesDetails?.user?.user_details?.designation}
                   </p>
 
                   {/* <p className="text-center">

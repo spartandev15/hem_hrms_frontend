@@ -17,6 +17,8 @@ const Employees = lazy(() => import("../pages/Employee/Employees"));
 const Category = lazy(() => import("../pages/Category/Category"));
 
 const Leave = lazy(() => import("../pages/Leave/Leave"));
+const EmployeeLeave = lazy(() => import("../pages/Leave/EmployeeLeaves"));
+
 const NotFound = lazy(() => import("../pages/NotFound/NotFound"));
 const EmployeeDetails = lazy(() => import("../pages/Employee/EmployeeDetails"));
 
@@ -50,6 +52,7 @@ import ChangePassword from "../pages/Auth/ChangePassword";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/SingUp";
+// import EmployeeLeaves from "../pages/Leave/EmployeeLeaves";
 // import Profile from "../pages/Profile/Profile";
 // import AddEmployee from "../pages/Employee/AddEmployee";
 // import Employees from "../pages/Employee/Employees";
@@ -186,14 +189,14 @@ const Navigation = () => {
               </Suspense>
             }
           />
-          <Route
+          {/* <Route
             path="vacancies"
             element={
               <Suspense fallback={""}>
                 <Vacancy />
               </Suspense>
             }
-          />
+          /> */}
           <Route
             path="vacancy-details/:id"
             element={
@@ -255,6 +258,15 @@ const Navigation = () => {
           />
 
           <Route
+            path="/leaves-details"
+            element={
+              <Suspense fallback={""}>
+                <EmployeeLeave />
+              </Suspense>
+            }
+          />
+
+          <Route
             path="/employee-details/:employee-name/:id"
             element={
               <Suspense fallback={""}>
@@ -268,7 +280,14 @@ const Navigation = () => {
           </Route> */}
         </Route>
 
-        <Route path="*" element={<NotFound />} />
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={""}>
+              <NotFound />
+            </Suspense>
+          }
+        />
       </Routes>
     </React.Fragment>
   );

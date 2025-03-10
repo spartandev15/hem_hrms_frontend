@@ -29,8 +29,6 @@ const NoticeCard = ({
       ? `${description.slice(0, 150)}...`
       : description;
 
-  console.log(truncatedDescription);
-
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
   };

@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useAppDispatch } from "../hooks/reduxHook";
 import {
-  usePunchOutMutation,
   usePunchInMutation,
   usePunchInOutDetailsQuery,
+  usePunchOutMutation,
   useResumeTimeMutation,
 } from "../redux/api/punchInOut";
-import { getLocalStorageItem } from "../utils/getLocalStorageItem";
-import { number } from "zod";
-import { formatDateType, formatElapsedTime } from "../utils/formatDate";
-import { useAppDispatch } from "../hooks/reduxHook";
 import { setIsLoading } from "../redux/slices/loadingSlice";
+import { formatElapsedTime } from "../utils/formatDate";
+import { getLocalStorageItem } from "../utils/getLocalStorageItem";
 import SpinnerLoader from "./SpinnerLoader";
+import ConfirmDialog from "./ConfirmDialog";
 
 const PunchInOut = () => {
+  const [isConfirmPunchOut, setIsConfirmPunchOut] = useState(false);
   const [isPunchIn, setPunchIn] = useState(false);
   const [isPunchOut, setPunchOut] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -121,6 +122,12 @@ const PunchInOut = () => {
     }
   };
 
+  // call punchout if confirm box true
+  const handleConfirmClose = (confrim: boolean) => {
+    if (confrim) PunchOut();
+    setIsConfirmPunchOut(!isConfirmPunchOut);
+  };
+
   // const currentDate = new Date().toLocaleDateString();
 
   useEffect(() => {
@@ -211,7 +218,7 @@ const PunchInOut = () => {
                 {punchInOutDataDetals?.data && (
                   <button
                     type="button"
-                    onClick={PunchOut}
+                    onClick={() => setIsConfirmPunchOut(!isConfirmPunchOut)}
                     className="btn mybtn punch-btn"
                     style={{
                       opacity:
@@ -278,6 +285,13 @@ const PunchInOut = () => {
               </div>
             )}
           </div>
+
+          <ConfirmDialog
+            message="Are you sure you want to punch out?'"
+            header="Confirm Punch Out"
+            isOpen={isConfirmPunchOut}
+            onClose={handleConfirmClose}
+          />
         </div>
       )}
     </div>

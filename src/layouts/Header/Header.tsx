@@ -25,8 +25,6 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const { data: userData, isLoading } = useGetProfileQuery();
 
-  console.log(userData);
-
   const [authLogout, { data: logoutDetails, isSuccess: logoutIsSuccess }] =
     useAuthLogoutMutation();
 
@@ -74,7 +72,10 @@ const Header = () => {
       return {
         ...item,
         label: "Overtime",
-        href: status === "HR" ? "/dashboard/overtime" : "/overtime",
+        href:
+          status === "HR" || status === "owner"
+            ? "/dashboard/overtime"
+            : "/overtime",
       };
     } else if (item.label === "Announcements") {
       return {
@@ -86,8 +87,12 @@ const Header = () => {
       return {
         ...item,
         label: "Document",
-        href: status === "HR" ? "/dashboard/documents" : "/documents",
+        href:
+          status === "HR" || status === "owner"
+            ? "/dashboard/documents"
+            : "/documents",
       };
+
       // } else if (item.label === "Leave") {
       //   if (status === "HR") {
       //     return null;

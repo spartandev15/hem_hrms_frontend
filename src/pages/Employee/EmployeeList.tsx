@@ -18,6 +18,7 @@ import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 import { EmployeeCardProps } from "../../types";
 import { employeeFormSchema } from "../../validations/formValidation";
+import { IoMdSearch } from "react-icons/io";
 
 const EmployeeList = ({
   data,
@@ -67,21 +68,26 @@ const EmployeeList = ({
       <div>
         <form>
           <div className="row">
-            <div className="col-sm-3 input-wrapper">
+            <div className="col-sm-3 input-wrapper position-relative">
               <input
                 type="text"
                 name="search"
                 onChange={handleSearchChange}
-                placeholder="employee id"
+                placeholder="Employee Id"
               />
-              {/* <InputWithLabel
-                type="text"
-                register={register}
-                name="employee_id"
-                placeholder="employee id"
-                labelAnimated={false}
-                onChange={handleSearchChange}
-              /> */}
+
+              <div
+                className="position-absolute"
+                style={{
+                  top: "50%",
+                  right: "7%",
+                  transform: "translate(0%, -50%)",
+                  zIndex: 99,
+                  background: "#fff",
+                }}
+              >
+                <IoMdSearch size={20} />
+              </div>
             </div>
 
             {/* <div className="col-sm-3">
@@ -267,6 +273,7 @@ const TableRow = ({
       value: record.phone,
     },
     {
+      label: "Designation",
       name: "designation",
       type: "select",
       options: items?.map((category) => ({
@@ -275,7 +282,6 @@ const TableRow = ({
       })),
       required: true,
       value: record.designation,
-      labelAnimated: false,
     },
     {
       label: "DOB",
@@ -449,14 +455,11 @@ const TableRow = ({
       if (key !== "profile_photo") formData.append(key, String(value));
     });
 
-    // for (let pair of formData.entries()) {
-    //   console.log(pair);
-    // }
-
     try {
       dispatch(setIsLoading(true));
       const response = await updateEmployee(formData);
       dispatch(setToast(response?.data?.message));
+      setIsEdit(false);
     } catch (error) {
       console.log(error);
     } finally {
@@ -617,7 +620,7 @@ const TableRow = ({
                       type={item.type}
                       value={item.value}
                       options={item.options}
-                      labelAnimated={item.labelAnimated}
+                      // labelAnimated={item.labelAnimated}
                       accept={item.accept}
                       disabled={item.disabled}
                     />

@@ -2,16 +2,22 @@ import { useState } from "react";
 import { EditableForm } from "./EditableForm";
 import { ProfileCommonSection } from "./ProfileCommonSection";
 import { useLocation } from "react-router-dom";
-import { useAppDispatch } from "../hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import { useUpdateEmployeeMutation } from "../redux/api/employee";
 import { setToast } from "../redux/slices/toastSlice";
+import { useUpdateProfileMutation } from "../redux/api/profile";
+import { getFirstAndLastName } from "../utils/getFirstAndLastName";
 
 const GeneralTabContent = ({ data, isEdit, role }: any) => {
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
+  const { items } = useAppSelector((state) => state.dropdown);
   const [showEditableForm, setShowEditableForm] = useState(false);
   const [updateEmployee] = useUpdateEmployeeMutation();
+  const [updateProfile] = useUpdateProfileMutation();
+
+  console.log(items);
 
   const GeneralFields = [
     {
@@ -19,9 +25,12 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
       items: [
         {
           label: "Full Name",
-          value: data?.user_details.name as string,
+          value:
+            (data?.user_details.first_name as string) +
+            " " +
+            data?.user_details.last_name,
           type: "text",
-          name: "name",
+          name: "full_name",
           disabled: false,
         },
         {
@@ -47,7 +56,6 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
           disabled:
             role === "owner" ? false : pathname === "/profile" ? true : false,
         },
-
         {
           label: "Date of Birth",
           value: data?.user_details?.date_of_birth as string,
@@ -64,12 +72,26 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
         },
         {
           label: "Position",
-          value: data?.user_details.designation as string,
-          type: "text",
           name: "designation",
+          type: "select",
+          options: items?.map((category) => ({
+            label: category.name,
+            value: category.name,
+          })),
+          required: true,
+          value: data?.user_details.designation as string,
+          labelAnimated: false,
           disabled:
             role === "owner" ? false : pathname === "/profile" ? true : false,
         },
+        // {
+        //   label: "Position",
+        //   value: data?.user_details.designation as string,
+        //   type: "text",
+        //   name: "designation",
+        //   disabled:
+        //     role === "owner" ? false : pathname === "/profile" ? true : false,
+        // },
       ],
     },
     {
@@ -305,7 +327,7 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
   ];
 
   const updatedFields = GeneralFields.map((field) => {
-    if (role === "owner") {
+    if (role === "owner" && pathname === "/profile") {
       if (
         field.title === "Salary" ||
         field.title === "Bank Details" ||
@@ -326,12 +348,32 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
   const handleSubmitFormEdit = async (formDataFields: any) => {
     try {
       dispatch(setIsLoading(true));
+      const { first_name, last_name } = getFirstAndLastName(
+        formDataFields.full_name
+      );
+
       const formData = new FormData();
       formData.append("id", data?.user_details?.id);
       Object.entries(formDataFields).map(([key, value]) => {
+        if (key === "full_name") {
+          return;
+        }
         formData.append(key, String(value));
       });
-      const response = await updateEmployee(formData);
+
+      formData.append("first_name", first_name);
+      formData.append("last_name", last_name);
+
+      // for (let [key, value] of formData.entries()) {
+      //   console.log([key, value]);
+      // }
+
+      let response;
+      if (pathname === "/profile") {
+        response = await updateProfile(formData);
+      } else {
+        response = await updateEmployee(formData);
+      }
       dispatch(setToast(response?.data?.message));
       setShowEditableForm(false);
     } catch (error) {
@@ -349,7 +391,7 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
             <EditableForm
               fields={Fields}
               defaultValues={{
-                name: data?.user_details?.name,
+                full_name: `${data?.user_details?.first_name} ${data?.user_details?.last_name}`,
                 email: data?.user_details?.email,
                 address: data?.user_details?.address,
                 phone: data?.user_details?.phone,
