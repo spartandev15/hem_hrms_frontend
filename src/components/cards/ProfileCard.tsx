@@ -8,7 +8,7 @@ import { ProfileCardProps } from "../../types";
 const profilePhoto = "/images/profile.png";
 
 const ProfileCard = ({ data, onProfileChange }: ProfileCardProps) => {
-  const [previewImage, setPreviewImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const profilePicRef = useRef<HTMLInputElement | null>(null);
   const { status } = useAppSelector((state) => state.authUser);
 
@@ -18,7 +18,9 @@ const ProfileCard = ({ data, onProfileChange }: ProfileCardProps) => {
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
-          setPreviewImage(reader.result); // Set preview image URL
+          if (typeof reader.result === "string" || reader.result === null) {
+            setPreviewImage(reader.result); // Set preview image URL
+          } // Set preview image URL
         };
         reader.readAsDataURL(file);
 
@@ -76,7 +78,7 @@ const ProfileCard = ({ data, onProfileChange }: ProfileCardProps) => {
         />
 
         <h2 className="font-weight-bold text-large profile-heading">
-          {data?.name} {data?.last_name}
+          {data?.first_name} {data?.last_name}
           {/* {userData?.user?.last_name as string}  */}
         </h2>
 

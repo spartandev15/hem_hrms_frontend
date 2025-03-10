@@ -43,7 +43,7 @@ export interface IProfileCommonSection {
 export interface ProfileCardProps {
   data: {
     id?: string;
-    name?: string;
+    first_name?: string;
     last_name?: string;
     designation?: string;
     phone?: number;
