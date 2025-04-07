@@ -30,7 +30,7 @@ const EmployeeList = ({
   handleQuery?: (query: string) => void;
 }) => {
   // const [searchEmployee] = useLazySerachEmployeesQuery();
-  const { debouncedQuery, setQuery } = useDebouncedSearch("", 600);
+  const { debouncedQuery, setQuery } = useDebouncedSearch("", 300);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;

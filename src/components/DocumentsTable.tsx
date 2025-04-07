@@ -18,6 +18,8 @@ import { Link } from "react-router-dom";
 import { GiConfirmed } from "react-icons/gi";
 import { IoMdCloseCircle } from "react-icons/io";
 import { FaEye, FaRegFilePdf } from "react-icons/fa";
+import ReactPaginate from "react-paginate";
+import { MdOutlineSkipNext } from "react-icons/md";
 
 const DocumentsTable = ({ data, isLoading }: any) => {
   const [screenShotPreviewImage, setScreenShotPreviewImage] = useState("");
@@ -274,9 +276,9 @@ const TableRow = ({
         <td>{record?.user.name}</td>
         <td>
           <div>
-            {record?.tenth_dmc.status === "uploaded" ? (
+            {record?.tenth_dmc?.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
-                <Link to={record.tenth_dmc.url} target="_blank">
+                <Link to={record?.tenth_dmc?.url} target="_blank">
                   <FaRegFilePdf size={17} color="#5D848B" />
                 </Link>
                 <GiConfirmed color="#32AC31" size={17} />
@@ -290,7 +292,7 @@ const TableRow = ({
         </td>
         <td>
           <div>
-            {record?.twelfth_dmc.status === "uploaded" ? (
+            {record?.twelfth_dmc?.status === "uploaded" ? (
               <div className="d-flex gap-1 align-items-center justify-content-center">
                 <Link to={record.twelfth_dmc.url} target="_blank">
                   <FaRegFilePdf size={17} color="#5D848B" />
@@ -320,6 +322,7 @@ const TableRow = ({
             )}
           </div>
         </td>
+
         <td>
           <div>
             {record?.aadhaar_card?.status === "uploaded" ? (
@@ -336,6 +339,7 @@ const TableRow = ({
             )}
           </div>
         </td>
+
         <td>
           <div>
             {record?.pan_card?.status === "uploaded" ? (
@@ -352,6 +356,7 @@ const TableRow = ({
             )}
           </div>
         </td>
+
         <td>
           <div>
             {record?.previous_experience?.length > 0 ? (
@@ -363,7 +368,11 @@ const TableRow = ({
                         <FaRegFilePdf size={17} color="#5D848B" />
                       </Link>
                       {item.status === "uploaded" ? (
-                        <GiConfirmed color="#32AC31" size={17} />
+                        <GiConfirmed
+                          color="#32AC31"
+                          size={17}
+                          className="mt-1"
+                        />
                       ) : (
                         <IoMdCloseCircle color="#C20000" size={17} />
                       )}
@@ -375,6 +384,7 @@ const TableRow = ({
             )}
           </div>
         </td>
+
         <td>
           <div>
             {record?.previous_salary_slip?.length > 0 ? (
@@ -385,7 +395,7 @@ const TableRow = ({
                       <FaRegFilePdf size={17} color="#5D848B" />
                     </Link>
                     {item.status === "uploaded" ? (
-                      <GiConfirmed color="#32AC31" size={17} />
+                      <GiConfirmed color="#32AC31" size={17} className="mt-1" />
                     ) : (
                       <IoMdCloseCircle color="#C20000" size={17} />
                     )}
@@ -399,6 +409,7 @@ const TableRow = ({
             )}
           </div>
         </td>
+
         <td>
           <div>
             <Link to={`/dashboard/documents/${record?.id}`}>

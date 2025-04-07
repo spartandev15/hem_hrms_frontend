@@ -40,7 +40,7 @@ const Profile = () => {
   //   profile_photo: oldData?.profile_photo || "",
   // });
 
-  const handleProfileChange = async (profile: File, id: string) => {
+  const handleProfileChange = async (profile: File) => {
     try {
       dispatch(setIsLoading(true));
       const formData = new FormData();

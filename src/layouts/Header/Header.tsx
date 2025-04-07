@@ -15,15 +15,44 @@ import { useGetProfileQuery } from "../../redux/api/profile";
 import { Nav_List } from "./Nav_List";
 
 import user from "../../assets/images/account.png";
-import logo from "../../assets/images/orpect1.png";
+import logo from "../../assets/images/orpect-logo.webp";
+
+import { baseApi } from "../../baseApi/baseApi";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
 import { logoutAuthUser } from "../../redux/slices/authSlice";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
-import { baseApi } from "../../baseApi/baseApi";
+
+import { getToken, onMessage } from "firebase/messaging";
+import { NotificationComp } from "../../components/Notification";
+import { messaging } from "../../firebase";
+
+const { VITE_APP_VAPID_KEY } = import.meta.env;
+
+const notificationData = [
+  {
+    title: "Hem Bhadur",
+  },
+
+  {
+    title: "Notification 1",
+  },
+
+  {
+    title: "Notification 1",
+  },
+  {
+    title: "Notification 1",
+  },
+  {
+    title: "Notification 1",
+  },
+];
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const { data: userData, isLoading } = useGetProfileQuery();
+  const [showNotification, setShowNotification] = useState(false);
+  const [allNotification, setAllNotification] = useState([]);
 
   const [authLogout, { data: logoutDetails, isSuccess: logoutIsSuccess }] =
     useAuthLogoutMutation();
@@ -92,14 +121,39 @@ const Header = () => {
             ? "/dashboard/documents"
             : "/documents",
       };
-
-      // } else if (item.label === "Leave") {
-      //   if (status === "HR") {
-      //     return null;
-      //   }
     }
     return item;
   });
+
+  async function requestPermission() {
+    //requesting permission using Notification API
+    const permission = await Notification.requestPermission();
+
+    if (permission === "granted") {
+      const token = await getToken(messaging, {
+        vapidKey: VITE_APP_VAPID_KEY,
+      });
+
+      //We can send token to server
+    } else if (permission === "denied") {
+      //notifications are blocked
+      // alert("You denied for the notification");
+    }
+
+    onMessage(messaging, (payload) => {
+      const { title, body } = payload.notification as {
+        title: string;
+        body: string;
+      };
+
+      const obj = {
+        title,
+        body,
+      };
+
+      setAllNotification((prev) => [...prev, obj]);
+    });
+  }
 
   useEffect(() => {
     if (logoutDetails?.result && logoutIsSuccess) {
@@ -109,6 +163,10 @@ const Header = () => {
       dispatch(baseApi.util.resetApiState());
     }
   }, [logoutDetails]);
+
+  useEffect(() => {
+    requestPermission();
+  }, []);
 
   return (
     <header>
@@ -120,7 +178,7 @@ const Header = () => {
             className="header-logo"
             onClick={() => navigate("/dashboard")}
           >
-            <img src={logo} alt="Orpect" width={150} />
+            <img src={logo} alt="Orpect-Logo" />
           </Link>
 
           {/* navigation Links  */}
@@ -201,13 +259,52 @@ const Header = () => {
             className="d-flex gap-3 align-items-center position-relative"
             ref={profileDropDwonRef}
           >
-            <div>
-              <FaBell
-                size={18}
-                style={{
-                  color: "#F6A21E",
-                }}
-              />
+            <div
+              onMouseEnter={() => setShowNotification(true)} // Show on hover of bell or dropdown
+              onMouseLeave={() => setShowNotification(false)}
+            >
+              <div className="position-relative">
+                <FaBell
+                  size={22}
+                  style={{
+                    color: "#F6A21E",
+                  }}
+                />
+
+                {allNotification.length > 0 && (
+                  <span
+                    className="position-absolute d-flex justify-content-center align-items-center"
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                      backgroundColor: "#E8323B",
+                      color: "#fff",
+                      borderRadius: "100%",
+                      fontSize: "9px",
+                      fontWeight: "bold",
+                      top: "5%",
+                      right: "-20%",
+                    }}
+                  >
+                    {allNotification.length}
+                  </span>
+                )}
+              </div>
+
+              {showNotification && allNotification.length > 0 && (
+                <div
+                  className="position-absolute border shadow-sm notification-container"
+                  style={{
+                    top: "90%",
+                    background: "#fff",
+                    borderRadius: "4px",
+                    transform: "translate(-50%, 0%)",
+                    zIndex: 999,
+                  }}
+                >
+                  <NotificationComp data={allNotification} />
+                </div>
+              )}
             </div>
 
             <div
@@ -316,66 +413,72 @@ const MobileNav = ({
       }}
     >
       <ul className="mobile-nav-list mt-3">
-        {navLists.map((link: any, index: number) => (
-          <li key={index} className="text-large">
-            <div
-              onClick={() => {
-                if (link.subLinks) {
-                  toggleMobileSubLinks(index); // Toggle sublinks visibility on click
-                }
-              }}
-              className="nav-item-toggle d-flex align-items-center nav-links"
-            >
-              {link?.subLinks ? (
-                <div>
-                  {link?.label === "Employee" && status != "HR"
-                    ? null
-                    : link?.label}
-                </div>
-              ) : (
-                <Link
-                  to={link?.href}
-                  className="text-black"
-                  onClick={() => toggleMobileNav(false)}
-                >
-                  {link?.label}
-                </Link>
-              )}
+        {navLists.map((link: any, index: number) => {
+          if (link.name === "Employees" && status === "HR") return null;
+          else if (link.label === "Leave" && status === "owner") return null;
 
-              {link?.label === "Employee" && status != "HR"
-                ? null
-                : link?.subLinks && (
-                    <FaCaretDown
-                      size={12}
-                      style={{
-                        marginLeft: "8px",
-                        transform:
-                          subLinksVisible === index
-                            ? "rotate(180deg)"
-                            : "rotate(0deg)",
-                      }}
-                    />
-                  )}
-            </div>
-
-            {/* Show sublinks if this parent link is active and has sublinks */}
-            {link?.subLinks && subLinksVisible === index && (
-              <ul className="sublinks-list">
-                {link.subLinks.map((subLink: any, subIndex: number) => (
-                  <li
-                    key={subIndex}
-                    className="m-0 py-1"
+          return (link.label === "Leave" && status === "HR") ||
+            (link.name === "Employees" && status === "employee") ? null : (
+            <li key={index} className="text-large">
+              <div
+                onClick={() => {
+                  if (link.subLinks) {
+                    toggleMobileSubLinks(index); // Toggle sublinks visibility on click
+                  }
+                }}
+                className="nav-item-toggle d-flex align-items-center nav-links"
+              >
+                {link?.subLinks ? (
+                  <div>
+                    {link?.label === "Employee" && status != "HR"
+                      ? null
+                      : link?.label}
+                  </div>
+                ) : (
+                  <Link
+                    to={link?.href}
+                    className="text-black"
                     onClick={() => toggleMobileNav(false)}
                   >
-                    <Link className="text-black" to={subLink.href}>
-                      {subLink.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
+                    {link?.label}
+                  </Link>
+                )}
+
+                {link?.label === "Employee" && status != "HR"
+                  ? null
+                  : link?.subLinks && (
+                      <FaCaretDown
+                        size={12}
+                        style={{
+                          marginLeft: "8px",
+                          transform:
+                            subLinksVisible === index
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)",
+                        }}
+                      />
+                    )}
+              </div>
+
+              {/* Show sublinks if this parent link is active and has sublinks */}
+              {link?.subLinks && subLinksVisible === index && (
+                <ul className="sublinks-list">
+                  {link.subLinks.map((subLink: any, subIndex: number) => (
+                    <li
+                      key={subIndex}
+                      className="m-0 py-1"
+                      onClick={() => toggleMobileNav(false)}
+                    >
+                      <Link className="text-black" to={subLink.href}>
+                        {subLink.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          );
+        })}
       </ul>
       {/* <ul className="mobile-nav-list mt-4">
         {Nav_List.map((link, index) => (

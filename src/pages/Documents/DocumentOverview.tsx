@@ -136,9 +136,9 @@ const DocumentOverview = () => {
           } else if (typeof value === "object") {
             // If it's a nested object (e.g., aadhaar_card, pan_card)
             filteredData[key] = {
-              name: value.name,
-              url: value.url,
-              status: value.status,
+              name: value?.name,
+              url: value?.url,
+              status: value?.status,
             };
           }
         });
@@ -173,19 +173,20 @@ const DocumentOverview = () => {
         <div className="container py-4">
           {/* User Information */}
           <div className="user-info">
-            <h1 className="text-large">{docDetails?.data?.user.name}</h1>
+            <h1 className="text-large">{docDetails?.data?.user?.name}</h1>
             <p>
               {" "}
               <strong>Email:</strong> {docDetails?.data?.user?.email}
             </p>
             <p>
               {" "}
-              <strong>Employee ID:</strong> {docDetails?.data?.user.employee_id}
+              <strong>Employee ID:</strong>{" "}
+              {docDetails?.data?.user?.employee_id}
             </p>
             <p>
               {" "}
               <strong>Designation: </strong>{" "}
-              {docDetails?.data?.user.designation}
+              {docDetails?.data?.user?.designation}
             </p>
           </div>
 
@@ -199,14 +200,18 @@ const DocumentOverview = () => {
               {Object.keys(filterDocument).length > 0 ? (
                 Object.keys(filterDocument).map((docKey) => {
                   const document = filterDocument[docKey];
+
                   // Check if document is an array (like previous_experience, previous_salary_slip)
                   if (Array.isArray(document)) {
                     return document.map((item, index) => (
                       <div className=" col-md-4" key={`${docKey}-${index}`}>
                         <div className="px-2 document-card">
-                          <h3>
-                            {docKey.replace(/_/g, " ").toUpperCase()}{" "}
-                            {index + 1}
+                          <h3
+                            style={{
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {docKey.replace(/_/g, " ")} {index + 1}
                           </h3>
 
                           <p className="d-flex align-items-center gap-2">
@@ -260,60 +265,68 @@ const DocumentOverview = () => {
 
                   // If it's a single document (like aadhaar_card, pan_card, etc.)
                   return (
-                    <div className="col-md-4" key={docKey}>
-                      <div className="document-card px-2">
-                        <h3>{document.name}</h3>
-
-                        <p className="d-flex align-items-center gap-2">
-                          <strong>Status:</strong>
-                          <span
-                            className={`badge ${
-                              document?.status === "uploaded"
-                                ? "bg-success"
-                                : document?.status === "rejected"
-                                ? "bg-danger"
-                                : "bg-warning"
-                            }`}
+                    document.name != null && (
+                      <div className="col-md-4" key={docKey}>
+                        <div className="document-card px-2">
+                          <h3
+                            style={{
+                              textTransform: "capitalize",
+                            }}
                           >
-                            {document?.status}
-                          </span>
-                        </p>
+                            {document.name.replace(/_/g, " ")}
+                          </h3>
 
-                        {document.status === "pending" && (
-                          <div className="d-flex gap-1">
-                            <MdOutlineNotInterested size={22} color="red" />
-                            <p>Document not uploaded yet!</p>
-                          </div>
-                        )}
-
-                        {/* Status Change Dropdown */}
-                        {document.status !== "pending" && (
-                          <select
-                            value={document.status}
-                            onChange={(e) =>
-                              handleStatusChange(docKey, e.target.value)
-                            }
-                          >
-                            <option value="uploaded">Uploaded</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="pending">Pending</option>
-                          </select>
-                        )}
-
-                        {/* Document Preview Link */}
-                        {document?.url && (
-                          <div className="document-preview">
-                            <Link
-                              to={document.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                          <p className="d-flex align-items-center gap-2">
+                            <strong>Status:</strong>
+                            <span
+                              className={`badge ${
+                                document?.status === "uploaded"
+                                  ? "bg-success"
+                                  : document?.status === "rejected"
+                                  ? "bg-danger"
+                                  : "bg-warning"
+                              }`}
                             >
-                              View Document
-                            </Link>
-                          </div>
-                        )}
+                              {document?.status}
+                            </span>
+                          </p>
+
+                          {document.status === "pending" && (
+                            <div className="d-flex gap-1">
+                              <MdOutlineNotInterested size={22} color="red" />
+                              <p>Document not uploaded yet!</p>
+                            </div>
+                          )}
+
+                          {/* Status Change Dropdown */}
+                          {document.status !== "pending" && (
+                            <select
+                              value={document.status}
+                              onChange={(e) =>
+                                handleStatusChange(docKey, e.target.value)
+                              }
+                            >
+                              <option value="uploaded">Uploaded</option>
+                              <option value="rejected">Rejected</option>
+                              <option value="pending">Pending</option>
+                            </select>
+                          )}
+
+                          {/* Document Preview Link */}
+                          {document?.url && (
+                            <div className="document-preview">
+                              <Link
+                                to={document.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                View Document
+                              </Link>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    )
                   );
                 })
               ) : (

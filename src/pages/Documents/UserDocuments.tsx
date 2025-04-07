@@ -39,6 +39,7 @@ const UserDocuments = () => {
   // ]);
   return (
     <div className="container py-4">
+      {/* documents list  */}
       <div>
         <h2 className="text-start text-blue-primary m-0 text-large">
           Your Uploaded Documents
@@ -52,8 +53,10 @@ const UserDocuments = () => {
           <UserDocumentStatus documents={data?.data} />
         )}
       </div>
+
+      {/* upload documents form  */}
       <div className="mt-4">
-        <UserDocumentsForm />
+        <UserDocumentsForm uploadedDocumets={data?.data} />
       </div>
     </div>
   );

@@ -103,6 +103,10 @@ input[type="number"] {
 .bg-blue-primary {
   background-color: var(--primary-color);
 }
+
+.bg-gray {
+  background-color: var(--bs-border-color);
+}
 /* common btn class for buttons  */
 .btn {
   width: 100%;
@@ -136,7 +140,8 @@ input[type="number"] {
 }
 
 .react-paginate {
-  background-color: var(--bs-border-color);
+  width: 100%;
+  /* background-color: var(--bs-border-color); */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -171,6 +176,11 @@ input[type="number"] {
   color: var(--bs-border-color);
   padding: 0.2rem 0.4rem;
 }
+
+/* .orpect-logo {
+  width: 150px;
+  object-fit: contain;
+} */
 
 /*Table CSS*/
 .table-scroll {

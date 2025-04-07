@@ -4,10 +4,22 @@ import { baseApi } from "../../baseApi/baseApi";
 export const leavesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // endpoint for getting all leaves details of users ( hr's end )
-    getAllLeaves: builder.query<any, void>({
-      query: () => {
+    getAllLeaves: builder.query<any, any>({
+      query: (query) => {
+        let url = `/api/get/employeesLeaves`;
+
+        // Append pagination params if present
+        if (query.per_page && query.page) {
+          url = `${url}?per_page=${query.per_page}&page=${query.page}`;
+        }
+
+        // Append search_query if it's provided
+        if (query.search_query) {
+          url = `${url}&search_query=${query.search_query}`;
+        }
+
         return {
-          url: "/api/get/employeesLeaves",
+          url: url,
           method: "GET",
         };
       },

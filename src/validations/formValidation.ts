@@ -1,6 +1,11 @@
 import { z } from "zod";
 
 // Define Zod validation schema
+export const loginFormSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Invalid email format"),
+  password: z.string().min(1, "Password should not empty"),
+});
+
 export const employeeFormSchema = z
   .object({
     password: z
@@ -15,12 +20,11 @@ export const employeeFormSchema = z
 
     designation: z
       .string()
-      .min(1, "Designation is required") // Make sure the select has a value selected
-      .default("defaultDesignation"), // Ensure a default value
+      // .min(1, "Designation is required") // Make sure the select has a value selected
+      .optional(), // Ensure a default value
 
     role: z
-      .string()
-      .min(1, "role is required") // Make sure the select has a value selected
+      .string() // Make sure the select has a value selected
       .optional(),
 
     email: z.string().min(1, "Email is required").email("Invalid email format"),
@@ -117,14 +121,16 @@ export const overTimeFormSchema = z.object({
     }),
 
   // Final Balance
-  final_balance: z
-    .string()
-    .min(1, "Final balance is required")
-    .regex(/^\d+(\.\d{1,2})?$/, "Invalid balance format")
-    .transform(Number)
-    .refine((balance) => balance >= 0, {
-      message: "Final balance must be greater than or equal to 0",
-    }),
+  // final_balance: z
+  //   .string()
+  //   .min(1, "Final balance is required")
+  //   .regex(/^\d+(\.\d{1,2})?$/, "Invalid balance format")
+  //   .transform(Number)
+  //   .refine((balance) => balance >= 0, {
+  //     message: "Final balance must be greater than or equal to 0",
+  //   }),
+
+  final_balance: z.string().optional(),
 
   // Project Name
   project_name: z.string().min(1, "Project name is required"),

@@ -10,6 +10,8 @@ import { setToast } from "../../redux/slices/toastSlice";
 import { LoginFormData } from "../../types";
 import { useForm } from "react-hook-form";
 import InputWithLabel from "../../components/ui/InputWithLabel";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginFormSchema } from "../../validations/formValidation";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,7 +19,13 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { handleSubmit, register } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginFormSchema),
+  });
 
   // hook to get the response from the mutation of authLogin mutation
   const [authLogin, { data: LoginDetialsData, isSuccess: loginIsSuccess }] =
@@ -100,8 +108,14 @@ const Login = () => {
                       label="Email"
                       register={register}
                       type="email"
-                      required
                     />
+
+                    {errors.email && (
+                      <p className="text-danger text-start">
+                        {errors?.email?.message as string}
+                      </p>
+                    )}
+
                     {/* <input
                       type="text"
                       id="username"
@@ -124,8 +138,13 @@ const Login = () => {
                       label="Password"
                       register={register}
                       type="password"
-                      required
                     />
+
+                    {errors.password && (
+                      <p className="text-danger text-start">
+                        {errors?.password?.message as string}
+                      </p>
+                    )}
                     {/* <input
                       type="password"
                       id="password"

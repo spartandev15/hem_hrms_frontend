@@ -118,7 +118,7 @@ const ScheduleInterviewTable = ({ data, isLoading }: any) => {
   return (
     <div>
       <h2 className="text-start text-small text-blue-primary m-0">
-        Schedules Interviews
+        Scheduled Interviews
       </h2>
 
       <div className="overflow-x-auto">

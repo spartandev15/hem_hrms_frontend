@@ -64,15 +64,20 @@ export const Nav_List = [
   {
     label: "Recruitment",
     name: "Recruitment",
-    subLinks: [
-      // {
-      //   label: "Vacancy",
-      //   href: "/dashboard/vacancies",
-      // },
-      {
-        label: "Schedule Interview",
-        href: "/dashboard/schedule-interviews",
-      },
-    ],
+    href: "/dashboard/schedule-interviews",
   },
+  // {
+  //   label: "Recruitment",
+  //   name: "Recruitment",
+  //   subLinks: [
+  //     // {
+  //     //   label: "Vacancy",
+  //     //   href: "/dashboard/vacancies",
+  //     // },
+  //     {
+  //       label: "Schedule Interview",
+  //       href: "/dashboard/schedule-interviews",
+  //     },
+  //   ],
+  // },
 ];

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { TiEdit } from "react-icons/ti";
-import { useAppDispatch } from "../hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHook";
 import { useUpdateLeavesStatusMutation } from "../redux/api/leave";
 import { useUpdateOverTimeStatusMutation } from "../redux/api/overTime";
 import { setIsLoading } from "../redux/slices/loadingSlice";
@@ -20,6 +20,8 @@ const OverTimeManagementTable: React.FC<{
   const handleViewScreenshot = (screenshotImtUrl: string) => {
     setScreenShotPreviewImage(screenshotImtUrl);
   };
+
+  const { status } = useAppSelector((state) => state.authUser);
 
   return (
     <div className="container">
@@ -56,6 +58,7 @@ const OverTimeManagementTable: React.FC<{
                   {...item}
                   itemIndex={itemIndex}
                   handleViewScreenshot={handleViewScreenshot}
+                  role={status}
                 />
               ))
             ) : (
@@ -351,39 +354,50 @@ const TableRow = (record: any) => {
                     : "#fff",
               }}
             >
-              <select
-                className="text-xsmall"
-                value={record.status}
-                onChange={handleStatusChange}
+              {record.role === "owner" ? (
+                <div className="px-2">{record.status}</div>
+              ) : (
+                <select
+                  className="text-xsmall"
+                  value={record.status}
+                  onChange={handleStatusChange}
+                  style={{
+                    width: "fit-content",
+                    cursor: "pointer",
+                    background: "transparent",
+                    border: "none",
+                    color: "#fff",
+                    padding: "3px 0px",
+                  }}
+                >
+                  <option value="approved" className="text-black">
+                    Approved{" "}
+                  </option>
+
+                  <option
+                    disabled
+                    hidden
+                    value="pending"
+                    className="text-black"
+                  >
+                    Pending
+                  </option>
+                </select>
+              )}
+            </div>
+
+            {record.role !== "owner" && (
+              <div
                 style={{
-                  width: "fit-content",
+                  marginTop: "-1px",
+                  marginLeft: "-2px",
                   cursor: "pointer",
-                  background: "transparent",
-                  border: "none",
-                  color: "#fff",
-                  padding: "3px 0px",
                 }}
+                onClick={() => setIsEdit(true)}
               >
-                <option value="approved" className="text-black">
-                  Approved{" "}
-                </option>
-
-                <option disabled hidden value="pending" className="text-black">
-                  Pending
-                </option>
-              </select>
-            </div>
-
-            <div
-              style={{
-                marginTop: "-1px",
-                marginLeft: "-2px",
-                cursor: "pointer",
-              }}
-              onClick={() => setIsEdit(true)}
-            >
-              <TiEdit size={22} />
-            </div>
+                <TiEdit size={22} />
+              </div>
+            )}
           </div>
         </td>
       ) : (

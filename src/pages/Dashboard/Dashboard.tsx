@@ -88,6 +88,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
+
                     <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-3">
                       <div className="d-flex align-items-center">
                         <a href="#" className="hravatar">
@@ -103,6 +104,39 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
+
+                    <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-3">
+                      <div className="d-flex align-items-center">
+                        <a href="#" className="hravatar">
+                          <img src={userLogo} alt="userimg" />
+                        </a>
+                        <div className="hrmr-3">
+                          <h6 className="mb-0 font-weight-bold">John Doe</h6>
+                          <p className="hrtext-muted-5">
+                            Lorem ipsum dolor sit amet, id quo eruditi
+                            eloquentiam.
+                          </p>
+                          <p className="hrtext-muted-6">7 hours ago</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-3">
+                      <div className="d-flex align-items-center">
+                        <a href="#" className="hravatar">
+                          <img src={userLogo} alt="userimg" />
+                        </a>
+                        <div className="hrmr-3">
+                          <h6 className="mb-0 font-weight-bold">John Doe</h6>
+                          <p className="hrtext-muted-5">
+                            Lorem ipsum dolor sit amet, id quo eruditi
+                            eloquentiam.
+                          </p>
+                          <p className="hrtext-muted-6">7 hours ago</p>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="border border-#e5e5e5 bg-white px-4 py-2 mt-3">
                       <div className="d-flex align-items-center">
                         <a href="#" className="hravatar">
@@ -123,9 +157,10 @@ const Dashboard = () => {
               )}
 
               <div
-                className="col-xl-5 col-lg-6"
+                className="col-xl-5 col-lg-6 punch-in-out-container"
                 style={{
-                  height: "fit-content",
+                  // minHeight: "200px",
+                  maxHeight: "450px",
                 }}
               >
                 <PunchInOut />

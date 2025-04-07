@@ -17,8 +17,6 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
   const [updateEmployee] = useUpdateEmployeeMutation();
   const [updateProfile] = useUpdateProfileMutation();
 
-  console.log(items);
-
   const GeneralFields = [
     {
       title: "Information",

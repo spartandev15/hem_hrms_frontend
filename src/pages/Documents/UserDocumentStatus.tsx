@@ -150,14 +150,19 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
         ))} */}
       </div>
 
-      <div className="document-list ">
+      <div className="document-list">
         {documentEntries.map(([key, doc], index) => {
           if (Array.isArray(doc) && doc.length === 0) {
             return (
               <div key={index} className="document-item col-md-4">
                 <div className="d-flex flex-column gap-3">
-                  <span className="font-weight-bold">
-                    {key.replace("_", " ").toUpperCase()}
+                  <span
+                    className="font-weight-bold"
+                    style={{
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {key.replace("/_/", " ")}
                   </span>
 
                   <div>
@@ -234,8 +239,13 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
               return (
                 <div key={index} className="document-item col-md-4">
                   <div className="d-flex flex-column gap-3">
-                    <span className="font-weight-bold">
-                      {key.replace("_", " ").toUpperCase() + " " + (indx + 1)}
+                    <span
+                      className="font-weight-bold"
+                      style={{
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {key.replace("/_/g", " ") + " " + (indx + 1)}
                     </span>
 
                     <div>
@@ -285,7 +295,7 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
                               onChange={(e) => handleChange(e, key)}
                               multiple={
                                 key === "previous_salary_slip" ||
-                                key === "previouse_experience"
+                                key === "previous_experience"
                                   ? true
                                   : false
                               }
@@ -351,8 +361,13 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
           return (
             <div key={index} className="document-item col-md-4">
               <div className="d-flex flex-column gap-3">
-                <span className="font-weight-bold">
-                  {key.replace("_", " ").toUpperCase()}
+                <span
+                  className="font-weight-bold"
+                  style={{
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {key.replace(/_/g, " ")}
                 </span>
 
                 <div>
@@ -373,7 +388,7 @@ const UserDocumentStatus: React.FC<DocumentStatusListProps> = ({
                             opacity: 0.3,
                           }}
                         />
-                        {doc.status === "pending" ? (
+                        {!doc || doc?.status === "pending" ? (
                           <span
                             className="text-xsmall px-2"
                             style={{

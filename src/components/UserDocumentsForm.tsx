@@ -6,8 +6,28 @@ import { setIsLoading } from "../redux/slices/loadingSlice";
 import { usePostDocumentsMutation } from "../redux/api/documents";
 import { setToast } from "../redux/slices/toastSlice";
 
-const UserDocumentsForm = () => {
+const UserDocumentsForm = ({
+  uploadedDocuments,
+}: {
+  uploadedDocuments: Record<string, any>;
+}) => {
   const dispatch = useAppDispatch();
+  const [previousExperienceFields, setPreviousExperienceFields] = useState<any>(
+    [
+      {
+        id: Date.now(),
+        value: "",
+      },
+    ]
+  );
+  const [previousSalarySlipFields, setPreviousSalarySlipFields] = useState<any>(
+    [
+      {
+        id: Date.now(),
+        value: "",
+      },
+    ]
+  );
   const [postDocuments] = usePostDocumentsMutation();
   const [filePreviews, setFilePreviews] = useState<any>({});
   const documentsFormFields = [
@@ -69,24 +89,24 @@ const UserDocumentsForm = () => {
 
       value: "default",
     },
-    {
-      label: "Previous Experience",
-      name: "previous_experience",
-      type: "file", // For uploading previous experience or salary slip files
-      accept: "image/*,application/pdf",
+    // {
+    //   label: "Previous Experience",
+    //   name: "previous_experience",
+    //   type: "file", // For uploading previous experience or salary slip files
+    //   accept: "image/*,application/pdf",
 
-      multiple: true, // Allow multiple uploads if needed
-      value: "default",
-    },
-    {
-      label: "Salary Slips",
-      name: "previous_salary_slip",
-      type: "file", // For uploading previous experience or salary slip files
-      accept: "image/*,application/pdf",
+    //   multiple: true, // Allow multiple uploads if needed
+    //   value: "default",
+    // },
+    // {
+    //   label: "Salary Slips",
+    //   name: "previous_salary_slip",
+    //   type: "file", // For uploading previous experience or salary slip files
+    //   accept: "image/*,application/pdf",
 
-      multiple: true, // Allow multiple uploads if needed
-      value: "default",
-    },
+    //   multiple: true, // Allow multiple uploads if needed
+    //   value: "default",
+    // },
   ];
 
   const {
@@ -101,6 +121,14 @@ const UserDocumentsForm = () => {
   // handler for submit the form
   const handleFormSubmit = async (data: any) => {
     dispatch(setIsLoading(true));
+    const previousExperience = Object.keys(data).filter((key) =>
+      key.startsWith("previous_experience")
+    );
+
+    const previousSalarySlip = Object.keys(data).filter((key) =>
+      key.startsWith("previous_salary")
+    );
+
     const formData = new FormData();
     formData.append("tenth_dmc", data["tenth_dmc"][0]);
     formData.append("twelfth_dmc", data["twelfth_dmc"][0]);
@@ -110,19 +138,29 @@ const UserDocumentsForm = () => {
     formData.append("bank_details", data?.bank_details[0]);
     formData.append("user_photo", data?.user_photo[0]);
 
-    if (data?.previous_experience) {
-      for (const value of data?.previous_experience) {
-        // previous_experience.push(value);
-        formData.append("previous_experience[]", value);
-        // previous_experience.push(value);
-      }
+    if (previousExperience) {
+      previousExperience.forEach((item) => {
+        formData.append("previous_experience[]", data[item][0]);
+      });
+      // for (const value of data?.previous_experience) {
+      //   // previous_experience.push(value);
+      //   formData.append("previous_experience[]", value);
+      //   // previous_experience.push(value);
+      // }
     }
 
-    if (data?.previous_salary_slip) {
-      for (const value of data?.previous_salary_slip) {
-        formData.append("previous_salary_slip[]", value);
-        // previous_salary_slip.push(value);
-      }
+    if (previousSalarySlip) {
+      previousSalarySlip.forEach((item) => {
+        formData.append("previous_salary_slip[]", data[item][0]);
+      });
+      // for (const value of data?.previous_salary_slip) {
+      //   formData.append("previous_salary_slip[]", value);
+      //   // previous_salary_slip.push(value);
+      // }
+    }
+
+    for (const value of formData.values()) {
+      console.log(value);
     }
 
     // formData.append("previous_experience", previous_experience);
@@ -152,6 +190,32 @@ const UserDocumentsForm = () => {
   };
 
   const fileValues = useWatch({ control });
+
+  const addPreviousExperienceField = () => {
+    setPreviousExperienceFields([
+      ...previousExperienceFields,
+      { id: Date.now() }, // Unique id for each field
+    ]);
+  };
+
+  const removePreviousExperienceField = (id: number) => {
+    setPreviousExperienceFields(
+      previousExperienceFields.filter((field) => field.id !== id)
+    );
+  };
+
+  const addPreviousSalarySlipField = () => {
+    setPreviousSalarySlipFields([
+      ...previousSalarySlipFields,
+      { id: Date.now() }, // Unique id for each field
+    ]);
+  };
+
+  const removePreviousSalarySlipField = (id: number) => {
+    setPreviousSalarySlipFields(
+      previousSalarySlipFields.filter((field) => field.id !== id)
+    );
+  };
 
   useEffect(() => {
     const newFilePreviews: any = {};
@@ -187,69 +251,212 @@ const UserDocumentsForm = () => {
           className="border p-3 rounded shadow-sm mt-2"
         >
           <div className="row mt-4">
-            {documentsFormFields.map((item, index) => (
-              <div
-                className={`${
-                  item.type === "textarea" ? "col-md-6" : "col-md-6"
-                } my-2`}
-                key={`${item.label}-${index}`}
-              >
-                <InputWithLabel
-                  id={`${index}`}
-                  label={item.label}
-                  name={item.name}
-                  register={register}
-                  type={item.type}
-                  value={item.value}
-                  //   options={item.options}
-                  disabledPast={true}
-                  multiple={item.multiple}
-                  accept={item.accept}
-                  //   rows={item.rows}
-                  //   isLoading={item.isLoading}
-                />
+            {documentsFormFields.map((item, index) => {
+              // const isDocumentUploaded = uploadedDocumets[item?.name] || null;
+              return (
+                <div
+                  className={`${
+                    item.type === "textarea" ? "col-md-6" : "col-md-6"
+                  } my-2`}
+                  key={`${item.label}-${index}`}
+                >
+                  <InputWithLabel
+                    id={`${index}`}
+                    label={item.label}
+                    name={item.name}
+                    register={register}
+                    type={item.type}
+                    value={item.value}
+                    //   options={item.options}
+                    disabledPast={true}
+                    multiple={item.multiple}
+                    accept={item.accept}
+                    // disabled={isDocumentUploaded}
+                    //   rows={item.rows}
+                    //   isLoading={item.isLoading}
+                  />
 
-                {errors[item.name] && (
-                  <p className="text-danger">
-                    {errors[item.name]?.message as string}
-                  </p>
-                )}
+                  {errors[item.name] && (
+                    <p className="text-danger">
+                      {errors[item.name]?.message as string}
+                    </p>
+                  )}
 
-                {filePreviews[item.name] && (
-                  <div className="mb-2 ms-1">
-                    {Array.isArray(filePreviews[item.name]) ? (
-                      // If it's an array (multiple files), map through each file
-                      filePreviews[item.name].map(
-                        (filePreview: any, idx: number) => (
-                          <div key={idx}>
-                            <span
-                              style={{
-                                color: "#199D4D",
-                              }}
-                            >
-                              {filePreview.file.name}
-                            </span>{" "}
-                            {/* Display file name */}
-                          </div>
+                  {filePreviews[item.name] && (
+                    <div className="mb-2 ms-1">
+                      {Array.isArray(filePreviews[item.name]) ? (
+                        // If it's an array (multiple files), map through each file
+                        filePreviews[item.name].map(
+                          (filePreview: any, idx: number) => (
+                            <div key={idx}>
+                              <span
+                                style={{
+                                  color: "#199D4D",
+                                }}
+                              >
+                                {filePreview.file.name}
+                              </span>{" "}
+                              {/* Display file name */}
+                            </div>
+                          )
                         )
-                      )
-                    ) : (
-                      // If it's a single file (not an array), directly display the file name
-                      <div>
-                        <span
+                      ) : (
+                        // If it's a single file (not an array), directly display the file name
+                        <div>
+                          <span
+                            style={{
+                              color: "#199D4D",
+                            }}
+                          >
+                            {filePreviews[item.name]?.file[0]?.name}
+                          </span>{" "}
+                          {/* Display file name */}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Dynamic Previous Experience fields */}
+            <div className="col-md-6 my-2">
+              {/* <label>Previous Experience</label> */}
+              <div className="d-flex flex-column gap-3">
+                {previousExperienceFields.map((field, index) => (
+                  <div key={field.id}>
+                    <div className="position-relative">
+                      <InputWithLabel
+                        label={`Previous Experience`}
+                        name={`previous_experience_${field.id}`}
+                        register={register}
+                        type="file"
+                        accept="image/*,application/pdf"
+                        value={"default"}
+                      />
+
+                      <div
+                        className="d-flex gap-1 justify-content-center position-absolute"
+                        style={{
+                          top: "-12%",
+                          right: "0",
+                        }}
+                      >
+                        {index !== 0 && (
+                          <button
+                            className="d-flex justify-content-center align-items-center mb-1"
+                            style={{
+                              width: "22px",
+                              height: "22px",
+                              background: "#F4F4F4",
+                              borderRadius: "100%",
+                              display: "inline-block",
+                              cursor: "pointer",
+                              fontWeight: "500",
+                            }}
+                            disabled={
+                              previousExperienceFields.length > index + 1
+                            }
+                            onClick={() =>
+                              removePreviousExperienceField(field?.id)
+                            }
+                          >
+                            -
+                          </button>
+                        )}
+
+                        <button
+                          className="d-flex justify-content-center align-items-center mb-1"
                           style={{
-                            color: "#199D4D",
+                            width: "22px",
+                            height: "22px",
+                            background: "#F4F4F4",
+                            borderRadius: "100%",
+                            display: "inline-block",
+                            cursor: "pointer",
+                            fontWeight: "500",
                           }}
+                          disabled={previousExperienceFields.length > index + 1}
+                          onClick={addPreviousExperienceField}
                         >
-                          {filePreviews[item.name]?.file[0]?.name}
-                        </span>{" "}
-                        {/* Display file name */}
+                          +
+                        </button>
                       </div>
-                    )}
+                    </div>
                   </div>
-                )}
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Dynamic Previous Salary Slip fields */}
+            <div className="col-md-6">
+              <div className="d-flex flex-column gap-3">
+                {previousSalarySlipFields.map((field, index) => (
+                  <div key={field.id}>
+                    <div className="position-relative">
+                      <InputWithLabel
+                        label={`Previous Salary`}
+                        name={`previous_salary_${field.id}`}
+                        register={register}
+                        type="file"
+                        accept="image/*,application/pdf"
+                        value={"default"}
+                      />
+
+                      <div
+                        className="d-flex gap-1 justify-content-center position-absolute"
+                        style={{
+                          top: "-12%",
+                          right: "0",
+                        }}
+                      >
+                        {index !== 0 && (
+                          <button
+                            type="button"
+                            className="d-flex justify-content-center align-items-center mb-1"
+                            style={{
+                              width: "22px",
+                              height: "22px",
+                              background: "#F4F4F4",
+                              borderRadius: "100%",
+                              display: "inline-block",
+                              cursor: "pointer",
+                              fontWeight: "500",
+                            }}
+                            disabled={
+                              previousSalarySlipFields.length > index + 1
+                            }
+                            onClick={() =>
+                              removePreviousSalarySlipField(field?.id)
+                            }
+                          >
+                            -
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          className="d-flex justify-content-center align-items-center mb-1"
+                          style={{
+                            width: "22px",
+                            height: "22px",
+                            background: "#F4F4F4",
+                            borderRadius: "100%",
+                            display: "inline-block",
+                            cursor: "pointer",
+                            fontWeight: "500",
+                          }}
+                          disabled={previousSalarySlipFields.length > index + 1}
+                          onClick={addPreviousSalarySlipField}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="d-flex justify-content-center mt-2">

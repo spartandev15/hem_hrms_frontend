@@ -52,8 +52,9 @@ export interface ProfileCardProps {
     line_manager?: string;
     joining_date?: string;
     employeeprofile?: string;
+    status?: "HR" | "employee" | "owner";
   };
-  onProfileChange?: (profile: File, id: string) => void;
+  onProfileChange?: (profile: File, id?: string) => void;
 }
 
 export interface EditableFormProps {
@@ -75,7 +76,7 @@ export interface EditableFormProps {
 
 export interface InputWithLabelProps {
   label?: string;
-  type: string;
+  type?: string;
   id?: string;
   name?: string;
   value?: string | number;

@@ -1,0 +1,23 @@
+.notification-container {
+  min-width: 200px;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-list {
+  padding: 0.95rem 1rem;
+  cursor: pointer;
+  background-color: #f5f6f7;
+}
+
+.notification-list:nth-child(even) {
+  background-color: #faf9f9;
+}
+
+.notification-list:hover {
+  background-color: #e8f0f7;
+  transition: all 0.2s linear;
+}

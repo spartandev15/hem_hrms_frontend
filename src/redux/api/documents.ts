@@ -15,10 +15,21 @@ export const overTimeApi = baseApi.injectEndpoints({
     }),
 
     // // endpoint for getting all overtime data
-    getAllDocuments: builder.query<any, void>({
-      query: () => {
+    getAllDocuments: builder.query<any, any>({
+      query: (query) => {
+        let url = `/api/get/documents`;
+
+        // Append pagination params if present
+        if (query.per_page && query.page) {
+          url = `${url}?per_page=${query.per_page}&page=${query.page}`;
+        }
+
+        // Append search_query if it's provided
+        if (query.search_query) {
+          url = `${url}&search_query=${query.search_query}`;
+        }
         return {
-          url: "/api/get/documents",
+          url: url,
           method: "GET",
         };
       },

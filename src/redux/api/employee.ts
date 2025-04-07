@@ -6,8 +6,19 @@ export const employeeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getEmployees: builder.query<any, any>({
       query: (query) => {
-        const baseUrl = `/api/get/all/employee`;
-        const url = query ? `${baseUrl}?search_query=${query}` : baseUrl;
+        let url = `/api/get/all/employee`;
+
+        // Append pagination params if present
+        if (query.per_page && query.page) {
+          url = `${url}?per_page=${query.per_page}&page=${query.page}`;
+        }
+
+        // Append search_query if it's provided
+        if (query.search_query) {
+          url = `${url}&search_query=${query.search_query}`;
+        }
+
+        // const url = query ? `${baseUrl}&search_query=${query}` : baseUrl;
 
         return {
           url,
@@ -29,10 +40,21 @@ export const employeeApi = baseApi.injectEndpoints({
     }),
 
     // endpoint for get employee Birthdays
-    getEmployeesBirthday: builder.query<any, void>({
-      query: () => {
+    getEmployeesBirthday: builder.query<any, any>({
+      query: (query) => {
+        let url = `/api/get/birthdays`;
+
+        // Append pagination params if present
+        if (query.per_page && query.page) {
+          url = `${url}?per_page=${query.per_page}&page=${query.page}`;
+        }
+
+        // Append search_query if it's provided
+        if (query.search_query) {
+          url = `${url}&search_query=${query.search_query}`;
+        }
         return {
-          url: `/api/get/birthdays`,
+          url: url,
           method: "GET",
         };
       },

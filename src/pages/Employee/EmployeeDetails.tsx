@@ -1,15 +1,13 @@
-import React from "react";
-import ProfileCard from "../../components/cards/ProfileCard";
+import { useParams } from "react-router-dom";
 import "../../assets/styles/profile.css";
-import TabContainer, { Tabs } from "../../components/Tabs";
+import ProfileCard from "../../components/cards/ProfileCard";
 import GeneralTabContent from "../../components/GeneralTabContent";
+import SpinnerLoader from "../../components/SpinnerLoader";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
 import {
   useGetEmployeeDetailsByIdQuery,
   useUpdateEmployeeMutation,
 } from "../../redux/api/employee";
-import { useParams } from "react-router-dom";
-import SpinnerLoader from "../../components/SpinnerLoader";
-import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 
@@ -22,12 +20,12 @@ export const EmployeeDetails = () => {
 
   const [updateEmployee] = useUpdateEmployeeMutation();
 
-  const handleProfileChange = async (profile: File, id: string) => {
+  const handleProfileChange = async (profile: File, id?: string) => {
     dispatch(setIsLoading(true));
     try {
       const formData = new FormData();
       formData.append("profile_photo", profile);
-      formData.append("id", id);
+      if (id) formData.append("id", id);
       const response = await updateEmployee(formData);
       dispatch(setToast(response?.data?.message));
     } catch (error) {

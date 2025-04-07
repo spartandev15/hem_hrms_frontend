@@ -9,11 +9,21 @@ const EmployeeWorkAniversary = () => {
     isLoading: isEmployeesAnniversaryLoading,
   } = useGetEmployeesAnniversaryQuery();
 
+  const handlePageClick = ({ selected }: { selected: number }) => {
+    setQuery((prev) => ({
+      ...prev,
+      page: selected + 1,
+    }));
+    // dispatch(setIsLoading(true));
+    // getAllCategoryWithPagination(selected + 1);
+  };
+
   return (
     <div className="container mt-5">
       <h2 className="text-start text-blue-primary">
-        Employees Work Anniversary
+        Employee's Work Anniversary
       </h2>
+
       <div className="overflow-auto">
         <table className="table table-bordered table-striped">
           <thead>
@@ -50,6 +60,22 @@ const EmployeeWorkAniversary = () => {
           </tbody>
         </table>
       </div>
+
+      {/* {employeesBirthdaysData?.EmployeeDetails?.last_page > 1 && (
+        <div className="bg-gray">
+          <ReactPaginate
+            className="react-paginate"
+            nextLabel={<MdOutlineSkipNext />}
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            pageCount={employeesBirthdaysData?.EmployeeDetails?.last_page}
+            pageCount={allCategory?.pagination?.last_page}
+            previousLabel={<MdOutlineSkipPrevious />}
+            renderOnZeroPageCount={null}
+            disabledClassName="disabled"
+          />
+        </div>
+      )} */}
 
       {/* <ReactPaginate
         className="react-paginate"

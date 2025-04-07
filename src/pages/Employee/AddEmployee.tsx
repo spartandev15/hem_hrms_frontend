@@ -1,6 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { FaPlus } from "react-icons/fa";
+import {
+  MdCancel,
+  MdOutlineCancel,
+  MdOutlineSkipNext,
+  MdOutlineSkipPrevious,
+} from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import "../../assets/styles/inputWithLabel.css";
 import InputWithLabel from "../../components/ui/InputWithLabel";
@@ -12,13 +19,17 @@ import {
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { setToast } from "../../redux/slices/toastSlice";
 import { employeeFormSchema } from "../../validations/formValidation";
-import { FaPlus } from "react-icons/fa";
 import EmployeeList from "./EmployeeList";
-import { URL } from "url";
+import { PER_PAGE_EMPLOYEE } from "../../utils/constant";
+import ReactPaginate from "react-paginate";
 
 const AddEmployee = () => {
-  const [query, setQuery] = useState("");
-  const [previewImage, setPreviewImage] = useState("");
+  const [query, setQuery] = useState({
+    search_query: "",
+    per_page: PER_PAGE_EMPLOYEE,
+    page: 1,
+  });
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const { status } = useAppSelector((state) => state.authUser);
   const [isOpen, setIsOpen] = useState(status === "owner" ? false : true);
   const navigate = useNavigate();
@@ -34,7 +45,8 @@ const AddEmployee = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      role: "HR",
+      role: status === "owner" ? "HR" : "",
+      // designation: status === "owner" ? "HR" : "",
       profile_photo: "",
     },
     resolver: zodResolver(employeeFormSchema),
@@ -61,7 +73,6 @@ const AddEmployee = () => {
       required: true,
       value: "",
     },
-
     {
       label: "Email",
       type: "email",
@@ -119,8 +130,8 @@ const AddEmployee = () => {
         label: category.name,
         value: category.name,
       })),
-      required: true,
-      value: items[0]?.name,
+      // required: true,
+      value: status === "owner" ? "HR" : items[0]?.name,
     },
     {
       label: "Total Leaves",
@@ -287,6 +298,13 @@ const AddEmployee = () => {
     },
   ];
 
+  const updateAddEmployeeFormField = addEmployeeFormFields
+    .map((item) => {
+      if (status === "owner" && item.label === "Designation") return null;
+      return { ...item };
+    })
+    .filter(Boolean);
+
   const handleFormSubmit = (data: any) => {
     const formData = new FormData();
     if (data.profile_photo.length > 0) {
@@ -303,16 +321,29 @@ const AddEmployee = () => {
   };
 
   const handleSearchSubmit = (query: any) => {
-    setQuery(query);
+    setQuery((prev) => ({
+      ...prev,
+      search_query: query,
+    }));
   };
 
   const formFields = useWatch({ control });
+
+  const handlePageClick = ({ selected }: { selected: number }) => {
+    setQuery((prev) => ({
+      ...prev,
+      page: selected + 1,
+    }));
+    // dispatch(setIsLoading(true));
+    // getAllCategoryWithPagination(selected + 1);
+  };
 
   useEffect(() => {
     if (EmployeeDetailsData?.result && postEmployeeIsSuccess) {
       dispatch(setIsLoading(false));
       dispatch(setToast(EmployeeDetailsData?.message));
-      navigate("/dashboard/all/employees");
+      if (status !== "owner") navigate("/dashboard/all/employees");
+      else setIsOpen(false);
       setIsLoading(false);
     } else {
       if (EmployeeDetailsData?.message) {
@@ -323,14 +354,17 @@ const AddEmployee = () => {
   }, [postEmployeeIsSuccess]);
 
   useEffect(() => {
-    if (formFields?.profile_photo) {
+    if (formFields?.profile_photo && formFields.profile_photo[0]) {
       const file = formFields?.profile_photo[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = (e: any) => {
-          setPreviewImage(e.target.result);
+          if (typeof reader.result === "string") {
+            setPreviewImage(e.target.result);
+          }
         };
-        reader.readAsDataURL(file);
+        if (typeof file === "object" && (file as File) instanceof Blob)
+          reader.readAsDataURL(file);
       }
     }
   }, [formFields?.profile_photo]);
@@ -353,7 +387,9 @@ const AddEmployee = () => {
                 }}
               >
                 {isOpen ? (
-                  <div>Cancel</div>
+                  <div className="d-flex align-items-center gap-1">
+                    <MdCancel size={22} /> Cancel
+                  </div>
                 ) : (
                   <div className="d-flex align-items-center gap-1">
                     <FaPlus />
@@ -370,30 +406,31 @@ const AddEmployee = () => {
               className="border p-3 rounded shadow-sm mt-3"
             >
               <div className="row mt-4">
-                {addEmployeeFormFields.map((item, index) => {
-                  if (item.label === "Role" && status === "HR") return null;
+                {updateAddEmployeeFormField.map((item, index) => {
+                  if (item && item.label === "Role" && status === "HR")
+                    return null;
                   return (
                     <div
                       className="col-sm-6 my-2"
-                      key={`${item.label}-${index}`}
+                      key={`${item?.label}-${index}`}
                     >
                       <InputWithLabel
                         id={`${index}`}
-                        label={item.label}
-                        name={item.name}
+                        label={item?.label}
+                        name={item?.name}
                         register={register}
-                        type={item.type}
-                        value={item.value}
-                        options={item.options}
-                        accept={item.accept}
+                        type={item?.type}
+                        value={item?.value}
+                        options={item?.options}
+                        accept={item?.accept}
                       />
-                      {errors[item.name as keyof typeof errors] && (
+                      {errors[item?.name as keyof typeof errors] && (
                         <p className="text-danger">
-                          {errors[item.name as keyof typeof errors]?.message}
+                          {errors[item?.name as keyof typeof errors]?.message}
                         </p>
                       )}
 
-                      {item.name === "profile_photo" && previewImage && (
+                      {item?.name === "profile_photo" && previewImage && (
                         <div>
                           {previewImage && (
                             <img
@@ -421,12 +458,27 @@ const AddEmployee = () => {
           )}
 
           {status === "owner" && (
-            <div className="mt-4">
+            <div className="mt-4 overflow-auto">
               <EmployeeList
-                data={allEmployeData?.employee}
+                data={allEmployeData?.employee?.data}
                 isLoading={isLoading}
                 handleQuery={handleSearchSubmit}
               />
+
+              <div className="bg-gray">
+                <ReactPaginate
+                  className="react-paginate"
+                  // breakLabel="..."
+                  nextLabel={<MdOutlineSkipNext />}
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={2}
+                  pageCount={allEmployeData?.pagination?.last_page}
+                  // pageCount={allCategory?.pagination?.last_page}
+                  previousLabel={<MdOutlineSkipPrevious />}
+                  renderOnZeroPageCount={null}
+                  disabledClassName="disabled"
+                />
+              </div>
             </div>
           )}
         </div>
