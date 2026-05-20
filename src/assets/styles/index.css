@@ -353,7 +353,10 @@ input[type="number"] {
 .toggle-status-btn:hover {
   background-color: #0056b3;
 }
-
+.custom-bg-primary {
+  background-color: #134d75 !important;
+  color: white;
+}
 @media (max-width: 768px) {
   .responsive-table th,
   .responsive-table td {
