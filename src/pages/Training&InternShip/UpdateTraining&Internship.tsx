@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+
 import InputWithLabel from "../../components/ui/InputWithLabel";
-import { usePostTrainingMutation } from "../../redux/api/training";
+
+import {
+  useGetTrainingByIdQuery,
+  useUpdateTrainingMutation,
+} from "../../redux/api/training";
 
 const basicInfoFields = [
   {
@@ -83,6 +89,10 @@ const trainingFields = [
     type: "select",
     options: [
       {
+        label: "Select Training Type",
+        value: "",
+      },
+      {
         label: "On Job",
         value: "On-Job",
       },
@@ -112,6 +122,10 @@ const trainingFields = [
     type: "select",
     options: [
       {
+        label: "Select Option",
+        value: "",
+      },
+      {
         label: "Yes",
         value: "yes",
       },
@@ -126,6 +140,10 @@ const trainingFields = [
     name: "status",
     type: "select",
     options: [
+      {
+        label: "Select Status",
+        value: "",
+      },
       {
         label: "Active",
         value: "active",
@@ -148,6 +166,10 @@ const internshipFields = [
     name: "work_mode",
     type: "select",
     options: [
+      {
+        label: "Select Work Mode",
+        value: "",
+      },
       {
         label: "Remote",
         value: "Remote",
@@ -218,27 +240,59 @@ const tabs = [
   },
 ];
 
-const AddTrainingInternship = () => {
+const UpdateTrainingInternship = () => {
+  const navigate = useNavigate();
+
+  const { id }:any = useParams();
+
   const [selectedType, setSelectedType] =
     useState("Training");
 
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] =
+    useState(1);
 
-  const [postTraining, { isLoading }] =
-    usePostTrainingMutation();
+  // =========================
+  // GET SINGLE DATA
+  // =========================
+
+  const { data, isLoading: getLoading } =useGetTrainingByIdQuery(id);
+
+  // =========================
+  // UPDATE API
+  // =========================
+
+  const [updateTraining, { isLoading }] =
+    useUpdateTrainingMutation();
+
+  // =========================
+  // FORM
+  // =========================
 
   const {
     register,
     handleSubmit,
-    watch,
     reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      status: "active",
-      has_prior_experience: "no",
-    },
-  });
+    watch,
+  } = useForm<any>();
+
+  // =========================
+  // SET DATA
+  // =========================
+
+  useEffect(() => {
+    if (data?.data) {
+      const editData = data?.data;
+
+      reset({
+        ...editData,
+      });
+
+      setSelectedType(
+        editData?.program_category ||
+          "Training"
+      );
+    }
+  }, [data, reset]);
 
   // =========================
   // NEXT TAB
@@ -264,28 +318,29 @@ const AddTrainingInternship = () => {
   // SUBMIT
   // =========================
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (formData: any) => {
     try {
       const payload = {
-        ...data,
+        ...formData,
+        id,
         program_category: selectedType,
       };
 
-      console.log(payload);
-
-      const response = await postTraining(
-        payload
-      ).unwrap();
+      const response =
+        await updateTraining(
+          payload
+        ).unwrap();
 
       console.log(response);
 
-      // alert("Program Added Successfully");
+      alert(
+        response?.message ||
+          "Updated Successfully"
+      );
 
-      reset();
-
-      setSelectedType("Training");
-
-      setActiveTab(1);
+      navigate(
+        "/training-internship/list"
+      );
     } catch (error: any) {
       console.log(error);
 
@@ -295,6 +350,14 @@ const AddTrainingInternship = () => {
       );
     }
   };
+
+  if (getLoading) {
+    return (
+      <div className="container py-5 text-center">
+        <div className="spinner-border text-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-4">
@@ -308,11 +371,11 @@ const AddTrainingInternship = () => {
               color: "#134d75",
             }}
           >
-            Add Training / Internship
+            Update Training / Internship
           </h2>
 
           <p className="text-muted mb-0">
-            Create a new training or internship
+            Update training or internship
             program
           </p>
         </div>
@@ -367,7 +430,9 @@ const AddTrainingInternship = () => {
 
         {/* FORM */}
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+        >
           {/* TAB 1 */}
 
           {activeTab === 1 && (
@@ -375,10 +440,13 @@ const AddTrainingInternship = () => {
               <div className="col-md-6">
                 <div
                   onClick={() =>
-                    setSelectedType("Training")
+                    setSelectedType(
+                      "Training"
+                    )
                   }
                   className={`p-5 rounded-4 border text-center ${
-                    selectedType === "Training"
+                    selectedType ===
+                    "Training"
                       ? "border-primary bg-primary-subtle shadow"
                       : "bg-white"
                   }`}
@@ -398,21 +466,19 @@ const AddTrainingInternship = () => {
                   <h4 className="fw-bold">
                     Training
                   </h4>
-
-                  <p className="text-muted mb-0">
-                    Create employee training
-                    programs.
-                  </p>
                 </div>
               </div>
 
               <div className="col-md-6">
                 <div
                   onClick={() =>
-                    setSelectedType("Internship")
+                    setSelectedType(
+                      "Internship"
+                    )
                   }
                   className={`p-5 rounded-4 border text-center ${
-                    selectedType === "Internship"
+                    selectedType ===
+                    "Internship"
                       ? "border-primary bg-primary-subtle shadow"
                       : "bg-white"
                   }`}
@@ -432,11 +498,6 @@ const AddTrainingInternship = () => {
                   <h4 className="fw-bold">
                     Internship
                   </h4>
-
-                  <p className="text-muted mb-0">
-                    Create internship
-                    opportunities.
-                  </p>
                 </div>
               </div>
             </div>
@@ -457,12 +518,13 @@ const AddTrainingInternship = () => {
                         id={`${index}`}
                         label={item?.label}
                         name={item?.name}
-                        register={register}
+                        register={
+                          register
+                        }
                         type={item?.type}
                         required={
                           item?.required
                         }
-                        // errors={errors}
                       />
                     </div>
                   )
@@ -476,7 +538,8 @@ const AddTrainingInternship = () => {
           {activeTab === 3 && (
             <div className="border p-4 rounded-4 shadow-sm">
               <div className="row">
-                {(selectedType === "Training"
+                {(selectedType ===
+                "Training"
                   ? trainingFields
                   : internshipFields
                 )?.map((item, index) => (
@@ -490,12 +553,9 @@ const AddTrainingInternship = () => {
                       name={item?.name}
                       register={register}
                       type={item?.type}
-                      // required={
-                      //   item?.required
-                      // }
-                      // value={item?.value}
-                      options={item?.options}
-                      // errors={errors}
+                      options={
+                        item?.options
+                      }
                     />
                   </div>
                 ))}
@@ -531,8 +591,7 @@ const AddTrainingInternship = () => {
                     </h6>
 
                     <p className="mb-0">
-                      
-                      {/* {watch("email")} */}
+                      {watch("email")}
                     </p>
                   </div>
                 </div>
@@ -544,7 +603,9 @@ const AddTrainingInternship = () => {
                     </h6>
 
                     <p className="mb-0">
-                      {/* {watch("first_name")} */}
+                      {watch(
+                        "first_name"
+                      )}
                     </p>
                   </div>
                 </div>
@@ -556,7 +617,9 @@ const AddTrainingInternship = () => {
                     </h6>
 
                     <p className="mb-0">
-                      {/* {watch("department")} */}
+                      {watch(
+                        "department"
+                      )}
                     </p>
                   </div>
                 </div>
@@ -571,8 +634,8 @@ const AddTrainingInternship = () => {
                 }}
               >
                 {isLoading
-                  ? "Submitting..."
-                  : "Submit Program"}
+                  ? "Updating..."
+                  : "Update Program"}
               </button>
             </div>
           )}
@@ -607,4 +670,4 @@ const AddTrainingInternship = () => {
   );
 };
 
-export default AddTrainingInternship;
+export default UpdateTrainingInternship;

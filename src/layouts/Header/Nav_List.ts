@@ -66,11 +66,22 @@ export const Nav_List = [
     name: "Recruitment",
     href: "/dashboard/schedule-interviews",
   },
-  {
+   {
     label: "Training&internship",
     name: "Training&internship",
-    href: "training&internship",
+    subLinks: [
+      {
+        label: "Add Training internship",
+        href: "training&internship",
+      },
+      {
+        label: "List Training internship",
+        href: "list-training&internship",
+      },
+    
+    ],
   },
+ 
   
   // {
   //   label: "Recruitment",

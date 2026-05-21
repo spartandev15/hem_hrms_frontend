@@ -337,6 +337,7 @@ import DocumentOverview from "../pages/Documents/DocumentOverview";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import AddTrainingInternship from "../pages/Training&InternShip/Addtraining&Internship";
+import ListTrainingInternship from "../pages/Training&InternShip/ListTraining&Internship";
 
 const Navigation = () => {
   return (
@@ -368,6 +369,9 @@ const Navigation = () => {
           <Route path="documents" element={<HRDocuments />} />
           <Route path="documents/:id" element={<DocumentOverview />} />
           <Route path="training&internship" element={<AddTrainingInternship />} />
+          <Route path="list-training&internship" element={<ListTrainingInternship />} />
+
+          
 
         </Route>
 

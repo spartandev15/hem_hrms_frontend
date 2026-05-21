@@ -21,6 +21,7 @@ export const baseApi = createApi({
     "documentsById",
     "userDocuments",
     "notices",
+    "training"
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_KEY_BASE_URL,
