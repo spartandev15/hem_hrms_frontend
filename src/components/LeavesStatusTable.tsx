@@ -1,27 +1,43 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import useOutsideClick from "../hooks/useOutsideClick";
 import { useUpdateLeavesStatusMutation } from "../redux/api/leave";
 import { useAppDispatch } from "../hooks/reduxHook";
 import { setIsLoading } from "../redux/slices/loadingSlice";
 import { setToast } from "../redux/slices/toastSlice";
+import { capitalizeFirstLetter } from "../utils/capitalizedFirstLetter";
 
 const LeavesStatusTable: React.FC<{ allAppliedLeavesData: any }> = ({
   allAppliedLeavesData,
 }) => {
+  console.log(allAppliedLeavesData);
+  const [allSelected, setAllSelected] = useState<number[]>([]);
+  const handleSelectAll = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      const ids = allAppliedLeavesData.map((item: any) => item.id);
+
+      setAllSelected([...ids]);
+    } else {
+      setAllSelected([]);
+    }
+  };
+
   return (
     <div className="container">
       {allAppliedLeavesData && (
-        <div className="">
-          <table
-            className="leave-status-table shadow-sm rounded-2 w-100"
-            style={{
-              whiteSpace: "nowrap", // Prevent wrapping of table cells
-            }}
-          >
+        <div className="overflow-x-auto">
+          <table className="leave-status-table shadow-sm rounded-2 w-100">
             <thead>
               <tr>
+                {/* <th>
+                  <input
+                    type="checkbox"
+                    onChange={handleSelectAll}
+                    checked={allSelected.length === allAppliedLeavesData.length}
+                  />
+                </th> */}
                 <th scope="col">#</th>
                 <th scope="col">Username</th>
+                <th scope="col">Leave Type</th>
                 <th scope="col">Start Date</th>
                 <th scope="col">End Date</th>
                 <th scope="col">Reason</th>
@@ -30,8 +46,13 @@ const LeavesStatusTable: React.FC<{ allAppliedLeavesData: any }> = ({
             </thead>
 
             <tbody>
-              {allAppliedLeavesData.map((item: any, itemIndex: number) => (
-                <TableRow {...item} itemIndex={itemIndex} />
+              {allAppliedLeavesData?.map((item: any, itemIndex: number) => (
+                <TableRow
+                  {...item}
+                  itemIndex={itemIndex}
+                  allSelected={allSelected}
+                  setAllSelected={setAllSelected}
+                />
               ))}
             </tbody>
           </table>
@@ -44,7 +65,9 @@ const LeavesStatusTable: React.FC<{ allAppliedLeavesData: any }> = ({
 export default LeavesStatusTable;
 
 const TableRow = (item: any) => {
+  const { allSelected, setAllSelected } = item;
   const dispatch = useAppDispatch();
+
   const [isDropdownVisible, setDropdownVisible] = useState(false); // State to toggle visibility
   const dropDownRef = useOutsideClick<HTMLDivElement>(() => {
     setDropdownVisible(false); // Close the dropdown when clicked outside
@@ -60,32 +83,70 @@ const TableRow = (item: any) => {
     { data: updateLeaveStatusDetailsData, isSuccess: updateLeavesIsSuccess },
   ] = useUpdateLeavesStatusMutation();
 
-  const handleStatusSubmit = (status: string) => {
+  const handleStatusSubmit = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const status = event.target.value;
     dispatch(setIsLoading(true));
-    updateLeavesStatus({
-      id: item.id,
-      status: status,
-    });
+    try {
+      const response = await updateLeavesStatus({
+        id: item.id,
+        status: status,
+      });
+
+      if (response?.error) {
+        dispatch(setToast(response?.error?.data?.error?.status));
+        return;
+      }
+      dispatch(setToast(response?.data?.message));
+    } catch (error) {
+    } finally {
+      dispatch(setIsLoading(false));
+    }
+  };
+
+  const handleSingleSelect = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const a = Number(value);
+    if (allSelected.includes(a)) {
+      setAllSelected(allSelected.filter((id) => id !== a));
+    } else {
+      setAllSelected([...allSelected, a]);
+    }
   };
 
   useEffect(() => {
     if (updateLeaveStatusDetailsData) {
-      dispatch(setIsLoading(false));
-      dispatch(setToast(updateLeaveStatusDetailsData.message));
     }
   }, [updateLeavesIsSuccess]);
 
   return (
     <tr key={item.id || item.itemIndex}>
+      {/* <td>
+        <input
+          type="checkbox"
+          checked={allSelected?.includes(item.id)}
+          onChange={handleSingleSelect}
+          value={item.id}
+        />
+      </td> */}
       <th>{item.itemIndex + 1}</th>
-      <td>{item?.employee_detail?.name}</td>
+      <td>{`${item?.employee?.first_name} ${item?.employee?.last_name}`}</td>
+      <td>{capitalizeFirstLetter(item?.leave_type, "_")}</td>
       <td>{item?.start_date}</td>
       <td>{item?.end_date}</td>
-      <td>{item?.reason}</td>
+      <td
+        style={{
+          width: "320px",
+          whiteSpace: "wrap",
+        }}
+      >
+        {item?.reason}
+      </td>
 
       <td onClick={toggleDropdown} style={{ cursor: "pointer" }}>
         <div
-          className="text-capitalize position-relative"
+          className="m-auto"
           style={{
             width: "fit-content",
             backgroundColor:
@@ -93,8 +154,10 @@ const TableRow = (item: any) => {
                 ? "#73A617" // green for approved
                 : item.status === "pending"
                 ? "#DD982F" // amber for pending
+                : item.status === "disapproved"
+                ? "#E84A07"
                 : "#DF3523",
-            padding: "2px 1rem",
+
             borderRadius: "4px",
             color:
               item.status === "approved"
@@ -104,9 +167,32 @@ const TableRow = (item: any) => {
                 : "#fff",
           }}
         >
-          {item.status}
+          <select
+            style={{
+              width: "fit-content",
+              background: "transparent",
+              border: "none",
+              padding: "2px",
+            }}
+            value={item.status}
+            onChange={handleStatusSubmit}
+            className="text-xsmall text-white"
+          >
+            <option value="approved" className="text-black text-xsmall">
+              Approved
+            </option>
+            <option value="disapproved" className="text-black text-xsmall">
+              Disapproved
+            </option>
+            <option value="rejected" className="text-black text-xsmall">
+              Rejected
+            </option>
+            <option hidden value="pending">
+              pending
+            </option>
+          </select>
 
-          {isDropdownVisible && (
+          {/* {isDropdownVisible && (
             <div
               ref={dropDownRef}
               className="position-absolute bg-white px-4 py-2 border rounded-2"
@@ -131,7 +217,7 @@ const TableRow = (item: any) => {
                 Rejected
               </p>
             </div>
-          )}
+          )} */}
         </div>
       </td>
     </tr>

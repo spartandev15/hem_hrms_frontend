@@ -4,7 +4,6 @@ import "../../assets/styles/NotFound.css"; // Assuming you're using a separate C
 
 const NotFound = () => {
   const navigate = useNavigate();
-
   return (
     <div className="not-found-container">
       <div className="not-found-content">

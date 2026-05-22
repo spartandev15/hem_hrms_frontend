@@ -1,21 +1,37 @@
-import React from "react";
-import { MdOutlineSkipNext, MdOutlineSkipPrevious } from "react-icons/md";
-import ReactPaginate from "react-paginate";
+import { useState } from "react";
 import { useGetEmployeesBirthdayQuery } from "../../redux/api/employee";
+import { PER_PAGE_BIRTHDAY } from "../../utils/constant";
+import ReactPaginate from "react-paginate";
+import { MdOutlineSkipNext, MdOutlineSkipPrevious } from "react-icons/md";
 
 const EmployeeBirthday = () => {
+  const [query, setQuery] = useState({
+    search_query: "",
+    per_page: PER_PAGE_BIRTHDAY,
+    page: 1,
+  });
   const {
     data: employeesBirthdaysData,
     isLoading: isEmployeesBirthdaysLoading,
-  } = useGetEmployeesBirthdayQuery();
+  } = useGetEmployeesBirthdayQuery(query);
+
+  const handlePageClick = ({ selected }: { selected: number }) => {
+    setQuery((prev) => ({
+      ...prev,
+      page: selected + 1,
+    }));
+    // dispatch(setIsLoading(true));
+    // getAllCategoryWithPagination(selected + 1);
+  };
 
   return (
     <div className="container mt-5">
-      <h2 className="text-start text-blue-primary">Employees Birthdays</h2>
+      <h2 className="text-start text-blue-primary">Employee's Birthdays</h2>
+
       <div className="overflow-auto">
         <table className="table table-bordered table-striped">
           <thead>
-            <tr>
+            <tr className="text-center">
               <th>#</th>
               <th>Name</th>
               <th>Position</th>
@@ -28,7 +44,7 @@ const EmployeeBirthday = () => {
             {employeesBirthdaysData?.EmployeeDetails?.length > 0 ? (
               employeesBirthdaysData?.EmployeeDetails?.map(
                 (employee: any, index: number) => (
-                  <tr key={index}>
+                  <tr className="text-center" key={index}>
                     <td>{index + 1}</td>
                     <td>{employee.employee_name}</td>
                     <td>{employee.designation}</td>
@@ -48,6 +64,23 @@ const EmployeeBirthday = () => {
           </tbody>
         </table>
       </div>
+
+      {employeesBirthdaysData?.pagination?.last_page > 1 && (
+        <div className="bg-gray">
+          <ReactPaginate
+            className="react-paginate"
+            // breakLabel="..."
+            nextLabel={<MdOutlineSkipNext />}
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            pageCount={employeesBirthdaysData?.pagination?.last_page}
+            // pageCount={allCategory?.pagination?.last_page}
+            previousLabel={<MdOutlineSkipPrevious />}
+            renderOnZeroPageCount={null}
+            disabledClassName="disabled"
+          />
+        </div>
+      )}
 
       {/* <ReactPaginate
         className="react-paginate"

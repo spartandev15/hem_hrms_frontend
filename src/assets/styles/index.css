@@ -42,7 +42,7 @@ input[type="number"] {
 }
 
 .text-xsmall {
-  font-size: 0.875rem;
+  font-size: 0.825rem;
 }
 
 .text-small {
@@ -103,8 +103,13 @@ input[type="number"] {
 .bg-blue-primary {
   background-color: var(--primary-color);
 }
+
+.bg-gray {
+  background-color: var(--bs-border-color);
+}
 /* common btn class for buttons  */
 .btn {
+  width: 100%;
   background-color: var(--primary-color);
   color: var(--white-color);
 }
@@ -114,8 +119,29 @@ input[type="number"] {
   color: var(--white-color);
 }
 
+.action-btn-container {
+  color: #434569;
+  width: 20px;
+  height: 25px;
+  /* border: 1px solid #57ac6b; */
+  border: 1px solid #526677;
+
+  border-radius: 2px;
+  padding: 2px;
+  box-shadow: 0 0 0px #575656;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-btn-container:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
 .react-paginate {
-  background-color: var(--bs-border-color);
+  width: 100%;
+  /* background-color: var(--bs-border-color); */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -151,6 +177,11 @@ input[type="number"] {
   padding: 0.2rem 0.4rem;
 }
 
+/* .orpect-logo {
+  width: 150px;
+  object-fit: contain;
+} */
+
 /*Table CSS*/
 .table-scroll {
   position: relative;
@@ -171,6 +202,7 @@ input[type="number"] {
 .table-wrap {
   position: relative;
 }
+
 .table > thead {
   vertical-align: bottom;
   color: #000;
@@ -321,7 +353,10 @@ input[type="number"] {
 .toggle-status-btn:hover {
   background-color: #0056b3;
 }
-
+.custom-bg-primary {
+  background-color: #134d75 !important;
+  color: white;
+}
 @media (max-width: 768px) {
   .responsive-table th,
   .responsive-table td {

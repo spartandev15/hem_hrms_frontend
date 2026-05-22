@@ -30,18 +30,19 @@ const LeavesStatus = ({
         <div className="overflow-scroll mt-3">
           <table className="table table-bordered table-striped">
             <thead>
-              <tr>
+              <tr className="text-center">
                 <th>#</th>
                 <th>Employee Name</th>
                 <th>Leave Type</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Reason</th>
-                <th>Status</th>
                 <th>Designation</th>
-                <th>Email</th>
+                <th>Reason</th>
+                {/* <th>Email</th> */}
+                <th>Status</th>
               </tr>
             </thead>
+
             <tbody>
               {isLoading ? (
                 <tr>
@@ -50,16 +51,16 @@ const LeavesStatus = ({
                   </td>
                 </tr>
               ) : leavesStatus && leavesStatus?.length > 0 ? (
-                leavesStatus.map((leave: any, index: number) => (
+                leavesStatus?.map((leave: any, index: number) => (
                   <tr key={leave.id}>
                     <td>{index + 1}</td>
                     <td>
-                      {leave.employee_detail.name}{" "}
-                      {leave.employee_detail.last_name}
+                      {leave.employee_detail?.name}{" "}
+                      {leave.employee_detail?.last_name}
                     </td>
-                    <td>{leave.leave_type}</td>
-                    <td>{leave.start_date}</td>
-                    <td>{leave.end_date}</td>
+                    <td>{leave?.leave_type}</td>
+                    <td>{leave?.start_date}</td>
+                    <td>{leave?.end_date}</td>
                     <td
                       style={{
                         minWidth: "160px",
@@ -67,6 +68,8 @@ const LeavesStatus = ({
                     >
                       {leave.reason}
                     </td>
+
+                    <td>{leave?.employee_detail?.designation}</td>
                     <td>
                       <span
                         style={{
@@ -86,11 +89,10 @@ const LeavesStatus = ({
                               : "#fff",
                         }}
                       >
-                        {leave.status}
+                        {leave?.status}
                       </span>
                     </td>
-                    <td>{leave.employee_detail.designation}</td>
-                    <td>{leave.employee_detail.email}</td>
+                    {/* <td>{leave.employee_detail.email}</td> */}
                   </tr>
                 ))
               ) : (
@@ -107,7 +109,7 @@ const LeavesStatus = ({
         {leavesStatus?.length > 0 && (
           <div className="btn mt-4 d-flex justify-content-center">
             <Link
-              to="/"
+              to="/dashboard/leave-details"
               className="text-white"
               style={{
                 textDecoration: "none",

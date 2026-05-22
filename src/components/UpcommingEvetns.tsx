@@ -23,6 +23,7 @@ const UpcommingEvetns = ({ data, isLoading }: any) => {
           View All
         </a>
       </div>
+
       <div className="row">
         {(data && data?.upcoming_anniversaries?.length > 0) ||
         (data?.upcoming_birthdays?.length > 0 && Object.keys(data)) ? (
@@ -37,7 +38,7 @@ const UpcommingEvetns = ({ data, isLoading }: any) => {
                     {key.replace("_", " ")}:
                   </h2>
                   {events.map((event, index) => (
-                    <div key={index} className="col-lg-12">
+                    <div key={index} className="col-lg-12 my-2">
                       <div className="border d-flex justify-content-between align-items-center bg-white px-4 py-2">
                         <div className="d-flex align-items-center">
                           <a href="#" className="hravatar">
@@ -92,7 +93,7 @@ const UpcommingEvetns = ({ data, isLoading }: any) => {
         ) : isLoading ? (
           <p>Loading...</p>
         ) : (
-          <p>No Data Available</p>
+          <p>No upcomming events</p>
         )}
 
         {/* <div className="col-lg-12 mt-3">

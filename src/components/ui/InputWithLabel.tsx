@@ -19,12 +19,16 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   isLoading,
   disabled,
   accept,
+  disabledPast,
+  disabledFuture,
+  rows,
+  multiple,
+  onChange,
 }) => {
-  const today = new Date().toISOString().split("T")[0];
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   const fileRef = useRef<HTMLInputElement | null>(null);
+
   const handleFocus = () => {
     setFocused(true);
   };
@@ -38,6 +42,22 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   const handleShowHidePassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const today = new Date();
+
+  const formatDate = (date: Date, type: string) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    if (type === "date") return `${year}-${month}-${day}`;
+    else if (type === "datetime-local")
+      `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const todayFormatted = formatDate(today, type);
+  // console.log(todayFormatted);
 
   useEffect(() => {
     if (value) {
@@ -58,6 +78,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             required={required}
             className="input-animation w-100"
             defaultValue={value || ""}
+            disabled={disabled}
           >
             {options && options.length > 0 ? (
               options?.map((option: any, index: number) => (
@@ -67,11 +88,11 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               ))
             ) : (
               <option value="" disabled>
-                {isLoading ? "wait..." : "No data"}
+                {isLoading ? "wait..." : "No Options"}
               </option>
             )}
           </select>
-        ) : type === "date" || type === "datetime" ? (
+        ) : type === "date" || type === "datetime-local" ? (
           <div>
             <input
               type={type}
@@ -83,7 +104,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
               onFocus={handleFocus}
               onBlur={handleBlur}
               required={required}
-              max={today}
+              min={disabledPast ? todayFormatted : undefined}
+              max={disabledFuture ? todayFormatted : undefined}
               className=" w-100"
               disabled={disabled}
             />
@@ -101,6 +123,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
                     fileRef.current = e;
                     register(name!).ref(e);
                   }}
+                  // onChange={onChange}
+                  multiple={multiple}
                 />
                 <button
                   type="button"
@@ -127,7 +151,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
                     required={required}
                     className="w-100"
                     disabled={disabled}
-                    rows={15}
+                    rows={rows || 8}
                   />
                 ) : (
                   <input

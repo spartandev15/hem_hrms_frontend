@@ -1,38 +1,36 @@
-import React, { ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { ChangeEvent, useRef, useState } from "react";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
-import { useRef, useState } from "react";
-import { useGetProfileQuery } from "../../redux/api/profile";
+import { Link, useLocation } from "react-router-dom";
+import { useAppSelector } from "../../hooks/reduxHook";
 import { ProfileCardProps } from "../../types";
 
 const profilePhoto = "/images/profile.png";
 
-const ProfileCard = ({
-  name,
-  last_name,
-  email,
-  phone,
-  line_manager,
-}: ProfileCardProps) => {
-  const { data: userData, isLoading } = useGetProfileQuery();
-  const [previewImage, setPreviewImage] = useState(null);
+const ProfileCard = ({ data, onProfileChange }: ProfileCardProps) => {
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const profilePicRef = useRef<HTMLInputElement | null>(null);
+  const { status } = useAppSelector((state) => state.authUser);
+  const { pathname } = useLocation();
 
   const changeProfilePicture = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(data);
     try {
       const file = e.target.files?.[0];
-      // if (file) {
-      //   const reader = new FileReader();
-      //   reader.onloadend = () => {
-      //     setPreviewImage(reader.result); // Set preview image URL
-      //   };
-      //   reader.readAsDataURL(file);
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === "string" || reader.result === null) {
+            setPreviewImage(reader.result); // Set preview image URL
+          } // Set preview image URL
+        };
+        reader.readAsDataURL(file);
 
-      //   const formData = new FormData();
-      //   formData.append("profile_photo", file);
-      //   dispatch(updateProfile(formData));
-      // }
+        if (onProfileChange) {
+          if (data.id) onProfileChange(file, data?.id);
+          else onProfileChange(file);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -43,23 +41,41 @@ const ProfileCard = ({
       <div className="profile-div">
         <div className="profile-image-container">
           {previewImage ? (
-            <img
-              src={previewImage}
-              style={{ width: "7rem", height: "7rem" }}
-              className="rounded-circle object-cover cursor-pointer"
-              onClick={() => {
-                profilePicRef?.current?.click();
+            <div
+              style={{
+                border: "2px solid #BE8E37",
+                borderRadius: "100%",
               }}
-            />
+            >
+              <img
+                src={previewImage}
+                className="rounded-circle object-cover cursor-pointer profile-image"
+                onClick={() => {
+                  profilePicRef?.current?.click();
+                }}
+              />
+            </div>
           ) : (
-            <img
-              src={`${userData?.user?.profile_photo || profilePhoto}`}
-              alt=""
-              className="rounded-circle object-cover cursor-pointer profile-image"
-              onClick={() => {
-                profilePicRef?.current?.click();
+            <div
+              style={{
+                border: "2px solid #BE8E37",
+                borderRadius: "100%",
               }}
-            />
+            >
+              <img
+                src={`${data?.profile_photo || profilePhoto}`}
+                className="rounded-circle object-cover cursor-pointer profile-image"
+                onClick={() => {
+                  if (pathname !== "/profile") {
+                    if (status === "HR") profilePicRef?.current?.click();
+                    else if (status === "owner" && data?.status === "HR")
+                      profilePicRef?.current?.click();
+                  } else {
+                    profilePicRef?.current?.click();
+                  }
+                }}
+              />
+            </div>
           )}
         </div>
 
@@ -69,8 +85,9 @@ const ProfileCard = ({
           className="d-none"
           onChange={changeProfilePicture}
         />
+
         <h2 className="font-weight-bold text-large profile-heading">
-          {name} {last_name}
+          {data?.first_name} {data?.last_name}
           {/* {userData?.user?.last_name as string}  */}
         </h2>
 
@@ -79,20 +96,20 @@ const ProfileCard = ({
             to={"/"}
             className="d-flex align-items-center gap-1 text-gray-primary text-xsmall"
           >
-            <FaPhoneAlt size={14} /> {phone || "Not Available"}
+            <FaPhoneAlt size={14} /> {data?.phone || "Not Available"}
           </Link>
           <Link
             to={"/"}
             className="d-flex align-items-center gap-1 text-gray-primary text-xsmall"
           >
-            <IoIosMail size={16} /> {email}
+            <IoIosMail size={16} /> {data?.email}
           </Link>
         </div>
 
         <div className="text-blue-primary profile-detials">
-          <h2 className="text-small m-0">Department</h2>
-          <h2 className="text-small m-0">{line_manager}</h2>
-          <p className="text-muted text-xsmall">{name}</p>
+          {/* <h2 className="text-small m-0">Department</h2> */}
+          {/* <h2 className="text-small m-0">{data?.line_manager}</h2>
+          <p className="text-muted text-xsmall">{data?.name}</p> */}
         </div>
       </div>
     </div>

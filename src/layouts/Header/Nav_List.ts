@@ -1,7 +1,7 @@
 export const Nav_List = [
   {
     label: "Employee",
-    href: "Leave",
+    name: "Employee",
     subLinks: [
       {
         label: "Add Employee",
@@ -9,55 +9,92 @@ export const Nav_List = [
       },
       {
         label: "All Employee",
-        href: "/dashboard/employees",
+        href: "/dashboard/all/employees",
       },
       {
-        label: "Employee Birthday",
-        href: "/dashboard/employees-birthdays",
+        label: "Leave",
+        href: "/dashboard/leave-details",
       },
-      {
-        label: "Employee Work Anniversary",
-        href: "/dashboard/employees-anniversary",
-      },
-      {
-        label: "Provisional Employee",
-        href: "",
-      },
+      // {
+      //   label: "Provisional Employee",
+      //   href: "",
+      // },
       {
         label: "Category",
         href: "/dashboard/create/category",
       },
+
+      {
+        label: "Employee Birthday",
+        href: "/dashboard/employees-birthdays",
+      },
+
+      {
+        label: "Employee Work Anniversary",
+        href: "/dashboard/employees-anniversary",
+      },
     ],
   },
   {
+    label: "Employees",
+    name: "Employees",
+    href: "/dashboard/employees",
+  },
+  {
     label: "Leave",
-    href: "/dashboard/leave-details",
+    name: "Leave",
+    href: "/leaves-details",
   },
   {
     label: "OverTime",
+    name: "OverTime",
     href: status === "HR" ? "/dashboard/overtime" : "/overtime",
     // href: "/overtime",
   },
   {
     label: "Documents",
     href: "Leave",
+    name: "Documents",
   },
   {
-    label: "Notice",
-    href: "notices",
+    label: "Announcements",
+    href: "announcements",
+    name: "Announcements",
   },
   {
     label: "Recruitment",
-    href: "/dashboard/employee",
+    name: "Recruitment",
+    href: "/dashboard/schedule-interviews",
+  },
+   {
+    label: "Training&internship",
+    name: "Training&internship",
     subLinks: [
       {
-        label: "Vacancy",
-        href: "",
+        label: "Add Training internship",
+        href: "training&internship",
       },
       {
-        label: "Schedule Interview",
-        href: "schedule-interviews",
+        label: "List Training internship",
+        href: "list-training&internship",
       },
+    
     ],
   },
+ 
+  
+  // {
+  //   label: "Recruitment",
+  //   name: "Recruitment",
+  //   subLinks: [
+  //     // {
+  //     //   label: "Vacancy",
+  //     //   href: "/dashboard/vacancies",
+  //     // },
+  //     {
+  //       label: "Schedule Interview",
+  //       href: "/dashboard/schedule-interviews",
+  //     },
+  //   ],
+  // },
 ];

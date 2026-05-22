@@ -1,32 +1,49 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import "../../assets/styles/dialogbox.css";
-import "../../assets/styles/employee.css";
-import EmployeeCard from "../../components/cards/EmployeeCard";
-import InputWithLabel from "../../components/ui/InputWithLabel";
-import { useGetAllCategoryQuery } from "../../redux/api/category";
+import { useState } from "react";
+import { useAppSelector } from "../../hooks/reduxHook";
 import { useGetEmployeesQuery } from "../../redux/api/employee";
+import EmployeeList from "./EmployeeList";
+import ReactPaginate from "react-paginate";
+import { MdOutlineSkipNext, MdOutlineSkipPrevious } from "react-icons/md";
+import { PER_PAGE_EMPLOYEE } from "../../utils/constant";
 
 const Employees = () => {
-  const { data: allEmployeData, isLoading } = useGetEmployeesQuery();
-  const { data: allCategory } = useGetAllCategoryQuery();
+  const [query, setQuery] = useState({
+    search_query: "",
+    per_page: PER_PAGE_EMPLOYEE,
+    page: 1,
+  });
 
-  const options = allCategory?.categories?.map((category: any) => ({
+  const { items } = useAppSelector((state) => state.dropdown);
+  const { data: allEmployeData, isLoading } = useGetEmployeesQuery(query);
+
+  console.log(allEmployeData);
+
+  const options = items?.map((category) => ({
     label: category.name,
     value: category.name,
   }));
 
-  const { register, handleSubmit } = useForm();
+  const handleSearchSubmit = (query: any) => {
+    setQuery((prev) => ({
+      ...prev,
+      search_query: query,
+    }));
+  };
 
-  const handleSearchSubmit = (values: any) => {
-    console.log("Search", values);
+  const handlePageClick = ({ selected }: { selected: number }) => {
+    setQuery((prev) => ({
+      ...prev,
+      page: selected + 1,
+    }));
+    // dispatch(setIsLoading(true));
+    // getAllCategoryWithPagination(selected + 1);
   };
 
   return (
     <div className="container py-4">
-      <h2 className="text-blue-primary text-start text-large">All Employees</h2>
+      <h2 className="text-blue-primary text-start text-large">Employees</h2>
 
-      <div>
+      {/* <div>
         <form onSubmit={handleSubmit(handleSearchSubmit)}>
           <div className="row p-2">
             <div className="col-sm-3">
@@ -65,20 +82,43 @@ const Employees = () => {
             </div>
           </div>
         </form>
-      </div>
+      </div> */}
 
-      <div className="row g-4 mt-2">
-        {allEmployeData?.employee?.length > 0 ? (
+      <div className="mt-2">
+        <EmployeeList
+          data={allEmployeData?.employee?.data}
+          isLoading={isLoading}
+          handleQuery={handleSearchSubmit}
+        />
+
+        {allEmployeData?.pagination?.last_page > 1 && (
+          <div className="bg-gray">
+            <ReactPaginate
+              className="react-paginate"
+              // breakLabel="..."
+              nextLabel={<MdOutlineSkipNext />}
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={2}
+              pageCount={allEmployeData?.pagination?.last_page}
+              // pageCount={allCategory?.pagination?.last_page}
+              previousLabel={<MdOutlineSkipPrevious />}
+              renderOnZeroPageCount={null}
+              disabledClassName="disabled"
+            />
+          </div>
+        )}
+
+        {/* {allEmployeData?.employee?.length > 0 ? (
           allEmployeData?.employee?.map((item: any, index: number) => (
-            <div className="col-md-4 " key={index}>
+            <div className="col-md-4 col-lg-3 " key={index}>
               <EmployeeCard {...item} />
             </div>
           ))
         ) : isLoading ? (
-          "Loading......"
+          <SpinnerLoader />
         ) : (
-          <h2>No data</h2>
-        )}
+          <h2 className="text-start">data not found!</h2>
+        )} */}
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ const OvetimeTable = ({ data, isLoading }: any) => {
       /\//g,
       "-"
     );
-    console.log(dateFormat);
+
     formData.append("overtime_date", dateFormat);
     formData.append("working_hours", data.working_hours);
     formData.append("salary_per_hour", data.salary_per_hour);

@@ -1,25 +1,54 @@
-import React, { useEffect } from "react";
-import InputWithLabel from "../../components/ui/InputWithLabel";
-import { useForm } from "react-hook-form";
-import "../../assets/styles/inputWithLabel.css";
-import { usePostEmployeeMutation } from "../../redux/api/employee";
-import { setIsLoading } from "../../redux/slices/loadingSlice";
-import { useAppDispatch } from "../../hooks/reduxHook";
-import { setToast } from "../../redux/slices/toastSlice";
-import { useGetAllCategoryQuery } from "../../redux/api/category";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { employeeFormSchema } from "../../validations/formValidation";
+import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { FaPlus } from "react-icons/fa";
+import {
+  MdCancel,
+  MdOutlineCancel,
+  MdOutlineSkipNext,
+  MdOutlineSkipPrevious,
+} from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import "../../assets/styles/inputWithLabel.css";
+import InputWithLabel from "../../components/ui/InputWithLabel";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
+import {
+  useGetEmployeesQuery,
+  usePostEmployeeMutation,
+} from "../../redux/api/employee";
+import { setIsLoading } from "../../redux/slices/loadingSlice";
+import { setToast } from "../../redux/slices/toastSlice";
+import { employeeFormSchema } from "../../validations/formValidation";
+import EmployeeList from "./EmployeeList";
+import { PER_PAGE_EMPLOYEE } from "../../utils/constant";
+import ReactPaginate from "react-paginate";
 
 const AddEmployee = () => {
+  const [query, setQuery] = useState({
+    search_query: "",
+    per_page: PER_PAGE_EMPLOYEE,
+    page: 1,
+  });
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const { status } = useAppSelector((state) => state.authUser);
+  const [isOpen, setIsOpen] = useState(status === "owner" ? false : true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const { data: allEmployeData, isLoading } = useGetEmployeesQuery(query);
+
   const {
     handleSubmit,
     register,
+    control,
     reset,
     formState: { errors },
   } = useForm({
+    defaultValues: {
+      role: status === "owner" ? "HR" : "",
+      // designation: status === "owner" ? "HR" : "",
+      profile_photo: "",
+    },
     resolver: zodResolver(employeeFormSchema),
   });
   const [
@@ -27,8 +56,7 @@ const AddEmployee = () => {
     { data: EmployeeDetailsData, isSuccess: postEmployeeIsSuccess },
   ] = usePostEmployeeMutation();
 
-  const { data: allCategory, isLoading: isAllCategoryLoading } =
-    useGetAllCategoryQuery();
+  const { items } = useAppSelector((state) => state.dropdown);
 
   const addEmployeeFormFields = [
     {
@@ -45,13 +73,6 @@ const AddEmployee = () => {
       required: true,
       value: "",
     },
-    // {
-    //   label: "Line Manager",
-    //   type: "text",
-    //   name: "line_manager",
-    //   required: true,
-    //   value: "",
-    // },
     {
       label: "Email",
       type: "email",
@@ -76,7 +97,7 @@ const AddEmployee = () => {
     {
       label: "Employee Id",
       name: "employee_id",
-      type: "string",
+      type: "text",
       required: true,
       value: "",
     },
@@ -102,15 +123,15 @@ const AddEmployee = () => {
       value: "",
     },
     {
-      // label: "Designation",
+      label: "Designation",
       name: "designation",
       type: "select",
-      options: allCategory?.categories?.map((category: any) => ({
+      options: items?.map((category: any) => ({
         label: category.name,
         value: category.name,
       })),
-      required: true,
-      value: allCategory?.categories[0]?.name,
+      // required: true,
+      value: status === "owner" ? "HR" : items[0]?.name,
     },
     {
       label: "Total Leaves",
@@ -140,20 +161,190 @@ const AddEmployee = () => {
       required: true,
       value: "",
     },
+    {
+      label: "Basic Salary",
+      name: "basic_salary",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "House Rent",
+      name: "house_rent",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Medical Allowance",
+      name: "medical_allowance",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Tax",
+      name: "tax",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Leave Deduction",
+      name: "leave_deduction",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "PF",
+      name: "pf",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Employee State",
+      name: "employee_state",
+      type: "text",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Insaurance",
+      name: "insurance",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Extra Working",
+      name: "extra_working",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Gross Total",
+      name: "gross_total",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Gross Salary",
+      name: "gross_salary",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Final",
+      name: "final_total",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Bank Name",
+      name: "bank_name",
+      type: "text",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Bank IFSC",
+      name: "bank_ifsc",
+      type: "text",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Account Number",
+      name: "account_number",
+      type: "number",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Account Holder Name",
+      name: "account_holder_name",
+      type: "text",
+      required: true,
+      value: "",
+    },
+    {
+      label: "Role",
+      name: "role",
+      options: [
+        {
+          label: "HR",
+          value: "HR",
+        },
+        {
+          label: "Employee",
+          value: "employee",
+        },
+      ],
+      type: "select",
+      value: "role",
+    },
+    {
+      label: "Upload Profile Image",
+      name: "profile_photo",
+      type: "file",
+      value: "image",
+      accept: "image/*",
+    },
   ];
 
+  const updateAddEmployeeFormField = addEmployeeFormFields
+    .map((item) => {
+      if (status === "owner" && item.label === "Designation") return null;
+      return { ...item };
+    })
+    .filter(Boolean);
+
   const handleFormSubmit = (data: any) => {
-    // const leavesFormData = {};
+    const formData = new FormData();
+    if (data.profile_photo.length > 0) {
+      formData.append("profile_photo", data.profile_photo[0]);
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (key !== "profile_photo") formData.append(key, String(value));
+    });
+
     dispatch(setIsLoading(true));
-    postEmployee(data);
+    postEmployee(formData);
     reset();
+  };
+
+  const handleSearchSubmit = (query: any) => {
+    setQuery((prev) => ({
+      ...prev,
+      search_query: query,
+    }));
+  };
+
+  const formFields = useWatch({ control });
+
+  const handlePageClick = ({ selected }: { selected: number }) => {
+    setQuery((prev) => ({
+      ...prev,
+      page: selected + 1,
+    }));
+    // dispatch(setIsLoading(true));
+    // getAllCategoryWithPagination(selected + 1);
   };
 
   useEffect(() => {
     if (EmployeeDetailsData?.result && postEmployeeIsSuccess) {
       dispatch(setIsLoading(false));
       dispatch(setToast(EmployeeDetailsData?.message));
-      navigate("/dashboard/employees");
+      if (status !== "owner") navigate("/dashboard/all/employees");
+      else setIsOpen(false);
+      setIsLoading(false);
     } else {
       if (EmployeeDetailsData?.message) {
         dispatch(setIsLoading(false));
@@ -162,46 +353,134 @@ const AddEmployee = () => {
     }
   }, [postEmployeeIsSuccess]);
 
+  useEffect(() => {
+    if (formFields?.profile_photo && formFields.profile_photo[0]) {
+      const file = formFields?.profile_photo[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          if (typeof reader.result === "string") {
+            setPreviewImage(e.target.result);
+          }
+        };
+        if (typeof file === "object" && (file as File) instanceof Blob)
+          reader.readAsDataURL(file);
+      }
+    }
+  }, [formFields?.profile_photo]);
+
   return (
     <div>
       <div className="mt-4 container pb-4">
-        <div className="col-lg-10 m-auto">
-          <div>
-            <h2 className="text-blue-primary text-start text-large ">
-              New Employee Enrollment
+        <div className="m-auto">
+          <div className="d-flex justify-content-between align-items-center">
+            <h2 className="text-blue-primary text-start text-large m-0">
+              Employee Records
             </h2>
+
+            {status === "owner" && (
+              <button
+                className="btn d-flex align-items-center gap-2"
+                onClick={() => setIsOpen(!isOpen)}
+                style={{
+                  width: "fit-content",
+                }}
+              >
+                {isOpen ? (
+                  <div className="d-flex align-items-center gap-1">
+                    <MdCancel size={22} /> Cancel
+                  </div>
+                ) : (
+                  <div className="d-flex align-items-center gap-1">
+                    <FaPlus />
+                    Enroll New Employee
+                  </div>
+                )}
+              </button>
+            )}
           </div>
 
-          <form
-            onSubmit={handleSubmit(handleFormSubmit)}
-            className="border p-3 rounded shadow-sm"
-          >
-            <div className="row mt-4">
-              {addEmployeeFormFields.map((item, index) => (
-                <div className="col-sm-6 my-2" key={`${item.label}-${index}`}>
-                  <InputWithLabel
-                    id={`${index}`}
-                    label={item.label}
-                    name={item.name}
-                    register={register}
-                    type={item.type}
-                    value={item.value}
-                    options={item.options}
-                    isLoading={isAllCategoryLoading}
-                  />
-                  {errors[item.name] && (
-                    <p className="text-danger">
-                      {errors[item.name]?.message as string}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
+          {isOpen && (
+            <form
+              onSubmit={handleSubmit(handleFormSubmit)}
+              className="border p-3 rounded shadow-sm mt-3"
+            >
+              <div className="row mt-4">
+                {updateAddEmployeeFormField.map((item, index) => {
+                  if (item && item.label === "Role" && status === "HR")
+                    return null;
+                  return (
+                    <div
+                      className="col-sm-6 my-2"
+                      key={`${item?.label}-${index}`}
+                    >
+                      <InputWithLabel
+                        id={`${index}`}
+                        label={item?.label}
+                        name={item?.name}
+                        register={register}
+                        type={item?.type}
+                        value={item?.value}
+                        options={item?.options}
+                        accept={item?.accept}
+                      />
+                      {errors[item?.name as keyof typeof errors] && (
+                        <p className="text-danger">
+                          {errors[item?.name as keyof typeof errors]?.message}
+                        </p>
+                      )}
 
-            <div className="d-flex justify-content-center mt-2">
-              <button className="btn py-2">Submit</button>
+                      {item?.name === "profile_photo" && previewImage && (
+                        <div>
+                          {previewImage && (
+                            <img
+                              src={previewImage}
+                              className="object-fit-contain"
+                              style={{
+                                width: "100px",
+                                height: "100px",
+                              }}
+                            />
+
+                            // <span>helo</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="d-flex justify-content-center mt-2">
+                <button className="btn py-2">Submit</button>
+              </div>
+            </form>
+          )}
+
+          {status === "owner" && (
+            <div className="mt-4 overflow-auto">
+              <EmployeeList
+                data={allEmployeData?.employee?.data}
+                isLoading={isLoading}
+                handleQuery={handleSearchSubmit}
+              />
+
+              <div className="bg-gray">
+                <ReactPaginate
+                  className="react-paginate"
+                  // breakLabel="..."
+                  nextLabel={<MdOutlineSkipNext />}
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={2}
+                  pageCount={allEmployeData?.pagination?.last_page}
+                  // pageCount={allCategory?.pagination?.last_page}
+                  previousLabel={<MdOutlineSkipPrevious />}
+                  renderOnZeroPageCount={null}
+                  disabledClassName="disabled"
+                />
+              </div>
             </div>
-          </form>
+          )}
         </div>
       </div>
     </div>

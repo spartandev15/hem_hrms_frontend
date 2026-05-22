@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/styles/auth-page.css";
+
 import { useAppDispatch } from "../../hooks/reduxHook";
 import { useAuthLoginMutation } from "../../redux/api/auth";
 import { setAuthUser } from "../../redux/slices/authSlice";
@@ -9,6 +10,8 @@ import { setToast } from "../../redux/slices/toastSlice";
 import { LoginFormData } from "../../types";
 import { useForm } from "react-hook-form";
 import InputWithLabel from "../../components/ui/InputWithLabel";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginFormSchema } from "../../validations/formValidation";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,7 +19,13 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { handleSubmit, register } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginFormSchema),
+  });
 
   // hook to get the response from the mutation of authLogin mutation
   const [authLogin, { data: LoginDetialsData, isSuccess: loginIsSuccess }] =
@@ -30,7 +39,7 @@ const Login = () => {
         email: data.email,
         password: data.password,
       };
-      await authLogin(formData).unwrap();
+      const response = await authLogin(formData).unwrap();
     } catch (error) {
       dispatch(setIsLoading(false));
       console.log(error);
@@ -42,16 +51,19 @@ const Login = () => {
     if (LoginDetialsData) {
       // destuct access_token from LoginDetialsData
 
+      console.log(LoginDetialsData);
       const { access_token, user } = LoginDetialsData;
-      const { status, id } = user;
+      const { status, id, first_name, last_name, email } = user;
       // payload details send to setAuthReducer
       const payloadData = {
         access_token,
         isAuthenticate: true,
         user_id: id,
         status,
+        name: first_name,
+        last_name,
+        email,
       };
-
       // if result true then set authData
       if (LoginDetialsData?.result) {
         // dispatch the setAuthUser action
@@ -59,7 +71,6 @@ const Login = () => {
         // navigate to dashboard page
         navigate("/dashboard");
       }
-
       // set loading false and set toast message
       dispatch(setIsLoading(false));
       dispatch(setToast(LoginDetialsData?.message));
@@ -97,8 +108,14 @@ const Login = () => {
                       label="Email"
                       register={register}
                       type="email"
-                      required
                     />
+
+                    {errors.email && (
+                      <p className="text-danger text-start">
+                        {errors?.email?.message as string}
+                      </p>
+                    )}
+
                     {/* <input
                       type="text"
                       id="username"
@@ -121,8 +138,13 @@ const Login = () => {
                       label="Password"
                       register={register}
                       type="password"
-                      required
                     />
+
+                    {errors.password && (
+                      <p className="text-danger text-start">
+                        {errors?.password?.message as string}
+                      </p>
+                    )}
                     {/* <input
                       type="password"
                       id="password"

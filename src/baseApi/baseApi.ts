@@ -5,8 +5,10 @@ import { AUTH_TOKEN_KEY } from "../constantsPaths/Constant";
 export const baseApi = createApi({
   reducerPath: "baseApi",
   tagTypes: [
+    "profile",
     "category",
     "employess",
+    "employessById",
     "leaves",
     "leaveStatus",
     "punchInOut",
@@ -14,6 +16,12 @@ export const baseApi = createApi({
     "overtime",
     "allOvertime",
     "interview",
+    "vacancy",
+    "allDocuments",
+    "documentsById",
+    "userDocuments",
+    "notices",
+    "training"
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_KEY_BASE_URL,

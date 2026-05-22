@@ -44,7 +44,7 @@ const ForgotPassword = () => {
               <p>
                 Enter your Organization details and start your journey with us.
               </p>
-              <Link to="/sign-in">
+              <Link to="/login">
                 <button className="btn signupbtn">Sign In</button>
               </Link>
             </div>

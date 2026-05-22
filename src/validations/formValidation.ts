@@ -1,6 +1,11 @@
 import { z } from "zod";
 
 // Define Zod validation schema
+export const loginFormSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Invalid email format"),
+  password: z.string().min(1, "Password should not empty"),
+});
+
 export const employeeFormSchema = z
   .object({
     password: z
@@ -15,8 +20,12 @@ export const employeeFormSchema = z
 
     designation: z
       .string()
-      .min(1, "Designation is required") // Make sure the select has a value selected
-      .default("defaultDesignation"), // Ensure a default value
+      // .min(1, "Designation is required") // Make sure the select has a value selected
+      .optional(), // Ensure a default value
+
+    role: z
+      .string() // Make sure the select has a value selected
+      .optional(),
 
     email: z.string().min(1, "Email is required").email("Invalid email format"),
 
@@ -25,7 +34,7 @@ export const employeeFormSchema = z
     first_name: z.string().min(1, "First name is required"),
 
     joining_date: z.string().min(1, "Joining date is required"),
-    date_of_birth: z.string().min(1, "Joining date is required"),
+    date_of_birth: z.string().min(1, "dob is required"),
     last_name: z.string().min(1, "Last name is required"),
 
     // line_manager: z.string().min(1, "Line manager is required"),
@@ -42,6 +51,23 @@ export const employeeFormSchema = z
     paid_leaves: z.string().min(1, "Paid leaves is required"),
 
     unpaid_leaves: z.string().min(1, "Unpaid leaves is required"),
+    basic_salary: z.string().min(1, "Basic Salary is required"),
+    house_rent: z.string().min(1, "House rent is required"),
+    medical_allowance: z.string().min(1, "Medical Allowance is required"),
+    tax: z.string().min(1, "Tax is required"),
+    leave_deduction: z.string().min(1, "Leave Deduction is required"),
+    pf: z.string().min(1, "Unpaid leaves is required"),
+    employee_state: z.string().min(1, "Employee State is required"),
+    insurance: z.string().min(1, "Insurance is required"),
+    extra_working: z.string().min(1, "Extra Working is required"),
+    gross_total: z.string().min(1, "Gross Total is required"),
+    final_total: z.string().min(1, "Final Total is required"),
+    gross_salary: z.string().min(1, "Gross Salary is required"),
+    bank_name: z.string().min(1, "Bank Name is required"),
+    bank_ifsc: z.string().min(1, "IFSC Code is required"),
+    account_number: z.string().min(1, "Account number is required"),
+    account_holder_name: z.string().min(1, "Account Holder Name is required"),
+    profile_photo: z.any().optional(),
   })
   .refine((data) => data.password === data.confirm_Password, {
     message: "Passwords don't match",
@@ -95,14 +121,16 @@ export const overTimeFormSchema = z.object({
     }),
 
   // Final Balance
-  final_balance: z
-    .string()
-    .min(1, "Final balance is required")
-    .regex(/^\d+(\.\d{1,2})?$/, "Invalid balance format")
-    .transform(Number)
-    .refine((balance) => balance >= 0, {
-      message: "Final balance must be greater than or equal to 0",
-    }),
+  // final_balance: z
+  //   .string()
+  //   .min(1, "Final balance is required")
+  //   .regex(/^\d+(\.\d{1,2})?$/, "Invalid balance format")
+  //   .transform(Number)
+  //   .refine((balance) => balance >= 0, {
+  //     message: "Final balance must be greater than or equal to 0",
+  //   }),
+
+  final_balance: z.string().optional(),
 
   // Project Name
   project_name: z.string().min(1, "Project name is required"),
@@ -131,7 +159,7 @@ export const noticeFormSchema = z.object({
     )
     .nonempty("Email is required"), // Ensure at least one email is selected
 
-  description: z.string().min(1, "Description is required"),
+  // description: z.string().min(1, "Description is required"),
   screenshot: z
     .any() // Allow either File or FileList
     .optional(), // Allow undefined or null
@@ -151,7 +179,56 @@ export const scheduleFormSchema = z.object({
   resume_file: z.any().refine((file) => file.length > 0, {
     message: "resume is required",
   }),
+
+  // interviewer_email: z.string().min(1, "interviewer email is required"),
+  interviewer_email: z
+    .array(
+      z.object({
+        label: z.string().min(1, "Label is required"),
+        value: z.string().min(1, "Value is required"),
+      })
+    )
+    .refine((emails) => emails && emails.length > 0, {
+      message: "At least one interviewer email is required", // Ensure the array is not empty
+    }),
   // Ensure at least one email is selected
   // description: z.string().min(1, "Description is required"),
   // Allow undefined or null
 });
+
+export const vacancyFormSchema = z.object({
+  job_title: z.string().min(1, "Job Title is required"),
+  location: z.string().min(1, "Location is required"),
+  salary_range: z.string().min(1, "salary Range is required"),
+  job_type: z.string().min(1, "Job Type is required"),
+  skills_required: z.string().min(1, "Skills required are required"),
+  job_responsibilities: z.string().min(1, "Job Responsibilities are required"),
+  company_information: z.string().min(1, "Company Information is required"),
+  contact_email: z.string().email("Please provide a valid email address"),
+  experience: z.string().min(1, "Experience is required"),
+  joining_time: z.string().min(1, "joining time is required"),
+  status: z.string().min(1, "status is required"),
+  // phone_number: z
+  //   .string()
+  //   .min(1, "Mobile number is required")
+  //   .regex(/^\d{10}$/, "Mobile number should be 10 digits"),
+});
+
+export const documentsFormSchema = z.object({
+  "10th_dmc": z.any(),
+  "12th_dmc": z.any(),
+});
+
+// {
+//   "job_title": "",
+//   "location": "",
+//   "salary_range": "10-20",
+//   "job_type": "Office",
+//   "skills_required": "",
+//   " job_responsibilities": "",
+//   "company_information": "",
+//   "contact_email": "",
+//   "experience": "1-2",
+//   "joining_time": "Immidiate",
+//   "phone_number": ""
+// }

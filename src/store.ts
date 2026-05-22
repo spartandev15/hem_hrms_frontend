@@ -7,6 +7,8 @@ import { authSlice } from "./redux/slices/authSlice";
 import { profileApi } from "./redux/api/profile";
 import { baseApi } from "./baseApi/baseApi";
 import { toastSlice } from "./redux/slices/toastSlice";
+import dropdownSlice from "./redux/slices/dropdown";
+import allEmailSlice from "./redux/slices/allEmail";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +17,8 @@ export const store = configureStore({
     authUser: authSlice.reducer,
     loader: loadingSlice.reducer,
     toast: toastSlice.reducer,
+    dropdown: dropdownSlice.reducer,
+    allEmail: allEmailSlice.reducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

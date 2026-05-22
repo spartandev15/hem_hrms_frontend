@@ -63,7 +63,7 @@ const Signup = () => {
             <div className="signupform2">
               <h5>Welcome to ORPECT!</h5>
               <p>If you already have an account.</p>
-              <Link to="">
+              <Link to="/login">
                 <button className="btn signupbtn">Sign In</button>
               </Link>
             </div>
