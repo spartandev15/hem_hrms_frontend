@@ -10,10 +10,11 @@ import { setToast } from "../../redux/slices/toastSlice";
 import { setIsLoading } from "../../redux/slices/loadingSlice";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 
 const ListTrainingInternship = () => {
   const dispatch = useAppDispatch();
-
+  const navigate = useNavigate()
   const [search, setSearch] = useState("");
 
   const [isOpenDialog, setIsOpenDialog] =
@@ -299,9 +300,7 @@ const ListTrainingInternship = () => {
                                               size={22}
                                               // color="#6C757D"
                                               title="edit"
-                                            //   onClick={() => {
-                                            //     setIsEdit(true);
-                                            //   }}
+                                              onClick={() =>navigate(`/dashboard/update-training&internship/${item?.id}`)}
                                             />
                                           </div>
 

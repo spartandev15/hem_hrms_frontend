@@ -339,7 +339,7 @@ const UpdateTrainingInternship = () => {
       );
 
       navigate(
-        "/training-internship/list"
+        "/dashboard/list-training&internship"
       );
     } catch (error: any) {
       console.log(error);
