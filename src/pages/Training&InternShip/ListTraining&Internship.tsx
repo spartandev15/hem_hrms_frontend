@@ -100,7 +100,7 @@ const ListTrainingInternship = () => {
         dispatch(
           setToast(
             response?.message ||
-              "Deleted Successfully"
+            "Deleted Successfully"
           )
         );
 
@@ -113,7 +113,7 @@ const ListTrainingInternship = () => {
         dispatch(
           setToast(
             error?.data?.message ||
-              "Something went wrong"
+            "Something went wrong"
           )
         );
       } finally {
@@ -250,15 +250,14 @@ const ListTrainingInternship = () => {
 
                         <td>
                           <span
-                            className={`badge ${
-                              item?.program_category ===
-                              "Training"
+                            className={`badge ${item?.program_category ===
+                                "Training"
                                 ? "bg-primary"
                                 : "bg-success"
-                            }`}
+                              }`}
                           >
                             {
-                              item?.program_category
+                              item?.training_type
                             }
                           </span>
                         </td>
@@ -275,15 +274,14 @@ const ListTrainingInternship = () => {
 
                         <td>
                           <span
-                            className={`badge ${
-                              item?.status ===
-                              "active"
+                            className={`badge ${item?.status ===
+                                "active"
                                 ? "bg-success"
                                 : item?.status ===
                                   "pending"
-                                ? "bg-warning text-dark"
-                                : "bg-secondary"
-                            }`}
+                                  ? "bg-warning text-dark"
+                                  : "bg-secondary"
+                              }`}
                           >
                             {item?.status}
                           </span>
@@ -295,32 +293,32 @@ const ListTrainingInternship = () => {
                           <div className="d-flex align-items-center justify-content-center gap-2">
                             {/* EDIT */}
 
-                              <div className="action-btn-container">
-                                            <TiEdit
-                                              size={22}
-                                              // color="#6C757D"
-                                              title="edit"
-                                              onClick={() =>navigate(`/dashboard/update-training&internship/${item?.id}`)}
-                                            />
-                                          </div>
+                            <div className="action-btn-container">
+                              <TiEdit
+                                size={22}
+                                // color="#6C757D"
+                                title="edit"
+                                onClick={() => navigate(`/dashboard/update-training&internship/${item?.id}`)}
+                              />
+                            </div>
 
                             {/* DELETE */}
-  <div className="action-btn-container action-btn-delete">
-                <RiDeleteBin6Line
-                  size={22}
-                  title="delete"
-                 onClick={() => {
-                                setSelectedId(
-                                  item?.id
-                                );
+                            <div className="action-btn-container action-btn-delete">
+                              <RiDeleteBin6Line
+                                size={22}
+                                title="delete"
+                                onClick={() => {
+                                  setSelectedId(
+                                    item?.id
+                                  );
 
-                                setIsOpenDialog(
-                                  true
-                                );
-                              }}
-                />
-              </div>
-                           
+                                  setIsOpenDialog(
+                                    true
+                                  );
+                                }}
+                              />
+                            </div>
+
                           </div>
                         </td>
                       </tr>
