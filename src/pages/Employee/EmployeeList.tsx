@@ -124,7 +124,7 @@ const EmployeeList = ({
             {/* <th>#</th> */}
             <th>Employee Id</th>
             <th>Name</th>
-            <th>Desgination</th>
+            <th>Designation</th>
             <th>Email</th>
             <th>Actions</th>
           </tr>
