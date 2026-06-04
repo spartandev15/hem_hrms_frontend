@@ -1,0 +1,208 @@
+import React from "react";
+import { MdOutlineClose } from "react-icons/md";
+import { useForm, useWatch } from "react-hook-form";
+import InputWithLabel from "../../components/ui/InputWithLabel";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHook";
+import { useUpdateEmployeeMutation } from "../../redux/api/employee";
+import { setIsLoading } from "../../redux/slices/loadingSlice";
+import { setToast } from "../../redux/slices/toastSlice";
+
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  record: any;
+}
+
+const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
+  const dispatch = useAppDispatch();
+  const { items } = useAppSelector((state) => state.dropdown);
+
+  const [updateEmployee] = useUpdateEmployeeMutation();
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      id: record?.id,
+      first_name: record?.first_name,
+      last_name: record?.last_name,
+      phone: record?.phone,
+      line_manager: record?.line_manager,
+      email: record?.email,
+      designation: record?.designation,
+      employee_id: record?.employee_id,
+      profile_photo: record?.profile_photo,
+      joining_date: record?.joining_date,
+      address: "",
+      password: "",
+      date_of_birth: record?.date_of_birth,
+      total_leaves: String(record?.leaves?.overall_total_leaves || ""),
+      paid_leaves: record?.leaves?.leave_data?.paid_leaves?.Total,
+      unpaid_leaves: record?.leaves?.leave_data?.unpaid_leaves?.Total,
+      sick_leaves: record?.leaves?.leave_data?.sick_leaves?.Total,
+      basic_salary: record?.salary_data?.basic_salary,
+      house_rent: record?.salary_data?.house_rent,
+      medical_allowance: record?.salary_data?.medical_allowance,
+      tax: record?.salary_data?.tax,
+      leave_deduction: record?.salary_data?.leave_deduction,
+      pf: record?.salary_data?.pf,
+      employee_state: record?.salary_data?.employee_state,
+      insurance: record?.salary_data?.insurance,
+      extra_working: record?.salary_data?.extra_working,
+      gross_total: record?.salary_data?.gross_total,
+      final_total: record?.salary_data?.final_total,
+      gross_salary: record?.salary_data?.gross_salary,
+      bank_name: record?.salary_data?.bank_name,
+      bank_ifsc: record?.salary_data?.bank_ifsc,
+      account_number: record?.salary_data?.account_number,
+      account_holder_name: record?.salary_data?.account_holder_name,
+    },
+  });
+
+  const formField = useWatch({ control });
+
+  const editEmployeeFormFields = [
+    {
+      label: "First Name",
+      name: "first_name",
+      type: "text",
+    },
+    {
+      label: "Last Name",
+      name: "last_name",
+      type: "text",
+    },
+    {
+      label: "Email",
+      name: "email",
+      type: "email",
+    },
+    {
+      label: "Employee Id",
+      name: "employee_id",
+      type: "text",
+    },
+    {
+      label: "Phone Number",
+      name: "phone",
+      type: "number",
+    },
+    {
+      label: "Designation",
+      name: "designation",
+      type: "select",
+      options: items?.map((item) => ({
+        label: item.name,
+        value: item.name,
+      })),
+    },
+    {
+      label: "Joining Date",
+      name: "joining_date",
+      type: "date",
+    },
+    {
+      label: "DOB",
+      name: "date_of_birth",
+      type: "date",
+    },
+    {
+      label: "Upload Image",
+      name: "profile_photo",
+      type: "file",
+      accept: "image/jpeg,image/png",
+    },
+  ];
+
+  const onSubmit = async (data: any) => {
+    const formData = new FormData();
+
+    if (
+      typeof data?.profile_photo !== "string" &&
+      data?.profile_photo?.length > 0
+    ) {
+      formData.append("profile_photo", data.profile_photo[0]);
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (key !== "profile_photo") {
+        formData.append(key, String(value ?? ""));
+      }
+    });
+
+    try {
+      dispatch(setIsLoading(true));
+
+      const response = await updateEmployee(formData).unwrap();
+
+      dispatch(setToast(response?.message));
+      onClose();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      dispatch(setIsLoading(false));
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="employee-detail-edit-form py-4">
+      <div className="container">
+        <div className="d-flex justify-content-between align-items-center">
+          <h2>Employee Update Form</h2>
+
+          <MdOutlineClose
+            size={24}
+            style={{ cursor: "pointer" }}
+            onClick={onClose}
+          />
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="row">
+            {editEmployeeFormFields.map((field, index) => (
+              <div className="col-md-6 my-2" key={index}>
+                <InputWithLabel
+                  id={`${index}`}
+                  label={field.label}
+                  name={field.name}
+                  type={field.type}
+                  register={register}
+                  options={field.options}
+                  accept={field.accept}
+                />
+
+                {field.name === "profile_photo" && (
+                  <div>
+                    {formField.profile_photo &&
+                    typeof formField.profile_photo === "string" ? (
+                      <span>
+                        {formField.profile_photo.split("/").pop()}
+                      </span>
+                    ) : (
+                      <span>
+                        {formField?.profile_photo?.[0]?.name}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-3">
+            <button type="submit" className="btn py-2">
+              Update Employee
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default EmployeeEditModal;

@@ -493,7 +493,7 @@ const TableRow = ({
       <tr>
         {/* <td>{index + 1}</td> */}
         <td>{record.employee_id}</td>
-        <td>{`${record?.first_name}  ${record?.last_name}`}</td>
+        <td>{`${record?.first_name}  ${record?.last_name ? record?.last_name : ""}`}</td>
         <td>{record.designation}</td>
         <td>{record.email}</td>
         {/* <td>{record.project_name}</td> */}

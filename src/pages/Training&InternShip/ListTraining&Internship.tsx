@@ -257,7 +257,7 @@ const ListTrainingInternship = () => {
                               }`}
                           >
                             {
-                              item?.training_type
+                              item?.program_category
                             }
                           </span>
                         </td>
