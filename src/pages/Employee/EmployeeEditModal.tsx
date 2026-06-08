@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { useForm, useWatch } from "react-hook-form";
 import InputWithLabel from "../../components/ui/InputWithLabel";
@@ -14,6 +14,7 @@ interface Props {
 }
 
 const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
+  console.log(record,"record")
   const dispatch = useAppDispatch();
   const { items } = useAppSelector((state) => state.dropdown);
 
@@ -23,6 +24,7 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -64,59 +66,300 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
 
   const formField = useWatch({ control });
 
-  const editEmployeeFormFields = [
+    const editEmployeeFormFields = [
     {
       label: "First Name",
       name: "first_name",
       type: "text",
+      required: true,
+      value: record?.first_name,
     },
     {
       label: "Last Name",
       name: "last_name",
       type: "text",
+      required: true,
+      value: record?.last_name,
+    },
+    {
+      label: "Address",
+      name: "address",
+      type: "text",
+      required: true,
+      value: "",
     },
     {
       label: "Email",
-      name: "email",
       type: "email",
+      name: "email",
+      required: true,
+      value: record?.email,
     },
     {
       label: "Employee Id",
       name: "employee_id",
-      type: "text",
-    },
-    {
-      label: "Phone Number",
-      name: "phone",
-      type: "number",
-    },
-    {
-      label: "Designation",
-      name: "designation",
-      type: "select",
-      options: items?.map((item) => ({
-        label: item.name,
-        value: item.name,
-      })),
+      type: "string",
+      required: true,
+      value: record?.employee_id,
     },
     {
       label: "Joining Date",
       name: "joining_date",
       type: "date",
+      required: true,
+      value: record?.joining_date,
+    },
+    {
+      label: "Phone Number",
+      name: "phone",
+      type: "number",
+      required: true,
+      value: record?.phone,
+    },
+    {
+      label: "Designation",
+      name: "designation",
+      type: "select",
+      options: items?.map((category) => ({
+        label: category.name,
+        value: category.name,
+      })),
+      required: true,
+      value: record?.designation,
     },
     {
       label: "DOB",
       name: "date_of_birth",
       type: "date",
+      required: true,
+      value: record?.date_of_birth,
+    },
+    {
+      label: "Total Leaves",
+      name: "total_leaves",
+      disabled: true,
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Paid Leaves",
+      name: "paid_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Unpaid Leaves",
+      name: "unpaid_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Sick Leaves",
+      name: "sick_leaves",
+      type: "text",
+      required: true,
+      value: "hem",
+    },
+    {
+      label: "Basic Salary",
+      name: "basic_salary",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.basic_salary,
+    },
+    {
+      label: "House Rent",
+      name: "house_rent",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.house_rent,
+    },
+    {
+      label: "Medical Allowance",
+      name: "medical_allowance",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.medical_allowance,
+    },
+    {
+      label: "Tax",
+      name: "tax",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.tax,
+    },
+    {
+      label: "Leave Deduction",
+      name: "leave_deduction",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.leave_deduction,
+    },
+    {
+      label: "PF",
+      name: "pf",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.pf,
+    },
+    {
+      label: "Employee State",
+      name: "employee_state",
+      type: "text",
+      required: true,
+      value: record?.salary_data?.employee_state,
+    },
+    {
+      label: "Insurance",
+      name: "insurance",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.insurance,
+    },
+    {
+      label: "Extra Working",
+      name: "extra_working",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.extra_working,
+    },
+    {
+      label: "Gross Total",
+      name: "gross_total",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.gross_total,
+    },
+    {
+      label: "Gross Salary",
+      name: "gross_salary",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.gross_salary,
+    },
+    {
+      label: "Final",
+      name: "final_total",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.final_total,
+    },
+    {
+      label: "Bank Name",
+      name: "bank_name",
+      type: "text",
+      required: true,
+      value: record?.salary_data?.bank_name,
+    },
+    {
+      label: "Bank IFSC",
+      name: "bank_ifsc",
+      type: "text",
+      required: true,
+      value: record?.salary_data?.bank_ifsc,
+    },
+    {
+      label: "Account Number",
+      name: "account_number",
+      type: "number",
+      required: true,
+      value: record?.salary_data?.account_number,
+    },
+    {
+      label: "Account Holder Name",
+      name: "account_holder_name",
+      type: "text",
+      required: true,
+      value: record?.salary_data?.account_holder_name,
     },
     {
       label: "Upload Image",
       name: "profile_photo",
       type: "file",
-      accept: "image/jpeg,image/png",
+      value: "image",
+      accept: "image/jpeg image/png",
     },
   ];
+useEffect(() => {
+  if (!record) return;
 
+  reset({
+    id: record?.id || "",
+    first_name: record?.first_name || "",
+    last_name: record?.last_name || "",
+    phone: record?.phone || "",
+    line_manager: record?.line_manager || "",
+    email: record?.email || "",
+    designation: record?.designation || "",
+    employee_id: record?.employee_id || "",
+    joining_date: record?.joining_date || "",
+    date_of_birth: record?.date_of_birth || "",
+
+    total_leaves: String(
+      record?.leaves?.overall_total_leaves || ""
+    ),
+
+    paid_leaves:
+      record?.leaves?.leave_data?.paid_leaves?.Total || "",
+
+    unpaid_leaves:
+      record?.leaves?.leave_data?.unpaid_leaves?.Total || "",
+
+    sick_leaves:
+      record?.leaves?.leave_data?.sick_leaves?.Total || "",
+
+    basic_salary:
+      record?.salary_data?.basic_salary || "",
+
+    house_rent:
+      record?.salary_data?.house_rent || "",
+
+    medical_allowance:
+      record?.salary_data?.medical_allowance || "",
+
+    tax: record?.salary_data?.tax || "",
+
+    leave_deduction:
+      record?.salary_data?.leave_deduction || "",
+
+    pf: record?.salary_data?.pf || "",
+
+    employee_state:
+      record?.salary_data?.employee_state || "",
+
+    insurance:
+      record?.salary_data?.insurance || "",
+
+    extra_working:
+      record?.salary_data?.extra_working || "",
+
+    gross_total:
+      record?.salary_data?.gross_total || "",
+
+    gross_salary:
+      record?.salary_data?.gross_salary || "",
+
+    final_total:
+      record?.salary_data?.final_total || "",
+
+    bank_name:
+      record?.salary_data?.bank_name || "",
+
+    bank_ifsc:
+      record?.salary_data?.bank_ifsc || "",
+
+    account_number:
+      record?.salary_data?.account_number || "",
+
+    account_holder_name:
+      record?.salary_data?.account_holder_name || "",
+
+    profile_photo: record?.profile_photo || "",
+  });
+}, [record, reset]);
   const onSubmit = async (data: any) => {
     const formData = new FormData();
 
@@ -174,6 +417,7 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
                   register={register}
                   options={field.options}
                   accept={field.accept}
+                  labelAnimated={true}
                 />
 
                 {field.name === "profile_photo" && (

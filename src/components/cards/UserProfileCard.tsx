@@ -39,7 +39,7 @@ const UserProfileCard = ({ userDetails }: any) => {
                     <p className="m-0">{`${years} years ${months} months`}</p>
                   </div>
                   <p className="m-0 d-flex align-items-center">
-                    <MdLocationOn /> {userDetails.address}
+                    <MdLocationOn /> {userDetails?.address}
                   </p>
 
                   {/* <div
