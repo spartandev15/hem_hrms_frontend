@@ -242,7 +242,7 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
     },
     {
       label: "Final",
-      name: "final_total",
+      name: "final_totalmm",
       type: "number",
       required: true,
       value: record?.salary_data?.final_total,
@@ -414,6 +414,7 @@ useEffect(() => {
                   label={field.label}
                   name={field.name}
                   type={field.type}
+                  value={field.value}
                   register={register}
                   options={field.options}
                   accept={field.accept}
