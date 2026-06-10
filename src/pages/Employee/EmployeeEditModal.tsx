@@ -38,7 +38,7 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
       employee_id: record?.employee_id,
       profile_photo: record?.profile_photo,
       joining_date: record?.joining_date,
-      address: "",
+    
       password: "",
       date_of_birth: record?.date_of_birth,
       total_leaves: String(record?.leaves?.overall_total_leaves || ""),
@@ -61,6 +61,13 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
       bank_ifsc: record?.salary_data?.bank_ifsc,
       account_number: record?.salary_data?.account_number,
       account_holder_name: record?.salary_data?.account_holder_name,
+
+      address: record?.address,
+      state: record?.state,
+      city: record?.salary_data?.city,
+      zipcode: record?.salary_data?.zipcode,
+      country: record?.country,
+
     },
   });
 
@@ -137,7 +144,7 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
     {
       label: "Total Leaves",
       name: "total_leaves",
-      disabled: true,
+      disabled: true, 
       type: "text",
       required: true,
       value: "hem",
@@ -281,6 +288,37 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
       type: "file",
       value: "image",
       accept: "image/jpeg image/png",
+    },
+     {
+      label: "Address",
+      name: "address",
+      type: "text",
+      value: record?.address,
+    },
+      {
+      label: "Country",
+      name: "country",
+      type: "text",
+      value:  record?.country,
+    },
+      {
+      label: "State",
+      name: "state",
+      type: "text",
+      value:  record?.state,
+    },
+
+      {
+      label: "City",
+      name: "city",
+      type: "text",
+      value:  record?.city,
+    },
+      {
+      label: "Zip Code",
+      name: "zipcode",
+      type: "text",
+      value:  record?.zipcode,
     },
   ];
 useEffect(() => {
