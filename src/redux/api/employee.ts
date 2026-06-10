@@ -91,7 +91,7 @@ export const employeeApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["allEmployess", "employessById"],
+      invalidatesTags: ["allEmployess", "employessById","leaves"],
     }),
 
     // endpoint for delete employee
