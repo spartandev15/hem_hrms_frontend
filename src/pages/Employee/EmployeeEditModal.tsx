@@ -63,10 +63,10 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
       account_holder_name: record?.salary_data?.account_holder_name,
 
       address: record?.address,
-      state: record?.state,
-      city: record?.salary_data?.city,
-      zipcode: record?.salary_data?.zipcode,
-      country: record?.country,
+      state: record?.user_detail?.state,
+      city: record?.user_detail?.salary_data?.city,
+      zipcode: record?.user_detail?.salary_data?.zipcode,
+      country: record?.user_detail?.country,
 
     },
   });
@@ -299,26 +299,26 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
       label: "Country",
       name: "country",
       type: "text",
-      value:  record?.country,
+      value:  record?.user_detail?.country,
     },
       {
       label: "State",
       name: "state",
       type: "text",
-      value:  record?.state,
+      value:  record?.user_detail?.state,
     },
 
       {
       label: "City",
       name: "city",
       type: "text",
-      value:  record?.city,
+      value:  record?.user_detail?.city,
     },
       {
       label: "Zip Code",
       name: "zipcode",
       type: "text",
-      value:  record?.zipcode,
+      value:  record?.user_detail?.zipcode,
     },
   ];
 useEffect(() => {
@@ -396,6 +396,12 @@ useEffect(() => {
       record?.salary_data?.account_holder_name || "",
 
     profile_photo: record?.profile_photo || "",
+
+      address: record?.address,
+      state: record?.user_detail?.state,
+      city: record?.user_detail?.city,
+      zipcode: record?.user_detail?.zipcode,
+      country: record?.user_detail?.country,
   });
 }, [record, reset]);
   const onSubmit = async (data: any) => {

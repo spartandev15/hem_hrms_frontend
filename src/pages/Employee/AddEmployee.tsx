@@ -296,6 +296,35 @@ const AddEmployee = () => {
       value: "image",
       accept: "image/*",
     },
+      {
+      label: "Address",
+      name: "address",
+      type: "text",
+      value: ""
+    },
+      {
+      label: "Country",
+      name: "country",
+      type: "text",
+      value:  ""
+    },
+      {
+      label: "State",
+      name: "state",
+      type: "text",
+      value:  ""   },
+
+      {
+      label: "City",
+      name: "city",
+      type: "text",
+      value:  ""  },
+      {
+      label: "Zip Code",
+      name: "zip_code",
+      type: "text",
+      value:  ""
+    },
   ];
 
   const updateAddEmployeeFormField = addEmployeeFormFields
