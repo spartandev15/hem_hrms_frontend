@@ -1,221 +1,566 @@
-import React, { useEffect, useRef, useState } from "react";
-import { InputWithLabelProps } from "../../types";
-import { IoMdSearch } from "react-icons/io";
-import { BiHide, BiShow } from "react-icons/bi";
-import { FaCloudUploadAlt } from "react-icons/fa";
+// import React, { useEffect, useRef, useState } from "react";
+// import { InputWithLabelProps } from "../../types";
+// import { IoMdSearch } from "react-icons/io";
+// import { BiHide, BiShow } from "react-icons/bi";
+// import { FaCloudUploadAlt } from "react-icons/fa";
+// import { Country, State, City } from "country-state-city";
 
-const InputWithLabel: React.FC<InputWithLabelProps> = ({
-  label,
-  type = "text",
-  id,
-  name,
-  placeholder,
-  register,
-  required = false,
-  value,
-  options,
-  labelAnimated = true,
-  serachIcon,
-  isLoading,
-  disabled,
-  accept,
-  disabledPast,
-  disabledFuture,
-  rows,
-  multiple,
-  onChange,
-}) => {
-  const [focused, setFocused] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const fileRef = useRef<HTMLInputElement | null>(null);
+// const InputWithLabel: React.FC<InputWithLabelProps> = ({
+//   label,
+//   type = "text",
+//   id,
+//   name,
+//   placeholder,
+//   register,
+//   required = false,
+//   value,
+//   options,
+//   labelAnimated = true,
+//   serachIcon,
+//   isLoading,
+//   disabled,
+//   accept,
+//   disabledPast,
+//   disabledFuture,
+//   rows,
+//   multiple,
+//   onChange,
+// }) => {
+//   const [countries, setCountries] = useState(
+//     Country.getAllCountries()
+//   );
+//     const [states, setStates] = useState<any[]>([]);
+//     const [cities, setCities] = useState<any[]>([]);
+//   const [focused, setFocused] = useState(false);
+//   const [showPassword, setShowPassword] = useState(false);
+//   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const handleFocus = () => {
-    setFocused(true);
-  };
+//   const handleFocus = () => {
+//     setFocused(true);
+//   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (!e.target.value) {
-      setFocused(false);
-    }
-  };
+//   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+//     if (!e.target.value) {
+//       setFocused(false);
+//     }
+//   };
 
-  const handleShowHidePassword = () => {
-    setShowPassword(!showPassword);
-  };
+//   const handleShowHidePassword = () => {
+//     setShowPassword(!showPassword);
+//   };
 
-  const today = new Date();
+//   const today = new Date();
 
-  const formatDate = (date: Date, type: string) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    if (type === "date") return `${year}-${month}-${day}`;
-    else if (type === "datetime-local")
-      `${year}-${month}-${day}T${hours}:${minutes}`;
-  };
+//   const formatDate = (date: Date, type: string) => {
+//     const year = date.getFullYear();
+//     const month = String(date.getMonth() + 1).padStart(2, "0");
+//     const day = String(date.getDate()).padStart(2, "0");
+//     const hours = String(date.getHours()).padStart(2, "0");
+//     const minutes = String(date.getMinutes()).padStart(2, "0");
+//     if (type === "date") return `${year}-${month}-${day}`;
+//     else if (type === "datetime-local")
+//       `${year}-${month}-${day}T${hours}:${minutes}`;
+//   };
 
-  const todayFormatted = formatDate(today, type);
-  // console.log(todayFormatted);
+//   const todayFormatted = formatDate(today, type);
+//   // console.log(todayFormatted);
 
-  useEffect(() => {
-    if (value) {
-      setFocused(true);
-    } else {
-      setFocused(false);
-    }
-  }, [value]);
+//   useEffect(() => {
+//     if (value) {
+//       setFocused(true);
+//     } else {
+//       setFocused(false);
+//     }
+//   }, [value]);
 
-  return (
-    <div className="form-group">
-      <div className={`input-wrapper ${focused ? "focused" : ""}`}>
-        {type === "select" ? (
-          <select
-            id={id}
-            {...register(name!)}
-            onFocus={handleFocus}
-            required={required}
-            className="input-animation w-100"
-            defaultValue={value || ""}
-            disabled={disabled}
-          >
-            {options && options.length > 0 ? (
-              options?.map((option: any, index: number) => (
-                <option key={index} value={option.value}>
-                  {option.label}
+//   return (
+//     <div className="form-group">
+//       <div className={`input-wrapper ${focused ? "focused" : ""}`}>
+//         {type === "select" ? (
+//           <select
+//             id={id}
+//             {...register(name!)}
+//             onFocus={handleFocus}
+//             required={required}
+//             className="input-animation w-100"
+//             defaultValue={value || ""}
+//             disabled={disabled}
+//           >
+//             {options && options.length > 0 ? (
+//               options?.map((option: any, index: number) => (
+//                 <option key={index} value={option.value}>
+//                   {option.label}
+//                 </option>
+//               ))
+//             ) : (
+//               <option value="" disabled>
+//                 {isLoading ? "wait..." : "No Options"}
+//               </option>
+//             )}
+//           </select>
+//         ) : type === "country" ? (
+
+
+//           < select id={id}
+//         {...register(name!)}
+//         onFocus={handleFocus}
+//         required={required}
+//         className="input-animation w-100"
+//         defaultValue={value || ""}
+//         disabled={disabled}
+//   >
+//         <option value="">Select Country</option>
+
+//         {countries.map((country) => (
+//           <option key={country.isoCode} value={country.name}>
+//             {country.name}
+//           </option>
+//         ))}
+//       </select>
+
+//       ): type === "state" ? (
+
+
+//           < select id={id}
+//         {...register(name!)}
+//         onFocus={handleFocus}
+//         required={required}
+//         className="input-animation w-100"
+//         defaultValue={value || ""}
+//         disabled={disabled}
+//   >
+//         <option value="">Select Country</option>
+
+//         {countries.map((country) => (
+//           <option key={country.isoCode} value={country.name}>
+//             {country.name}
+//           </option>
+//         ))}
+//       </select>
+
+//       ): type === "city" ? (
+
+
+//           < select id={id}
+//         {...register(name!)}
+//         onFocus={handleFocus}
+//         required={required}
+//         className="input-animation w-100"
+//         defaultValue={value || ""}
+//         disabled={disabled}
+//   >
+//         <option value="">Select Country</option>
+
+//         {countries.map((country) => (
+//           <option key={country.isoCode} value={country.name}>
+//             {country.name}
+//           </option>
+//         ))}
+//       </select>
+
+//       ): type === "date" || type === "datetime-local" ? (
+//       <div>
+//         <input
+//           type={type}
+//           id={id}
+//           {...register(name!)}
+//           placeholder={
+//             focused ? (labelAnimated ? "" : placeholder) : placeholder
+//           }
+//           onFocus={handleFocus}
+//           onBlur={handleBlur}
+//           required={required}
+//           min={disabledPast ? todayFormatted : undefined}
+//           max={disabledFuture ? todayFormatted : undefined}
+//           className=" w-100"
+//           disabled={disabled}
+//         />
+//       </div>
+//       ) : (
+//       <div className="position-relative">
+//         {type === "file" ? (
+//           <div>
+//             <input
+//               type="file"
+//               accept={accept}
+//               {...register(name!)}
+//               hidden
+//               ref={(e) => {
+//                 fileRef.current = e;
+//                 register(name!).ref(e);
+//               }}
+//               // onChange={onChange}
+//               multiple={multiple}
+//             />
+//             <button
+//               type="button"
+//               disabled={disabled}
+//               className="file text-start"
+//               style={{
+//                 cursor: disabled ? "auto" : "pointer",
+//               }}
+//               onClick={() => fileRef?.current?.click()}
+//             >
+//               <span className="text-xmall">
+//                 <FaCloudUploadAlt /> Upload File
+//               </span>
+//             </button>
+//           </div>
+//         ) : (
+//           <>
+//             {type === "textarea" ? (
+//               <textarea
+//                 id={id}
+//                 {...register(name!)}
+//                 placeholder={placeholder}
+//                 onFocus={handleFocus}
+//                 required={required}
+//                 className="w-100"
+//                 disabled={disabled}
+//                 rows={rows || 8}
+//               />
+//             ) : (
+//               <input
+//                 type={
+//                   type === "password"
+//                     ? showPassword
+//                       ? "text"
+//                       : type
+//                     : type
+//                 }
+//                 id={id}
+//                 {...register(name!)}
+//                 placeholder={
+//                   focused ? (labelAnimated ? "" : placeholder) : placeholder
+//                 }
+//                 onFocus={handleFocus}
+//                 onBlur={handleBlur}
+//                 required={required}
+//                 className="w-100"
+//                 disabled={disabled}
+//               />
+//             )}
+
+//             {type === "password" && (
+//               <div
+//                 className="position-absolute"
+//                 style={{
+//                   right: "20px",
+//                   top: "50%",
+//                   transform: "translate(20%, -50%)",
+//                   cursor: "pointer",
+//                 }}
+//                 onClick={handleShowHidePassword}
+//               >
+//                 {showPassword ? <BiShow /> : <BiHide />}
+//               </div>
+//             )}
+//           </>
+//         )}
+
+//         {serachIcon && (
+//           <IoMdSearch
+//             size={20}
+//             className="position-absolute top-50 bg-white"
+//             style={{
+//               right: "10px",
+//               transform: "translate(20%, -50%)",
+//             }}
+//           />
+//         )}
+//       </div>
+//         )}
+
+//       {labelAnimated && (
+//         <label
+//           htmlFor={id}
+//           className={`${labelAnimated && "label-animation"}`}
+//         >
+//           {label}
+//         </label>
+//       )}
+//     </div>
+//     </div >
+//   );
+// };
+
+// export default InputWithLabel;
+    import React, { useEffect, useRef, useState } from "react";
+    import { InputWithLabelProps } from "../../types";
+    import { IoMdSearch } from "react-icons/io";
+    import { BiHide, BiShow } from "react-icons/bi";
+    import { FaCloudUploadAlt } from "react-icons/fa";
+    import { Country, State, City } from "country-state-city";
+
+    const InputWithLabel: React.FC<InputWithLabelProps> = ({
+      label,
+      type = "text",
+      id,
+      name,
+      placeholder,
+      register,
+      watch, // ✅ IMPORTANT
+      required = false,
+      options,
+      labelAnimated = true,
+      serachIcon,
+      isLoading,
+      disabled,
+      accept,
+      disabledPast,
+      disabledFuture,
+      rows,
+      multiple,
+    }) => {
+      const [countries] = useState(Country.getAllCountries());
+      const [states, setStates] = useState<any[]>([]);
+      const [cities, setCities] = useState<any[]>([]);
+
+      const [focused, setFocused] = useState(false);
+      const [showPassword, setShowPassword] = useState(false);
+
+      const fileRef = useRef<HTMLInputElement | null>(null);
+
+      // ================= RHF WATCH VALUES =================
+      const selectedCountry = watch?.("country"); // ISO CODE
+      const selectedState = watch?.("state"); // ISO CODE
+
+      // ================= COUNTRY → STATES =================
+      useEffect(() => {
+        if (!selectedCountry) {
+          setStates([]);
+          setCities([]);
+          return;
+        }
+
+        const stateList = State.getStatesOfCountry(selectedCountry);
+        setStates(stateList);
+      }, [selectedCountry]);
+
+      // ================= STATE → CITIES =================
+      useEffect(() => {
+        if (!selectedCountry || !selectedState) {
+          setCities([]);
+          return;
+        }
+
+        const cityList = City.getCitiesOfState(
+          selectedCountry,
+          selectedState
+        );
+
+        setCities(cityList);
+      }, [selectedCountry, selectedState]);
+
+      // ================= FOCUS =================
+      const handleFocus = () => setFocused(true);
+
+      const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        if (!e.target.value) setFocused(false);
+      };
+
+      const togglePassword = () => {
+        setShowPassword((p) => !p);
+      };
+
+      // ================= DATE LIMIT =================
+      const today = new Date();
+      const formatDate = (date: Date, type: string) => {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        const h = String(date.getHours()).padStart(2, "0");
+        const min = String(date.getMinutes()).padStart(2, "0");
+
+        if (type === "date") return `${y}-${m}-${d}`;
+        if (type === "datetime-local") return `${y}-${m}-${d}T${h}:${min}`;
+      };
+
+      const todayFormatted = formatDate(today, type);
+
+      return (
+        <div className="form-group">
+          <div className={`input-wrapper ${focused ? "focused" : ""}`}>
+
+            {/* ================= SELECT ================= */}
+            {type === "select" ? (
+              <select
+                id={id}
+                {...register(name!)}
+                onFocus={handleFocus}
+                disabled={disabled}
+                className="input-animation w-100"
+                required={required}
+              >
+                <option value="">
+                  {isLoading ? "Loading..." : "Select Option"}
                 </option>
-              ))
+
+                {options?.map((opt: any, i: number) => (
+                  <option key={i} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            ) : type === "country" ? (
+              <select
+                id={id}
+                {...register(name!)}
+                onFocus={handleFocus}
+                disabled={disabled}
+                className="input-animation w-100"
+                required={required}
+              >
+                <option value="">Select Country</option>
+                {countries.map((c) => (
+                  <option key={c.isoCode} value={c.isoCode}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            ) : type === "state" ? (
+              <select
+                id={id}
+                {...register(name!)}
+                onFocus={handleFocus}
+                disabled={disabled}
+                className="input-animation w-100"
+                required={required}
+              >
+                <option value="">Select State</option>
+                {states.length > 0 ? (
+                  states.map((s) => (
+                    <option key={s.isoCode} value={s.isoCode}>
+                      {s.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">Select country first</option>
+                )}
+              </select>
+            ) : type === "city" ? (
+              <select
+                id={id}
+                {...register(name!)}
+                onFocus={handleFocus}
+                disabled={disabled}
+                className="input-animation w-100"
+                required={required}
+              >
+                <option value="">Select City</option>
+                {cities.length > 0 ? (
+                  cities.map((c) => (
+                    <option key={c.name} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">Select state first</option>
+                )}
+              </select>
+            ) : type === "date" || type === "datetime-local" ? (
+              <input
+                type={type}
+                {...register(name!)}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                min={disabledPast ? todayFormatted : undefined}
+                max={disabledFuture ? todayFormatted : undefined}
+                disabled={disabled}
+                className="w-100"
+              />
             ) : (
-              <option value="" disabled>
-                {isLoading ? "wait..." : "No Options"}
-              </option>
-            )}
-          </select>
-        ) : type === "date" || type === "datetime-local" ? (
-          <div>
-            <input
-              type={type}
-              id={id}
-              {...register(name!)}
-              placeholder={
-                focused ? (labelAnimated ? "" : placeholder) : placeholder
-              }
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              required={required}
-              min={disabledPast ? todayFormatted : undefined}
-              max={disabledFuture ? todayFormatted : undefined}
-              className=" w-100"
-              disabled={disabled}
-            />
-          </div>
-        ) : (
-          <div className="position-relative">
-            {type === "file" ? (
-              <div>
-                <input
-                  type="file"
-                  accept={accept}
-                  {...register(name!)}
-                  hidden
-                  ref={(e) => {
-                    fileRef.current = e;
-                    register(name!).ref(e);
-                  }}
-                  // onChange={onChange}
-                  multiple={multiple}
-                />
-                <button
-                  type="button"
-                  disabled={disabled}
-                  className="file text-start"
-                  style={{
-                    cursor: disabled ? "auto" : "pointer",
-                  }}
-                  onClick={() => fileRef?.current?.click()}
-                >
-                  <span className="text-xmall">
-                    <FaCloudUploadAlt /> Upload File
-                  </span>
-                </button>
-              </div>
-            ) : (
-              <>
-                {type === "textarea" ? (
+              <div className="position-relative">
+
+                {/* ================= FILE ================= */}
+                {type === "file" ? (
+                  <>
+                    <input
+                      type="file"
+                      {...register(name!)}
+                      hidden
+                      ref={(e) => {
+                        fileRef.current = e;
+                        register(name!).ref(e);
+                      }}
+                      accept={accept}
+                      multiple={multiple}
+                    />
+
+                    <button
+                      type="button"
+                      className="file text-start"
+                      onClick={() => fileRef.current?.click()}
+                      disabled={disabled}
+                    >
+                      <FaCloudUploadAlt /> Upload File
+                    </button>
+                  </>
+                ) : type === "textarea" ? (
                   <textarea
-                    id={id}
                     {...register(name!)}
                     placeholder={placeholder}
-                    onFocus={handleFocus}
-                    required={required}
-                    className="w-100"
+                    rows={rows || 5}
                     disabled={disabled}
-                    rows={rows || 8}
+                    className="w-100"
                   />
                 ) : (
-                  <input
-                    type={
-                      type === "password"
-                        ? showPassword
-                          ? "text"
+                  <>
+                    <input
+                      type={
+                        type === "password"
+                          ? showPassword
+                            ? "text"
+                            : "password"
                           : type
-                        : type
-                    }
-                    id={id}
-                    {...register(name!)}
-                    placeholder={
-                      focused ? (labelAnimated ? "" : placeholder) : placeholder
-                    }
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    required={required}
-                    className="w-100"
-                    disabled={disabled}
+                      }
+                      {...register(name!)}
+                      placeholder={placeholder}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      disabled={disabled}
+                      className="w-100"
+                    />
+
+                    {type === "password" && (
+                      <span
+                        className="position-absolute"
+                        style={{
+                          right: 15,
+                          top: "50%",
+                          cursor: "pointer",
+                        }}
+                        onClick={togglePassword}
+                      >
+                        {showPassword ? <BiShow /> : <BiHide />}
+                      </span>
+                    )}
+                  </>
+                )}
+
+                {/* SEARCH ICON */}
+                {serachIcon && (
+                  <IoMdSearch
+                    size={18}
+                    className="position-absolute top-50"
+                    style={{
+                      right: "10px",
+                      transform: "translateY(-50%)",
+                    }}
                   />
                 )}
-
-                {type === "password" && (
-                  <div
-                    className="position-absolute"
-                    style={{
-                      right: "20px",
-                      top: "50%",
-                      transform: "translate(20%, -50%)",
-                      cursor: "pointer",
-                    }}
-                    onClick={handleShowHidePassword}
-                  >
-                    {showPassword ? <BiShow /> : <BiHide />}
-                  </div>
-                )}
-              </>
+              </div>
             )}
 
-            {serachIcon && (
-              <IoMdSearch
-                size={20}
-                className="position-absolute top-50 bg-white"
-                style={{
-                  right: "10px",
-                  transform: "translate(20%, -50%)",
-                }}
-              />
+            {/* ================= LABEL ================= */}
+            {labelAnimated && (
+              <label htmlFor={id} className="label-animation">
+                {label}
+              </label>
             )}
           </div>
-        )}
+        </div>
+      );
+    };
 
-        {labelAnimated && (
-          <label
-            htmlFor={id}
-            className={`${labelAnimated && "label-animation"}`}
-          >
-            {label}
-          </label>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default InputWithLabel;
+    export default InputWithLabel;

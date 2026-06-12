@@ -94,6 +94,7 @@ export interface InputWithLabelProps {
   disabledFuture?: boolean;
   rows?: number;
   multiple?: boolean;
+  watch?:any
 }
 
 interface EmployeeDetails {
