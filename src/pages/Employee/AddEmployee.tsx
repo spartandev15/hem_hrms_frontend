@@ -42,12 +42,17 @@ const AddEmployee = () => {
     register,
     control,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
       role: status === "owner" ? "HR" : "",
       // designation: status === "owner" ? "HR" : "",
       profile_photo: "",
+          country: "",
+    state: "",
+    city: "",
+
     },
     resolver: zodResolver(employeeFormSchema),
   });
@@ -305,19 +310,19 @@ const AddEmployee = () => {
       {
       label: "Country",
       name: "country",
-      type: "text",
+      type: "country",
       value:  ""
     },
       {
       label: "State",
       name: "state",
-      type: "text",
+      type: "state",
       value:  ""   },
 
       {
       label: "City",
       name: "city",
-      type: "text",
+      type: "city",
       value:  ""  },
       {
       label: "Zip Code",
@@ -334,21 +339,42 @@ const AddEmployee = () => {
     })
     .filter(Boolean);
 
-  const handleFormSubmit = (data: any) => {
-    const formData = new FormData();
-    if (data.profile_photo.length > 0) {
-      formData.append("profile_photo", data.profile_photo[0]);
+  // const handleFormSubmit = (data: any) => {
+  //   const formData = new FormData();
+  //   if (data.profile_photo.length > 0) {
+  //     formData.append("profile_photo", data.profile_photo[0]);
+  //   }
+
+  //   Object.entries(data).forEach(([key, value]) => {
+  //     if (key !== "profile_photo") formData.append(key, String(value));
+  //   });
+
+  //   dispatch(setIsLoading(true));
+  //   postEmployee(formData);
+  //   reset();
+  // };
+const handleFormSubmit = (data: any) => {
+  const formData = new FormData();
+
+  // profile image
+  if (data.profile_photo && data.profile_photo.length > 0) {
+    formData.append("profile_photo", data.profile_photo[0]);
+  }
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (key === "profile_photo") return;
+
+    if (value !== undefined && value !== null && value !== "") {
+      formData.append(key, value as any);
     }
+  });
 
-    Object.entries(data).forEach(([key, value]) => {
-      if (key !== "profile_photo") formData.append(key, String(value));
-    });
+  console.log("FINAL PAYLOAD 👉", Object.fromEntries(formData.entries()));
 
-    dispatch(setIsLoading(true));
-    postEmployee(formData);
-    reset();
-  };
-
+  dispatch(setIsLoading(true));
+  postEmployee(formData);
+  reset();
+};
   const handleSearchSubmit = (query: any) => {
     setQuery((prev) => ({
       ...prev,
@@ -450,6 +476,7 @@ const AddEmployee = () => {
                         register={register}
                         type={item?.type}
                         value={item?.value}
+                         watch={watch} 
                         options={item?.options}
                         accept={item?.accept}
                       />

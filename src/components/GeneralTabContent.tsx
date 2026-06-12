@@ -97,7 +97,7 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
       items: [
         {
           label: "Address",
-          value: "Mohali",
+          value: data?.additional_details?.address || "-//",
           type: "text",
           name: "address",
           disabled:
@@ -105,7 +105,7 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
         },
         {
           label: "Country",
-          value: "India",
+          value: data?.additional_details?.country,
           type: "text",
           name: "country",
           disabled:
@@ -113,7 +113,7 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
         },
         {
           label: "State",
-          value: "PUN",
+          value: data?.additional_details?.state,
           type: "text",
           name: "state",
           disabled:
@@ -121,7 +121,7 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
         },
         {
           label: "City",
-          value: "City",
+          value: data?.additional_details?.city,
           type: "text",
           name: "city",
           disabled:
@@ -129,9 +129,9 @@ const GeneralTabContent = ({ data, isEdit, role }: any) => {
         },
         {
           label: "Zip Code",
-          value: "14000",
+          value: data?.additional_details?.zip_code,
           type: "text",
-          name: "zip code",
+          name: "zip_code",
           disabled:
             role === "owner" ? false : pathname === "/profile" ? true : false,
         },
