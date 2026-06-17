@@ -311,6 +311,7 @@
       disabledFuture,
       rows,
       multiple,
+      value
     }) => {
       const [countries] = useState(Country.getAllCountries());
       const [states, setStates] = useState<any[]>([]);
@@ -377,7 +378,11 @@
       };
 
       const todayFormatted = formatDate(today, type);
-
+useEffect(() => {
+    if (value) {
+      setFocused(true);
+    }
+  }, [value]);
       return (
         <div className="form-group">
           <div className={`input-wrapper ${focused ? "focused" : ""}`}>
