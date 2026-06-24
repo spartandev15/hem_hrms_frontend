@@ -505,102 +505,91 @@ const AddTrainingInternship = () => {
 
           {/* TAB 4 */}
 
-          {activeTab === 4 && (
-            <div className="border rounded-4 p-4 shadow-sm">
-              <h4 className="fw-bold mb-4">
-                Review & Submit
-              </h4>
+        {/* TAB 4 */}
 
-              <div className="row">
-                <div className="col-md-6 mb-3">
-                  <div className="border rounded-3 p-3 bg-light">
-                    <h6 className="fw-bold">
-                      Selected Type
-                    </h6>
+{activeTab === 4 && (
+  <div className="border rounded-4 p-4 shadow-sm">
+    <h4 className="fw-bold mb-4">Review & Submit</h4>
 
-                    <p className="mb-0">
-                      {selectedType}
-                    </p>
-                  </div>
-                </div>
+    <div className="row">
+      {/* Program Type */}
+      <div className="col-md-6 mb-3">
+        <div className="border rounded-3 p-3 bg-light">
+          <h6 className="fw-bold">Program Type</h6>
+          <p className="mb-0">{selectedType}</p>
+        </div>
+      </div>
 
-                <div className="col-md-6 mb-3">
-                  <div className="border rounded-3 p-3 bg-light">
-                    <h6 className="fw-bold">
-                      Email
-                    </h6>
+      {/* Basic Information */}
+      {basicInfoFields.map((field:any, index) => (
+        <div className="col-md-6 mb-3" key={index}>
+          <div className="border rounded-3 p-3 bg-light h-100">
+            <h6 className="fw-bold">{field.label}</h6>
+            <p className="mb-0 text-break">
+              {watch(field.name) || "-"}
+            </p>
+          </div>
+        </div>
+      ))}
 
-                    <p className="mb-0">
-                      
-                      {/* {watch("email")} */}
-                    </p>
-                  </div>
-                </div>
+      {/* Program Details */}
+      {(selectedType === "Training"
+        ? trainingFields
+        : internshipFields
+      ).map((field:any, index) => (
+        <div className="col-md-6 mb-3" key={`detail-${index}`}>
+          <div className="border rounded-3 p-3 bg-light h-100">
+            <h6 className="fw-bold">{field.label}</h6>
+            <p className="mb-0 text-break">
+              {watch(field.name) || "-"}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
 
-                <div className="col-md-6 mb-3">
-                  <div className="border rounded-3 p-3 bg-light">
-                    <h6 className="fw-bold">
-                      First Name
-                    </h6>
-
-                    <p className="mb-0">
-                      {/* {watch("first_name")} */}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="col-md-6 mb-3">
-                  <div className="border rounded-3 p-3 bg-light">
-                    <h6 className="fw-bold">
-                      Department
-                    </h6>
-
-                    <p className="mb-0">
-                      {/* {watch("department")} */}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="btn text-white px-4 py-2 mt-3"
-                style={{
-                  backgroundColor: "#134d75",
-                }}
-              >
-                {isLoading
-                  ? "Submitting..."
-                  : "Submit Program"}
-              </button>
-            </div>
-          )}
+    <div className="text-end mt-3 row">
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="btn btn-sm text-white col-md-3"
+        style={{
+          backgroundColor: "#134d75",
+          minWidth: "140px",
+        }}
+      >
+        {isLoading ? "Submitting..." : "Submit Program"}
+      </button>
+    </div>
+  </div>
+)}
 
           {/* BUTTONS */}
 
-          <div className="d-flex justify-content-between mt-4">
-            <button
-              type="button"
-              className="btn btn-outline-secondary px-4"
-              onClick={prevTab}
-              disabled={activeTab === 1}
-            >
-              Previous
-            </button>
+        <div className="d-flex justify-content-center gap-2 mt-4">
+  <button
+    type="button"
+    className="btn btn-outline-secondary btn-sm"
+    style={{ width: "120px" }}
+    onClick={prevTab}
+    disabled={activeTab === 1}
+  >
+    Previous
+  </button>
 
-            <button
-              type="button"
-              className="btn text-white px-4"
-              style={{
-                backgroundColor: "#134d75",
-              }}
-              onClick={nextTab}
-              disabled={activeTab === 4}
-            >
-              Next
-            </button>
-          </div>
+  <button
+    type="button"
+    className="btn btn-sm text-white"
+    style={{
+      backgroundColor: "#134d75",
+      width: "120px",
+    }}
+    onClick={nextTab}
+    disabled={activeTab === 4}
+  >
+    Next
+  </button>
+</div>
         </form>
       </div>
     </div>

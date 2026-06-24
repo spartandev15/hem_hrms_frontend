@@ -295,31 +295,49 @@ const EmployeeEditModal = ({ isOpen, onClose, record }: Props) => {
       type: "text",
       value: record?.address,
     },
-      {
-      label: "Country",
-      name: "country",
-      type: "text",
-      value:  record?.user_detail?.country,
-    },
-      {
-      label: "State",
-      name: "state",
-      type: "text",
-      value:  record?.user_detail?.state,
-    },
+    //   {
+    //   label: "Country",
+    //   name: "country",
+    //   type: "text",
+    //   value:  record?.user_detail?.country,
+    // },
+    //   {
+    //   label: "State",
+    //   name: "state",
+    //   type: "text",
+    //   value:  record?.user_detail?.state,
+    // },
 
-      {
-      label: "City",
-      name: "city",
-      type: "text",
-      value:  record?.user_detail?.city,
-    },
+    //   {
+    //   label: "City",
+    //   name: "city",
+    //   type: "text",
+    //   value:  record?.user_detail?.city,
+    // },
       {
       label: "Zip Code",
       name: "zipcode",
       type: "text",
       value:  record?.user_detail?.zipcode,
     },
+      {
+      label: "Country",
+      name: "country",
+      type: "country",
+      value:  record?.user_detail?.country,
+    },
+      {
+      label: "State",
+      name: "state",
+      type: "state",
+      value:  record?.user_detail?.state,  },
+
+      {
+      label: "City",
+      name: "city",
+      type: "city",
+      value:  record?.user_detail?.city,  },
+   
   ];
 useEffect(() => {
   if (!record) return;

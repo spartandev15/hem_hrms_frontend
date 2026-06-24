@@ -56,10 +56,7 @@ const AddEmployee = () => {
     },
     resolver: zodResolver(employeeFormSchema),
   });
-  const [
-    postEmployee,
-    { data: EmployeeDetailsData, isSuccess: postEmployeeIsSuccess },
-  ] = usePostEmployeeMutation();
+  const [postEmployee,{ data: EmployeeDetailsData, isSuccess: postEmployeeIsSuccess }, ] = usePostEmployeeMutation();
 
   const { items } = useAppSelector((state) => state.dropdown);
 
@@ -368,7 +365,9 @@ const handleFormSubmit = (data: any) => {
       formData.append(key, value as any);
     }
   });
-
+for (const pair of formData.entries()) {
+  console.log(pair[0], pair[1]);
+}
   console.log("FINAL PAYLOAD 👉", Object.fromEntries(formData.entries()));
 
   dispatch(setIsLoading(true));
@@ -426,7 +425,7 @@ const handleFormSubmit = (data: any) => {
 
   return (
     <div>
-      <div className="mt-4 container pb-4">
+      <div className="mt-4 container pb-4"> 
         <div className="m-auto">
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="text-blue-primary text-start text-large m-0">
