@@ -292,6 +292,7 @@ import { BiHide, BiShow } from "react-icons/bi";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { Country, State, City } from "country-state-city";
 
+
 const InputWithLabel: React.FC<InputWithLabelProps> = ({
   label,
   type = "text",
@@ -312,7 +313,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   rows,
   multiple,
   value,
-}) => {
+  setValue,
+}:any) => {
   const [countries] = useState(Country.getAllCountries());
   const [states, setStates] = useState<any[]>([]);
   const [cities, setCities] = useState<any[]>([]);
@@ -322,59 +324,77 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
 
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const selectedCountry = watch?.("country");
-  const selectedState = watch?.("state");
-  useEffect(() => {
-    if (!selectedCountry) {
-      setStates([]);
-      setCities([]);
-      return;
-    }
+  const previousCountry = useRef("");
+const previousState = useRef("");
+  
+  const selectedCountry = watch("country");
+const selectedState = watch("state");
 
-    const countryObj = countries.find(
-      (c) => c.name === selectedCountry
-    );
-
-    if (!countryObj) {
-      setStates([]);
-      return;
-    }
-
-    const stateList = State.getStatesOfCountry(
-      countryObj.isoCode
-    );
-
-    setStates(stateList);
+useEffect(() => {
+  if (!selectedCountry) {
+    setStates([]);
     setCities([]);
-  }, [selectedCountry, countries]);
+    return;
+  }
 
-  useEffect(() => {
-    if (!selectedCountry || !selectedState) {
-      setCities([]);
-      return;
-    }
+  const country = countries.find(
+    (item) => item.name === selectedCountry
+  );
 
-    const countryObj = countries.find(
-      (c) => c.name === selectedCountry
-    );
+  if (!country) return;
 
-    const stateObj = states.find(
-      (s) => s.name === selectedState
-    );
+  const stateList = State.getStatesOfCountry(country.isoCode);
 
-    if (!countryObj || !stateObj) {
-      setCities([]);
-      return;
-    }
+  setStates(stateList);
 
-    const cityList = City.getCitiesOfState(
-      countryObj.isoCode,
-      stateObj.isoCode
-    );
+  if (
+    previousCountry.current &&
+    previousCountry.current !== selectedCountry
+  ) {
+    setValue("state", "");
+    setValue("city", "");
+  }
 
-    setCities(cityList);
-  }, [selectedCountry, selectedState, countries, states]);
+  previousCountry.current = selectedCountry;
+}, [selectedCountry]);
 
+
+
+useEffect(() => {
+  if (!selectedCountry || !selectedState) {
+    setCities([]);
+    return;
+  }
+
+  const country = countries.find(
+    (item) => item.name === selectedCountry
+  );
+
+  const state = states.find(
+    (item) => item.name === selectedState
+  );
+
+  if (!country || !state) {
+    setCities([]);
+    return;
+  }
+
+  const cityList = City.getCitiesOfState(
+    country.isoCode,
+    state.isoCode
+  );
+
+  setCities(cityList);
+
+  if (
+    previousState.current &&
+    previousState.current !== selectedState
+  ) {
+    setValue("city", "");
+  }
+
+  previousState.current = selectedState;
+}, [selectedCountry, selectedState, states]);
   const handleFocus = () => setFocused(true);
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -440,7 +460,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             onFocus={handleFocus}
             disabled={disabled}
             className="input-animation w-100"
-            required={required}
+            // required={required}
           >
             <option value="">Select Country</option>
 
@@ -460,7 +480,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             onFocus={handleFocus}
             disabled={!selectedCountry || disabled}
             className="input-animation w-100"
-            required={required}
+            // required={required}
           >
             <option value="">Select State</option>
 
@@ -480,7 +500,7 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
             onFocus={handleFocus}
             disabled={!selectedState || disabled}
             className="input-animation w-100"
-            required={required}
+            // required={required}
           >
             <option value="">Select City</option>
 

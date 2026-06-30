@@ -43,6 +43,7 @@ const AddEmployee = () => {
     control,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -57,6 +58,7 @@ const AddEmployee = () => {
     resolver: zodResolver(employeeFormSchema),
   });
   const [postEmployee,{ data: EmployeeDetailsData, isSuccess: postEmployeeIsSuccess }, ] = usePostEmployeeMutation();
+
 
   const { items } = useAppSelector((state) => state.dropdown);
 
@@ -351,28 +353,48 @@ const AddEmployee = () => {
   //   reset();
   // };
 const handleFormSubmit = (data: any) => {
+
+  console.log("FINAL FORM DATA 👉", data);
+
+
   const formData = new FormData();
 
-  // profile image
-  if (data.profile_photo && data.profile_photo.length > 0) {
-    formData.append("profile_photo", data.profile_photo[0]);
+
+  if (data.profile_photo?.length > 0) {
+    formData.append(
+      "profile_photo",
+      data.profile_photo[0]
+    );
   }
 
-  Object.entries(data).forEach(([key, value]) => {
-    if (key === "profile_photo") return;
 
-    if (value !== undefined && value !== null && value !== "") {
-      formData.append(key, value as any);
+  Object.entries(data).forEach(([key, value]) => {
+
+    if(key === "profile_photo") return;
+
+
+    if(value !== undefined && value !== null){
+
+      formData.append(
+        key,
+        String(value)
+      );
+
     }
+
   });
-for (const pair of formData.entries()) {
-  console.log(pair[0], pair[1]);
-}
-  console.log("FINAL PAYLOAD 👉", Object.fromEntries(formData.entries()));
+
+
+  console.log(
+    "API PAYLOAD 👉",
+    Object.fromEntries(formData.entries())
+  );
+
 
   dispatch(setIsLoading(true));
+
   postEmployee(formData);
-  reset();
+
 };
   const handleSearchSubmit = (query: any) => {
     setQuery((prev) => ({
@@ -422,7 +444,9 @@ for (const pair of formData.entries()) {
       }
     }
   }, [formFields?.profile_photo]);
-
+useEffect(()=>{
+ console.log("WATCH:",watch());
+},[watch()]);
   return (
     <div>
       <div className="mt-4 container pb-4"> 
@@ -460,7 +484,8 @@ for (const pair of formData.entries()) {
               className="border p-3 rounded shadow-sm mt-3"
             >
               <div className="row mt-4">
-                {updateAddEmployeeFormField.map((item, index) => {
+                {updateAddEmployeeFormField.map((item:any, index) => {
+                  console.log(item.name, item.type);
                   if (item && item.label === "Role" && status === "HR")
                     return null;
                   return (
@@ -478,6 +503,7 @@ for (const pair of formData.entries()) {
                          watch={watch} 
                         options={item?.options}
                         accept={item?.accept}
+                        setValue={setValue}
                       />
                       {errors[item?.name as keyof typeof errors] && (
                         <p className="text-danger">
