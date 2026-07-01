@@ -327,8 +327,8 @@ const InputWithLabel: React.FC<InputWithLabelProps> = ({
   const previousCountry = useRef("");
 const previousState = useRef("");
   
-  const selectedCountry = watch("country");
-const selectedState = watch("state");
+  const selectedCountry = watch?.("country");
+const selectedState = watch?.("state");
 
 useEffect(() => {
   if (!selectedCountry) {
@@ -359,7 +359,12 @@ useEffect(() => {
 }, [selectedCountry]);
 
 
-
+useEffect(() => {
+    register("country");
+    register("state");
+    register("city");
+    register("address");
+}, [register]);
 useEffect(() => {
   if (!selectedCountry || !selectedState) {
     setCities([]);
